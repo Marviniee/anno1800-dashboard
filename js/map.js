@@ -183,7 +183,7 @@ function computeTradeEdges(islands) {
       const norm = normalizeGoodName(g.good);
       if (!norm) return;
       if (!goodMap[norm]) {
-        goodMap[norm] = { displayName: g.good.trim(), producers: new Set(), consumers: new Set() };
+        goodMap[norm] = { displayName: Translations.good(g.good, g.good.trim()), producers: new Set(), consumers: new Set() };
       }
       if (g.role === 'producer' || g.role === 'both') goodMap[norm].producers.add(island.id);
       if (g.role === 'consumer' || g.role === 'both') goodMap[norm].consumers.add(island.id);
