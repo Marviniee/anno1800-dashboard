@@ -179,5 +179,44 @@
     ],
     "goods": [],
     "id": "4c21ea7a-d1a6-48db-95af-a258f437488a"
+  },
+  {
+    "name": "Marklow",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Clay",
+        "count": 1
+      },
+      {
+        "good": "Iron",
+        "count": 1
+      },
+      {
+        "good": "Coal",
+        "count": 4
+      },
+      {
+        "good": "Copper",
+        "count": 2
+      },
+      {
+        "good": "Cement",
+        "count": 1
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Potato"
+      },
+      {
+        "good": "Hops"
+      },
+      {
+        "good": "Red_peppers"
+      }
+    ],
+    "goods": [],
+    "id": "02bc113a-e9dd-4881-8dbc-d987ca8917bd"
   }
 ]
