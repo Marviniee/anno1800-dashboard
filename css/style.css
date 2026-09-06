@@ -619,10 +619,29 @@ body {
   height: calc(100vh - 170px);
 }
 
+.map-canvas-scale-container {
+  position: relative;
+}
+
+.map-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.map-zoom-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 42px;
+  text-align: center;
+}
+
 .map-canvas {
   position: relative;
   background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
   background-size: 24px 24px;
+  transform-origin: 0 0;
 }
 
 .map-svg {

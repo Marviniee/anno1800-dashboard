@@ -68,6 +68,37 @@ let editingRouteId = null;
 let draftRouteStops = [];
 let draftRouteColor = ROUTE_COLOR_PALETTE[0];
 
+// Karten-Zoom: skaliert die Insel-Boxen und die SVG-Linien gemeinsam über
+// CSS transform:scale() auf den Canvas-Container. Anders als beim
+// Warenketten-Zoom (calc()-basiert auf einzelnen CSS-Werten, passend für ein
+// Flex-/Text-Layout) braucht die Karte transform:scale(), weil Boxen absolut
+// per Pixel-Koordinate positioniert sind und die SVG-Linien exakt an diesen
+// Pixel-Koordinaten andocken müssen - eine gemeinsame Transformation skaliert
+// beides synchron, ohne jede Position/Linie einzeln neu zu berechnen.
+const KARTEN_ZOOM_STORAGE_KEY = 'kartenZoom';
+const KARTEN_ZOOM_MIN = 0.4;
+const KARTEN_ZOOM_MAX = 1.5;
+const KARTEN_ZOOM_STEP = 0.1;
+let kartenZoom = Storage.get(KARTEN_ZOOM_STORAGE_KEY, 1);
+
+function setKartenZoom(zoom) {
+  kartenZoom = Math.min(KARTEN_ZOOM_MAX, Math.max(KARTEN_ZOOM_MIN, Math.round(zoom * 10) / 10));
+  Storage.set(KARTEN_ZOOM_STORAGE_KEY, kartenZoom);
+  applyKartenZoom();
+}
+
+function applyKartenZoom() {
+  const canvas = document.getElementById('map-canvas');
+  const scaleContainer = document.getElementById('map-canvas-scale-container');
+  if (canvas) canvas.style.transform = `scale(${kartenZoom})`;
+  if (scaleContainer) {
+    scaleContainer.style.width = `${CANVAS_WIDTH * kartenZoom}px`;
+    scaleContainer.style.height = `${CANVAS_HEIGHT * kartenZoom}px`;
+  }
+  const label = document.getElementById('karten-zoom-label');
+  if (label) label.textContent = `${Math.round(kartenZoom * 100)}%`;
+}
+
 function renderMapView() {
   const view = document.getElementById('view-karte');
   const islands = Islands.getAll();
@@ -79,11 +110,20 @@ function renderMapView() {
       <div class="map-header-actions">
         <label class="layer-toggle"><input type="checkbox" id="toggle-trade-edges" checked> Warenlinien</label>
         <label class="layer-toggle"><input type="checkbox" id="toggle-ship-routes" checked> Schiffsrouten</label>
+        <div class="map-zoom-controls">
+          <button class="btn btn-small" id="btn-karten-zoom-out" title="Verkleinern">−</button>
+          <span id="karten-zoom-label" class="map-zoom-label">100%</span>
+          <button class="btn btn-small" id="btn-karten-zoom-in" title="Vergrößern">+</button>
+        </div>
         <button class="btn btn-primary" id="btn-add-route">+ Route anlegen</button>
         <button class="btn" id="btn-reset-layout">Layout zurücksetzen</button>
       </div>
     </div>
   `;
+
+  document.getElementById('btn-karten-zoom-out').addEventListener('click', () => setKartenZoom(kartenZoom - KARTEN_ZOOM_STEP));
+  document.getElementById('btn-karten-zoom-in').addEventListener('click', () => setKartenZoom(kartenZoom + KARTEN_ZOOM_STEP));
+  applyKartenZoom();
 
   if (islands.length === 0) {
     const empty = document.createElement('div');
@@ -112,8 +152,18 @@ function renderMapView() {
   const wrapper = document.createElement('div');
   wrapper.className = 'map-canvas-wrapper';
 
+  // Scale-Container meldet dem scrollbaren wrapper die tatsächliche
+  // (skalierte) Größe, damit Scrollbars/Scroll-Bereich zur Zoomstufe passen -
+  // die eigentliche .map-canvas behält ihre Original-Pixelgröße und wird nur
+  // per transform:scale() visuell skaliert (transform ändert die Layout-Größe
+  // eines Elements nicht, deshalb der zusätzliche Container).
+  const scaleContainer = document.createElement('div');
+  scaleContainer.className = 'map-canvas-scale-container';
+  scaleContainer.id = 'map-canvas-scale-container';
+
   const canvas = document.createElement('div');
   canvas.className = 'map-canvas';
+  canvas.id = 'map-canvas';
   canvas.style.width = `${CANVAS_WIDTH}px`;
   canvas.style.height = `${CANVAS_HEIGHT}px`;
 
@@ -123,8 +173,10 @@ function renderMapView() {
   svg.setAttribute('height', CANVAS_HEIGHT);
 
   canvas.appendChild(svg);
-  wrapper.appendChild(canvas);
+  scaleContainer.appendChild(canvas);
+  wrapper.appendChild(scaleContainer);
   view.appendChild(wrapper);
+  applyKartenZoom();
 
   document.getElementById('btn-reset-layout').addEventListener('click', () => {
     if (confirm('Layout zurücksetzen? Alle Inseln werden neu im Raster angeordnet.')) {
@@ -509,8 +561,12 @@ function setupDrag(box, islandId, allLineEls, boxEls) {
     const relatedLines = allLineEls.filter((entry) => entry.edge.a === islandId || entry.edge.b === islandId);
 
     function onMouseMove(moveEvent) {
-      const dx = moveEvent.clientX - startX;
-      const dy = moveEvent.clientY - startY;
+      // Mausbewegung ist in echten Bildschirm-Pixeln, Box-Position dagegen in
+      // unskalierten Canvas-Koordinaten (transform:scale ändert nur die
+      // Darstellung, nicht die Layout-Maße) - Delta durch die Zoomstufe
+      // teilen, sonst "hinkt" die Box der Maus hinterher/voraus.
+      const dx = (moveEvent.clientX - startX) / kartenZoom;
+      const dy = (moveEvent.clientY - startY) / kartenZoom;
 
       let newLeft = startLeft + dx;
       let newTop = startTop + dy;
