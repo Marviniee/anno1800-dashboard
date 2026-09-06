@@ -1,7 +1,12 @@
 /*
- * Karte: Inseln als frei verschiebbare Boxen auf einer Canvas-Fläche,
- * verbunden durch Linien für gehandelte Waren (Produzent -> Konsument je Ware).
- * Positionen werden pro Insel-ID in localStorage gespeichert.
+ * Karte: Inseln als frei verschiebbare Boxen auf einer Canvas-Fläche.
+ * Zwei unabhängige Linien-Ebenen:
+ *  - Warenlinien: automatisch berechnete Verbindungen zwischen Inseln, die
+ *    dieselbe Ware handeln (aus goods/role, computeTradeEdges).
+ *  - Schiffsrouten: manuell angelegte Rundläufe über mehrere Stationen in
+ *    fester Reihenfolge (ShipRoutes, js/ship-routes.js).
+ * Beide Ebenen können unabhängig ein-/ausgeblendet werden und wandern beim
+ * Verschieben einer Insel automatisch mit.
  */
 
 const CANVAS_WIDTH = 2400;
@@ -52,14 +57,25 @@ const MapPositions = {
   },
 };
 
+let routesPanelExpanded = true;
+let editingRouteId = null;
+let draftRouteStops = [];
+let draftRouteColor = ROUTE_COLOR_PALETTE[0];
+
 function renderMapView() {
   const view = document.getElementById('view-karte');
   const islands = Islands.getAll();
+  const routes = ShipRoutes.getAll();
 
   view.innerHTML = `
     <div class="view-header">
       <h1>Karte</h1>
-      <button class="btn" id="btn-reset-layout">Layout zurücksetzen</button>
+      <div class="map-header-actions">
+        <label class="layer-toggle"><input type="checkbox" id="toggle-trade-edges" checked> Warenlinien</label>
+        <label class="layer-toggle"><input type="checkbox" id="toggle-ship-routes" checked> Schiffsrouten</label>
+        <button class="btn btn-primary" id="btn-add-route">+ Route anlegen</button>
+        <button class="btn" id="btn-reset-layout">Layout zurücksetzen</button>
+      </div>
     </div>
   `;
 
@@ -70,6 +86,22 @@ function renderMapView() {
     view.appendChild(empty);
     return;
   }
+
+  const routePanel = document.createElement('div');
+  routePanel.className = 'route-panel';
+  routePanel.innerHTML = `
+    <button class="route-panel-toggle" id="btn-toggle-routes-panel">
+      ${routesPanelExpanded ? '▾' : '▸'} Schiffsrouten (${routes.length})
+    </button>
+    <div id="routes-list-container" ${routesPanelExpanded ? '' : 'hidden'}></div>
+  `;
+  view.appendChild(routePanel);
+  renderRoutesList(routes, islands);
+
+  document.getElementById('btn-toggle-routes-panel').addEventListener('click', () => {
+    routesPanelExpanded = !routesPanelExpanded;
+    renderMapView();
+  });
 
   const wrapper = document.createElement('div');
   wrapper.className = 'map-canvas-wrapper';
@@ -95,6 +127,8 @@ function renderMapView() {
     }
   });
 
+  document.getElementById('btn-add-route').addEventListener('click', () => openRouteModal());
+
   const positions = assignMissingPositions(islands);
   const boxEls = {};
 
@@ -105,11 +139,22 @@ function renderMapView() {
     boxEls[island.id] = box;
   });
 
-  const edges = computeTradeEdges(islands);
-  const edgeEls = drawEdges(svg, edges, boxEls);
+  const tradeEdges = computeTradeEdges(islands);
+  const tradeEdgeEls = drawTradeEdges(svg, tradeEdges, boxEls);
+  const routeLineEls = drawShipRoutes(svg, routes, boxEls);
+  const allLineEls = [...tradeEdgeEls, ...routeLineEls];
+
+  document.getElementById('toggle-trade-edges').addEventListener('change', (e) => {
+    const g = svg.querySelector('.trade-edges-layer');
+    if (g) g.style.display = e.target.checked ? '' : 'none';
+  });
+  document.getElementById('toggle-ship-routes').addEventListener('change', (e) => {
+    const g = svg.querySelector('.ship-routes-layer');
+    if (g) g.style.display = e.target.checked ? '' : 'none';
+  });
 
   islands.forEach((island) => {
-    setupDrag(boxEls[island.id], island.id, canvas, edges, edgeEls, boxEls);
+    setupDrag(boxEls[island.id], island.id, allLineEls, boxEls);
   });
 }
 
@@ -254,7 +299,27 @@ function getBoxCenter(box) {
   };
 }
 
-function drawEdges(svg, edges, boxEls) {
+// Punkt auf dem Rand von `box`, dort wo die Linie Richtung `towardPoint`
+// das Rechteck verlässt (für Schiffsrouten-Pfeile, die sichtbar an der
+// Box-Kante enden sollen statt unter der Box im Zentrum zu verschwinden).
+function getBoxEdgePoint(box, towardPoint) {
+  const center = getBoxCenter(box);
+  const hw = box.offsetWidth / 2;
+  const hh = box.offsetHeight / 2;
+  const dx = towardPoint.x - center.x;
+  const dy = towardPoint.y - center.y;
+  if (dx === 0 && dy === 0) return center;
+  const tx = dx !== 0 ? hw / Math.abs(dx) : Infinity;
+  const ty = dy !== 0 ? hh / Math.abs(dy) : Infinity;
+  const t = Math.min(tx, ty);
+  return { x: center.x + dx * t, y: center.y + dy * t };
+}
+
+function drawTradeEdges(svg, edges, boxEls) {
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.setAttribute('class', 'trade-edges-layer');
+  svg.appendChild(group);
+
   const edgeEls = [];
 
   edges.forEach((edge) => {
@@ -278,9 +343,9 @@ function drawEdges(svg, edges, boxEls) {
     hitTitle.textContent = edge.goods.join(', ');
     hitArea.appendChild(hitTitle);
 
-    svg.appendChild(line);
-    svg.appendChild(hitArea);
-    svg.appendChild(label);
+    group.appendChild(line);
+    group.appendChild(hitArea);
+    group.appendChild(label);
 
     const entry = { edge, line, hitArea, label };
     edgeEls.push(entry);
@@ -324,7 +389,87 @@ function formatEdgeLabel(goods) {
   return `${goods.slice(0, 2).join(', ')} +${goods.length - 2}`;
 }
 
-function setupDrag(box, islandId, canvas, edges, edgeEls, boxEls) {
+// Schiffsrouten: gestrichelte, farbige Linien mit Pfeilspitzen in
+// Fahrtrichtung, ein Kreis je Route (letzter Stop -> erster Stop).
+function drawShipRoutes(svg, routes, boxEls) {
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.setAttribute('class', 'ship-routes-layer');
+  svg.appendChild(group);
+
+  const routeEls = [];
+  if (routes.length === 0) return routeEls;
+
+  let defs = svg.querySelector('defs');
+  if (!defs) {
+    defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    svg.insertBefore(defs, svg.firstChild);
+  }
+
+  routes.forEach((route) => {
+    const markerId = `route-arrow-${route.id}`;
+    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+    marker.setAttribute('id', markerId);
+    marker.setAttribute('viewBox', '0 0 10 10');
+    marker.setAttribute('refX', '9');
+    marker.setAttribute('refY', '5');
+    marker.setAttribute('markerWidth', '7');
+    marker.setAttribute('markerHeight', '7');
+    marker.setAttribute('orient', 'auto-start-reverse');
+    const arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    arrowPath.setAttribute('d', 'M0,0 L10,5 L0,10 z');
+    arrowPath.setAttribute('fill', route.color);
+    marker.appendChild(arrowPath);
+    defs.appendChild(marker);
+
+    ShipRoutes.segmentsFor(route).forEach((seg) => {
+      const boxA = boxEls[seg.from];
+      const boxB = boxEls[seg.to];
+      if (!boxA || !boxB) return;
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('class', 'route-line');
+      line.setAttribute('stroke', route.color);
+      line.setAttribute('marker-end', `url(#${markerId})`);
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = route.name;
+      line.appendChild(title);
+
+      const hitArea = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      hitArea.setAttribute('class', 'route-hit-area');
+      const hitTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      hitTitle.textContent = route.name;
+      hitArea.appendChild(hitTitle);
+
+      group.appendChild(hitArea);
+      group.appendChild(line);
+
+      const entry = { type: 'route', edge: { a: seg.from, b: seg.to }, line, hitArea };
+      routeEls.push(entry);
+      updateRoutePosition(entry, boxA, boxB);
+    });
+  });
+
+  return routeEls;
+}
+
+function updateRoutePosition(entry, boxA, boxB) {
+  const centerA = getBoxCenter(boxA);
+  const centerB = getBoxCenter(boxB);
+  const start = getBoxEdgePoint(boxA, centerB);
+  const end = getBoxEdgePoint(boxB, centerA);
+
+  entry.line.setAttribute('x1', start.x);
+  entry.line.setAttribute('y1', start.y);
+  entry.line.setAttribute('x2', end.x);
+  entry.line.setAttribute('y2', end.y);
+
+  entry.hitArea.setAttribute('x1', start.x);
+  entry.hitArea.setAttribute('y1', start.y);
+  entry.hitArea.setAttribute('x2', end.x);
+  entry.hitArea.setAttribute('y2', end.y);
+}
+
+function setupDrag(box, islandId, allLineEls, boxEls) {
   box.addEventListener('mousedown', (e) => {
     e.preventDefault();
     const startX = e.clientX;
@@ -334,7 +479,7 @@ function setupDrag(box, islandId, canvas, edges, edgeEls, boxEls) {
 
     box.classList.add('dragging');
 
-    const relatedEdges = edgeEls.filter((entry) => entry.edge.a === islandId || entry.edge.b === islandId);
+    const relatedLines = allLineEls.filter((entry) => entry.edge.a === islandId || entry.edge.b === islandId);
 
     function onMouseMove(moveEvent) {
       const dx = moveEvent.clientX - startX;
@@ -349,8 +494,9 @@ function setupDrag(box, islandId, canvas, edges, edgeEls, boxEls) {
       box.style.left = `${newLeft}px`;
       box.style.top = `${newTop}px`;
 
-      relatedEdges.forEach((entry) => {
-        updateEdgePosition(entry, boxEls[entry.edge.a], boxEls[entry.edge.b]);
+      relatedLines.forEach((entry) => {
+        const updater = entry.type === 'route' ? updateRoutePosition : updateEdgePosition;
+        updater(entry, boxEls[entry.edge.a], boxEls[entry.edge.b]);
       });
     }
 
@@ -364,4 +510,207 @@ function setupDrag(box, islandId, canvas, edges, edgeEls, boxEls) {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+}
+
+// ---- Schiffsrouten-Verwaltung (Liste + Anlegen/Bearbeiten/Löschen) ----
+
+function renderRoutesList(routes, islands) {
+  const container = document.getElementById('routes-list-container');
+  if (!container) return;
+
+  if (routes.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:12px 0;">Noch keine Schiffsrouten angelegt.</div>`;
+    return;
+  }
+
+  const islandsById = Object.fromEntries(islands.map((i) => [i.id, i]));
+
+  container.innerHTML = routes
+    .map((route) => {
+      const stopNames = route.stops.map((id) => (islandsById[id] ? islandsById[id].name : '(gelöscht)'));
+      return `
+        <div class="route-row">
+          <span class="route-color-dot" style="background:${route.color}"></span>
+          <span class="route-row-name">${escapeHtml(route.name)}</span>
+          <span class="route-row-stops" title="${escapeHtml(stopNames.join(' → '))}">${stopNames.length} Stationen</span>
+          <button class="icon-btn" data-edit-route="${route.id}" title="Bearbeiten">✎</button>
+          <button class="icon-btn" data-delete-route="${route.id}" title="Löschen">🗑</button>
+        </div>
+      `;
+    })
+    .join('');
+
+  container.querySelectorAll('[data-edit-route]').forEach((btn) => {
+    btn.addEventListener('click', () => openRouteModal(btn.dataset.editRoute));
+  });
+  container.querySelectorAll('[data-delete-route]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const route = routes.find((r) => r.id === btn.dataset.deleteRoute);
+      if (confirm(`Route "${route.name}" wirklich löschen?`)) {
+        ShipRoutes.remove(btn.dataset.deleteRoute);
+        renderMapView();
+      }
+    });
+  });
+}
+
+function openRouteModal(routeId) {
+  editingRouteId = routeId || null;
+  const route = routeId ? ShipRoutes.getAll().find((r) => r.id === routeId) : null;
+
+  draftRouteStops = route ? [...route.stops] : [];
+  draftRouteColor = route ? route.color : ROUTE_COLOR_PALETTE[ShipRoutes.getAll().length % ROUTE_COLOR_PALETTE.length];
+
+  const islands = Islands.getAll();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'route-modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2>${route ? 'Route bearbeiten' : 'Route anlegen'}</h2>
+
+      <div class="form-group">
+        <label for="input-route-name">Name</label>
+        <input type="text" id="input-route-name" placeholder="z.B. Alte-Welt-Ringroute" value="${route ? escapeHtml(route.name) : ''}">
+      </div>
+
+      <div class="form-group">
+        <label>Farbe</label>
+        <div class="route-color-row">
+          <div class="route-color-swatches" id="route-color-swatches">
+            ${ROUTE_COLOR_PALETTE.map(
+              (c) => `<button type="button" class="route-color-swatch ${c === draftRouteColor ? 'selected' : ''}" data-color="${c}" style="background:${c}"></button>`
+            ).join('')}
+          </div>
+          <input type="color" id="input-route-color-custom" value="${draftRouteColor}" title="Eigene Farbe">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="input-route-stop">Stationen (Reihenfolge)</label>
+        <div class="chip-input-row">
+          <select id="input-route-stop">
+            ${islands.map((i) => `<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('')}
+          </select>
+          <button class="btn btn-small" id="btn-add-stop">Hinzufügen</button>
+        </div>
+        <div id="route-stop-list"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" id="btn-cancel-route-modal">Abbrechen</button>
+        <button class="btn btn-primary" id="btn-save-route">Speichern</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  renderRouteStopList();
+
+  document.getElementById('btn-add-stop').addEventListener('click', () => {
+    const select = document.getElementById('input-route-stop');
+    if (!select.value) return;
+    draftRouteStops.push(select.value);
+    renderRouteStopList();
+  });
+
+  document.querySelectorAll('#route-color-swatches [data-color]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      draftRouteColor = btn.dataset.color;
+      document.getElementById('input-route-color-custom').value = draftRouteColor;
+      document.querySelectorAll('#route-color-swatches .route-color-swatch').forEach((b) => {
+        b.classList.toggle('selected', b.dataset.color === draftRouteColor);
+      });
+    });
+  });
+
+  document.getElementById('input-route-color-custom').addEventListener('input', (e) => {
+    draftRouteColor = e.target.value;
+    document.querySelectorAll('#route-color-swatches .route-color-swatch').forEach((b) => b.classList.remove('selected'));
+  });
+
+  document.getElementById('btn-cancel-route-modal').addEventListener('click', closeRouteModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeRouteModal();
+  });
+
+  document.getElementById('btn-save-route').addEventListener('click', saveRouteFromModal);
+}
+
+function renderRouteStopList() {
+  const list = document.getElementById('route-stop-list');
+  const islandsById = Object.fromEntries(Islands.getAll().map((i) => [i.id, i]));
+
+  if (draftRouteStops.length === 0) {
+    list.innerHTML = `<div class="empty-state" style="padding:12px 0;">Noch keine Stationen ausgewählt.</div>`;
+    return;
+  }
+
+  list.innerHTML = draftRouteStops
+    .map((islandId, idx) => {
+      const island = islandsById[islandId];
+      const name = island ? island.name : '(gelöschte Insel)';
+      return `
+        <div class="route-stop-row">
+          <span class="route-stop-index">${idx + 1}</span>
+          <span class="route-stop-name">${escapeHtml(name)}</span>
+          <button class="icon-btn" data-move-up="${idx}" title="Nach oben" ${idx === 0 ? 'disabled' : ''}>↑</button>
+          <button class="icon-btn" data-move-down="${idx}" title="Nach unten" ${idx === draftRouteStops.length - 1 ? 'disabled' : ''}>↓</button>
+          <button class="icon-btn" data-remove-stop="${idx}" title="Entfernen">✕</button>
+        </div>
+      `;
+    })
+    .join('');
+
+  list.querySelectorAll('[data-move-up]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.moveUp);
+      [draftRouteStops[idx - 1], draftRouteStops[idx]] = [draftRouteStops[idx], draftRouteStops[idx - 1]];
+      renderRouteStopList();
+    });
+  });
+  list.querySelectorAll('[data-move-down]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.moveDown);
+      [draftRouteStops[idx + 1], draftRouteStops[idx]] = [draftRouteStops[idx], draftRouteStops[idx + 1]];
+      renderRouteStopList();
+    });
+  });
+  list.querySelectorAll('[data-remove-stop]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      draftRouteStops.splice(Number(btn.dataset.removeStop), 1);
+      renderRouteStopList();
+    });
+  });
+}
+
+function saveRouteFromModal() {
+  const name = document.getElementById('input-route-name').value.trim();
+  if (!name) {
+    alert('Bitte einen Namen für die Route angeben.');
+    return;
+  }
+  if (draftRouteStops.length < 2) {
+    alert('Eine Route braucht mindestens 2 Stationen.');
+    return;
+  }
+
+  const routeData = { name, color: draftRouteColor, stops: draftRouteStops };
+
+  if (editingRouteId) {
+    ShipRoutes.update(editingRouteId, routeData);
+  } else {
+    ShipRoutes.add(routeData);
+  }
+
+  closeRouteModal();
+  renderMapView();
+}
+
+function closeRouteModal() {
+  const overlay = document.getElementById('route-modal-overlay');
+  if (overlay) overlay.remove();
+  editingRouteId = null;
+  draftRouteStops = [];
 }

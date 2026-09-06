@@ -123,7 +123,7 @@ function renderCurrentView() {
 }
 
 async function init() {
-  await Promise.all([Islands.load(), MapPositions.load(), Todos.load(), Translations.load()]);
+  await Promise.all([Islands.load(), MapPositions.load(), Todos.load(), Translations.load(), ShipRoutes.load()]);
 
   document.getElementById('app-loading').hidden = true;
   document.getElementById('view-inseln').classList.add('active');
