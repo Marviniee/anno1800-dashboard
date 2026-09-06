@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "name": "Montpelican",
+    "functions": [],
+    "goods": [
+      {
+        "good": "Lehm",
+        "role": "producer"
+      },
+      {
+        "good": "Eisen",
+        "role": "producer"
+      },
+      {
+        "good": "Steinkohle",
+        "role": "producer"
+      },
+      {
+        "good": "Öl",
+        "role": "producer"
+      }
+    ],
+    "id": "90eac99e-5413-41b3-ba28-6dafe1e57ab9"
+  }
+]
