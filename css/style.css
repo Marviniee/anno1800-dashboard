@@ -594,7 +594,15 @@ body {
 }
 
 /* Warenketten */
+.warenketten-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
 .warenketten-search {
+  flex: 1;
   width: 100%;
   max-width: 420px;
   padding: 9px 12px;
@@ -603,7 +611,20 @@ body {
   background: var(--bg-panel);
   color: var(--text);
   font-size: 14px;
-  margin-bottom: 24px;
+}
+
+.warenketten-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.warenketten-zoom-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 42px;
+  text-align: center;
 }
 
 .warenketten-category {
@@ -620,9 +641,13 @@ body {
   margin-bottom: 14px;
 }
 
+.warenketten-content {
+  --zoom: 1;
+}
+
 .chain-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(280px * var(--zoom)), 1fr));
   gap: 14px;
 }
 
@@ -637,15 +662,16 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: calc(15px * var(--zoom));
   font-weight: 600;
   margin-bottom: 10px;
 }
 
 .chain-card-title-icon {
-  width: 24px;
-  height: 24px;
+  width: calc(24px * var(--zoom));
+  height: calc(24px * var(--zoom));
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .chain-flow {
@@ -658,7 +684,7 @@ body {
 
 .chain-arrow {
   color: var(--text-muted);
-  font-size: 16px;
+  font-size: calc(16px * var(--zoom));
   flex-shrink: 0;
 }
 
@@ -673,19 +699,19 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 72px;
+  width: calc(72px * var(--zoom));
   text-align: center;
 }
 
 .chain-node-icon-wrap {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: calc(44px * var(--zoom));
+  height: calc(44px * var(--zoom));
 }
 
 .chain-node-icon {
-  width: 44px;
-  height: 44px;
+  width: calc(44px * var(--zoom));
+  height: calc(44px * var(--zoom));
   object-fit: contain;
 }
 
@@ -700,19 +726,20 @@ body {
   background: var(--bg-panel-alt);
   border: 1px solid var(--border);
   border-radius: 999px;
-  font-size: 10px;
+  font-size: calc(10px * var(--zoom));
   padding: 1px 5px;
   color: var(--text);
+  white-space: nowrap;
 }
 
 .chain-node-name {
-  font-size: 11px;
+  font-size: calc(11px * var(--zoom));
   margin-top: 6px;
   line-height: 1.2;
 }
 
 .chain-node-building {
-  font-size: 10px;
+  font-size: calc(10px * var(--zoom));
   color: var(--text-muted);
   line-height: 1.2;
 }

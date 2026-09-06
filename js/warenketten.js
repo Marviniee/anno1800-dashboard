@@ -20,20 +20,58 @@ const CATEGORY_ORDER = [
 ];
 
 let productionChains = null;
+let deTranslations = null;
 let chainsLoadPromise = null;
 let warenkettenSearchTerm = '';
 
+const ZOOM_STORAGE_KEY = 'warenkettenZoom';
+const ZOOM_MIN = 0.7;
+const ZOOM_MAX = 1.8;
+const ZOOM_STEP = 0.1;
+let warenkettenZoom = Storage.get(ZOOM_STORAGE_KEY, 1);
+
 function loadProductionChains() {
-  if (productionChains) return Promise.resolve(productionChains);
+  if (productionChains && deTranslations) return Promise.resolve(productionChains);
   if (!chainsLoadPromise) {
-    chainsLoadPromise = fetch('data/production-chains.json')
-      .then((res) => res.json())
-      .then((data) => {
-        productionChains = data.chains;
-        return productionChains;
-      });
+    chainsLoadPromise = Promise.all([
+      fetch('data/production-chains.json').then((res) => res.json()),
+      fetch('data/de-translations.json').then((res) => res.json()),
+    ]).then(([chainsData, translations]) => {
+      productionChains = chainsData.chains;
+      deTranslations = translations;
+      return productionChains;
+    });
   }
   return chainsLoadPromise;
+}
+
+function translateGood(id, fallbackName) {
+  return deTranslations?.goods?.[id] || fallbackName;
+}
+
+function translateCategory(category) {
+  return deTranslations?.categories?.[category] || category;
+}
+
+function translateTier(tier) {
+  return deTranslations?.tiers?.[tier] || tier;
+}
+
+function translateBuilding(building) {
+  return deTranslations?.buildings?.[building] || building;
+}
+
+function setWarenkettenZoom(zoom) {
+  warenkettenZoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(zoom * 10) / 10));
+  Storage.set(ZOOM_STORAGE_KEY, warenkettenZoom);
+  applyWarenkettenZoom();
+}
+
+function applyWarenkettenZoom() {
+  const content = document.getElementById('warenketten-content');
+  if (content) content.style.setProperty('--zoom', warenkettenZoom);
+  const label = document.getElementById('warenketten-zoom-label');
+  if (label) label.textContent = `${Math.round(warenkettenZoom * 100)}%`;
 }
 
 function renderWarenkettenView() {
@@ -43,7 +81,14 @@ function renderWarenkettenView() {
     <div class="view-header">
       <h1>Warenketten</h1>
     </div>
-    <input type="text" id="warenketten-search" class="warenketten-search" placeholder="Ware suchen, z.B. Stahl, Bricks..." value="${escapeHtml(warenkettenSearchTerm)}">
+    <div class="warenketten-toolbar">
+      <input type="text" id="warenketten-search" class="warenketten-search" placeholder="Ware suchen, z.B. Stahl, Ziegel..." value="${escapeHtml(warenkettenSearchTerm)}">
+      <div class="warenketten-zoom-controls">
+        <button class="btn btn-small" id="btn-zoom-out" title="Verkleinern">−</button>
+        <span id="warenketten-zoom-label" class="warenketten-zoom-label">100%</span>
+        <button class="btn btn-small" id="btn-zoom-in" title="Vergrößern">+</button>
+      </div>
+    </div>
     <div id="warenketten-content" class="warenketten-content">
       <div class="empty-state">Lade Warenketten...</div>
     </div>
@@ -63,6 +108,10 @@ function renderWarenkettenView() {
   searchInput.focus();
   searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
 
+  document.getElementById('btn-zoom-out').addEventListener('click', () => setWarenkettenZoom(warenkettenZoom - ZOOM_STEP));
+  document.getElementById('btn-zoom-in').addEventListener('click', () => setWarenkettenZoom(warenkettenZoom + ZOOM_STEP));
+  applyWarenkettenZoom();
+
   loadProductionChains()
     .then(() => renderWarenkettenContent())
     .catch((err) => {
@@ -81,7 +130,10 @@ function renderWarenkettenContent() {
   const chainsByCategory = {};
   productionChains.forEach((chain) => {
     if (term) {
-      const matches = chain.nodes.some((n) => n.name.toLowerCase().includes(term));
+      const matches = chain.nodes.some((n) => {
+        const deName = translateGood(n.id, n.name);
+        return deName.toLowerCase().includes(term) || n.name.toLowerCase().includes(term);
+      });
       if (!matches) return;
     }
     if (!chainsByCategory[chain.category]) chainsByCategory[chain.category] = [];
@@ -99,7 +151,7 @@ function renderWarenkettenContent() {
     .map(
       (category) => `
       <section class="warenketten-category">
-        <h2 class="warenketten-category-title">${escapeHtml(category)}</h2>
+        <h2 class="warenketten-category-title">${escapeHtml(translateCategory(category))}</h2>
         <div class="chain-card-grid">
           ${chainsByCategory[category].map(renderChainCard).join('')}
         </div>
@@ -118,12 +170,13 @@ function renderChainCard(chain) {
 
   const finalNode = chain.nodes.find((n) => n.isFinal);
   const consumedBy = finalNode?.consumedBy || [];
+  const finalName = translateGood(finalNode.id, finalNode.name);
 
   return `
     <div class="chain-card">
       <div class="chain-card-title">
-        ${goodIconHtml(finalNode.icon, finalNode.name, 'chain-card-title-icon')}
-        <span>${escapeHtml(finalNode.name)}</span>
+        ${goodIconHtml(finalNode.icon, finalName, 'chain-card-title-icon')}
+        <span>${escapeHtml(finalName)}</span>
       </div>
       <div class="chain-flow">
         ${levels
@@ -139,7 +192,7 @@ function renderChainCard(chain) {
       </div>
       ${
         consumedBy.length
-          ? `<div class="chain-consumed-by">Verbraucht von: ${consumedBy.map((c) => `<span class="tag">${escapeHtml(c)}</span>`).join('')}</div>`
+          ? `<div class="chain-consumed-by">Verbraucht von: ${consumedBy.map((c) => `<span class="tag">${escapeHtml(translateTier(c))}</span>`).join('')}</div>`
           : ''
       }
     </div>
@@ -147,14 +200,16 @@ function renderChainCard(chain) {
 }
 
 function renderChainNode(node) {
+  const name = translateGood(node.id, node.name);
+  const building = node.building ? translateBuilding(node.building) : '';
   return `
-    <div class="chain-node" title="${escapeHtml(node.name)}${node.building ? ' — ' + escapeHtml(node.building) : ''}">
+    <div class="chain-node" title="${escapeHtml(name)}${building ? ' — ' + escapeHtml(building) : ''}">
       <div class="chain-node-icon-wrap">
-        ${goodIconHtml(node.icon, node.name, 'chain-node-icon')}
+        ${goodIconHtml(node.icon, name, 'chain-node-icon')}
         ${node.amount ? `<span class="chain-node-amount">×${escapeHtml(node.amount)}</span>` : ''}
       </div>
-      <div class="chain-node-name">${escapeHtml(node.name)}</div>
-      ${node.building ? `<div class="chain-node-building">${escapeHtml(node.building)}</div>` : ''}
+      <div class="chain-node-name">${escapeHtml(name)}</div>
+      ${building ? `<div class="chain-node-building">${escapeHtml(building)}</div>` : ''}
       ${node.fieldInfo ? `<div class="chain-node-building">${escapeHtml(node.fieldInfo)}</div>` : ''}
     </div>
   `;

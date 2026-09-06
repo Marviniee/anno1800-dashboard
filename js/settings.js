@@ -1,5 +1,5 @@
-const APP_SEMVER = '0.4.0';
-const APP_BUILD = 4;
+const APP_SEMVER = '0.4.1';
+const APP_BUILD = 5;
 
 function renderSettingsView() {
   const view = document.getElementById('view-einstellungen');
