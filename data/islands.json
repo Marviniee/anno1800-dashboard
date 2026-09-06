@@ -71,5 +71,40 @@
     ],
     "goods": [],
     "id": "8ce00510-43a2-4dda-a784-9a440684a26f"
+  },
+  {
+    "name": "Pingport",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Clay",
+        "count": 1
+      },
+      {
+        "good": "Iron",
+        "count": 2
+      },
+      {
+        "good": "Coal",
+        "count": 2
+      },
+      {
+        "good": "Zinc",
+        "count": 1
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Potato"
+      },
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Red_peppers"
+      }
+    ],
+    "goods": [],
+    "id": "f3f42aaf-5155-465c-bd65-23e31c4fa42d"
   }
 ]
