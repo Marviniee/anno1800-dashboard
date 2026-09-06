@@ -408,3 +408,89 @@ body {
 }
 
 .settings-row .label { color: var(--text-muted); }
+
+/* Karte */
+.map-canvas-wrapper {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  height: calc(100vh - 170px);
+}
+
+.map-canvas {
+  position: relative;
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.map-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.edge-line {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+.edge-hit-area {
+  stroke: transparent;
+  stroke-width: 14;
+  pointer-events: stroke;
+  cursor: help;
+}
+
+.edge-label {
+  fill: var(--text-muted);
+  font-size: 11px;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 4px;
+  pointer-events: none;
+}
+
+.map-island-box {
+  position: absolute;
+  width: 170px;
+  min-height: 64px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.map-island-box:hover {
+  border-color: var(--accent);
+}
+
+.map-island-box.dragging {
+  cursor: grabbing;
+  z-index: 10;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+}
+
+.map-island-box-title {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-island-box-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -4,6 +4,8 @@ function switchView(viewName) {
 
   document.querySelectorAll('.nav-item').forEach((btn) => btn.classList.remove('active'));
   document.querySelector(`.nav-item[data-view="${viewName}"]`).classList.add('active');
+
+  if (viewName === 'karte') renderMapView();
 }
 
 document.querySelectorAll('.nav-item').forEach((btn) => {
