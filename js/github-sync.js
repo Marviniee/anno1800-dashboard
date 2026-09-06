@@ -142,6 +142,7 @@ const GitHubSync = {
 
     if (res.status === 409) {
       console.warn(`GitHubSync.writeJson: 409-Konflikt bei ${path}, versuche mit frischem SHA erneut...`);
+      await new Promise((resolve) => setTimeout(resolve, 400));
       res = await attemptWrite();
     }
 
