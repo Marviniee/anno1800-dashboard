@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anno 1800 Inselplaner</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Anno 1800</span>
+        <span class="sidebar-subtitle">Inselplaner</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="inseln">
+          <span class="nav-icon">🏝️</span> Inseln
+        </button>
+        <button class="nav-item" data-view="karte">
+          <span class="nav-icon">🗺️</span> Karte
+        </button>
+        <button class="nav-item" data-view="todos">
+          <span class="nav-icon">✅</span> To-Dos
+        </button>
+        <button class="nav-item" data-view="warenketten">
+          <span class="nav-icon">🔗</span> Warenketten
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="nav-item" data-view="einstellungen">
+          <span class="nav-icon">⚙️</span> Einstellungen
+        </button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section id="view-inseln" class="view active"></section>
+      <section id="view-karte" class="view">
+        <div class="placeholder-view">
+          <h2>Karte</h2>
+          <p>Kommt als nächster Baustein.</p>
+        </div>
+      </section>
+      <section id="view-todos" class="view">
+        <div class="placeholder-view">
+          <h2>To-Dos</h2>
+          <p>Noch nicht implementiert.</p>
+        </div>
+      </section>
+      <section id="view-warenketten" class="view">
+        <div class="placeholder-view">
+          <h2>Warenketten</h2>
+          <p>Noch nicht implementiert.</p>
+        </div>
+      </section>
+      <section id="view-einstellungen" class="view"></section>
+    </main>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/goods-data.js"></script>
+  <script src="js/islands.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
