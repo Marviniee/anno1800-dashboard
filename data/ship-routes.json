@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "name": "fügt",
+    "color": "#1abc9c",
+    "stops": [
+      "90eac99e-5413-41b3-ba28-6dafe1e57ab9",
+      "1e592457-cfe6-4376-bbc4-c9ced7486ebe"
+    ],
+    "id": "39a4cd63-6c95-4574-b885-eea81ed57cce"
+  }
+]
