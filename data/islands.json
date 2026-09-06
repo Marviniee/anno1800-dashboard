@@ -132,7 +132,17 @@
         "count": 1
       }
     ],
-    "fruchtbarkeiten": [],
+    "fruchtbarkeiten": [
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Hops"
+      },
+      {
+        "good": "Grapes"
+      }
+    ],
     "goods": [],
     "id": "e2056329-5329-4d18-8c83-2392a6559f7f"
   }
