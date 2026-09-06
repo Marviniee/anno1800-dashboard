@@ -1,1 +1,39 @@
-[]
+[
+  {
+    "name": "Montpelican",
+    "functions": [
+      "Hauptstadt"
+    ],
+    "vorkommen": [
+      {
+        "good": "Clay",
+        "count": 3
+      },
+      {
+        "good": "Iron",
+        "count": 4
+      },
+      {
+        "good": "Coal",
+        "count": 3
+      },
+      {
+        "good": "Oilwell",
+        "count": 7
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Potato"
+      },
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Grapes"
+      }
+    ],
+    "goods": [],
+    "id": "8ba791ab-1501-4351-8f97-929e7156bfe7"
+  }
+]
