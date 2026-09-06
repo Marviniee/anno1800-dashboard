@@ -6,10 +6,12 @@
 
 const CANVAS_WIDTH = 2400;
 const CANVAS_HEIGHT = 1400;
-const BOX_DEFAULT_WIDTH = 170;
-const BOX_DEFAULT_HEIGHT = 64;
+const BOX_DEFAULT_WIDTH = 190;
+const BOX_DEFAULT_HEIGHT = 140;
 const GRID_GAP = 40;
 const GRID_COLUMNS = 6;
+const MAX_BOX_FUNCTIONS = 3;
+const MAX_BOX_GOODS = 6;
 
 const MapPositions = {
   DATA_PATH: 'data/map-positions.json',
@@ -162,9 +164,45 @@ function createIslandBox(island, pos) {
   box.style.top = `${pos.y}px`;
   box.innerHTML = `
     <div class="map-island-box-title">${escapeHtml(island.name)}</div>
-    ${island.functions.length ? `<div class="map-island-box-sub">${escapeHtml(island.functions[0])}${island.functions.length > 1 ? ` +${island.functions.length - 1}` : ''}</div>` : ''}
+    ${renderBoxFunctions(island.functions)}
+    ${renderBoxGoods(island.goods)}
   `;
   return box;
+}
+
+function renderBoxFunctions(functions) {
+  if (!functions.length) return '';
+  const shown = functions.slice(0, MAX_BOX_FUNCTIONS);
+  const overflow = functions.length - shown.length;
+  return `
+    <div class="map-island-box-functions">
+      ${shown.map((f) => `<span class="map-function-chip">${escapeHtml(f)}</span>`).join('')}
+      ${overflow > 0 ? `<span class="map-function-chip map-function-chip-more">+${overflow}</span>` : ''}
+    </div>
+  `;
+}
+
+function renderBoxGoods(goods) {
+  if (!goods.length) return '';
+  const shown = goods.slice(0, MAX_BOX_GOODS);
+  const overflow = goods.length - shown.length;
+  return `
+    <div class="map-island-box-goods">
+      ${shown
+        .map((g) => {
+          const name = Translations.good(g.good, g.good);
+          const titleText = g.count ? `${name} ×${g.count}` : name;
+          return `
+            <span class="map-good-icon-wrap" title="${escapeHtml(titleText)}">
+              ${goodIconHtml(g.good, name, 'map-good-icon')}
+              ${g.count ? `<span class="map-good-count">${escapeHtml(String(g.count))}</span>` : ''}
+            </span>
+          `;
+        })
+        .join('')}
+      ${overflow > 0 ? `<span class="map-good-more" title="${overflow} weitere Güter">+${overflow}</span>` : ''}
+    </div>
+  `;
 }
 
 function normalizeGoodName(good) {

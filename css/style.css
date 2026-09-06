@@ -619,12 +619,12 @@ body {
 
 .map-island-box {
   position: absolute;
-  width: 170px;
-  min-height: 64px;
+  width: 190px;
+  min-height: 48px;
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 8px 12px;
+  padding: 8px 10px;
   cursor: grab;
   user-select: none;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -649,13 +649,71 @@ body {
   text-overflow: ellipsis;
 }
 
-.map-island-box-sub {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
+.map-island-box-functions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.map-function-chip {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(217, 164, 65, 0.15);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.map-function-chip-more {
+  background: var(--bg-panel-alt);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.map-island-box-goods {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.map-good-icon-wrap {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.map-good-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.map-good-count {
+  position: absolute;
+  bottom: -4px;
+  right: -5px;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 8px;
+  line-height: 1.4;
+  padding: 0 3px;
+  color: var(--text);
+}
+
+.map-good-more {
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 0 2px;
+  flex-shrink: 0;
 }
 
 /* To-Dos */
