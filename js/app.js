@@ -7,6 +7,7 @@ function switchView(viewName) {
 
   if (viewName === 'karte') renderMapView();
   if (viewName === 'todos') renderTodosView();
+  if (viewName === 'warenketten') renderWarenkettenView();
 }
 
 document.querySelectorAll('.nav-item').forEach((btn) => {
