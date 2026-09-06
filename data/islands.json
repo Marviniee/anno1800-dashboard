@@ -20,6 +20,10 @@
       {
         "good": "Oilwell",
         "count": 7
+      },
+      {
+        "good": "Saltpeter",
+        "count": null
       }
     ],
     "fruchtbarkeiten": [
