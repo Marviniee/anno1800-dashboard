@@ -46,10 +46,29 @@
       },
       {
         "good": "Iron",
-        "count": null
+        "count": 2
+      },
+      {
+        "good": "Coal",
+        "count": 2
+      },
+      {
+        "good": "Zinc",
+        "count": 1
+      },
+      {
+        "good": "Cement",
+        "count": 1
       }
     ],
-    "fruchtbarkeiten": [],
+    "fruchtbarkeiten": [
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Hops"
+      }
+    ],
     "goods": [],
     "id": "8ce00510-43a2-4dda-a784-9a440684a26f"
   }
