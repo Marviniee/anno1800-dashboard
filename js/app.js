@@ -6,6 +6,7 @@ function switchView(viewName) {
   document.querySelector(`.nav-item[data-view="${viewName}"]`).classList.add('active');
 
   if (viewName === 'karte') renderMapView();
+  if (viewName === 'todos') renderTodosView();
 }
 
 document.querySelectorAll('.nav-item').forEach((btn) => {
