@@ -12,11 +12,17 @@
 const CANVAS_WIDTH = 2400;
 const CANVAS_HEIGHT = 1400;
 const BOX_DEFAULT_WIDTH = 190;
-const BOX_DEFAULT_HEIGHT = 140;
+// Grobe Schätzung für die automatische Grid-Platzierung neuer Inseln (siehe
+// assignMissingPositions). Boxen zeigen jetzt Vorkommen/Fruchtbarkeiten/
+// Güter vollständig ohne Kürzung und wachsen dafür in der Höhe - bei Inseln
+// mit sehr vielen erfassten Gütern kann eine Box höher werden als dieser
+// Schätzwert und im Raster leicht mit der Zeile darunter überlappen. Das ist
+// nur beim automatischen Erst-Platzieren relevant und lässt sich jederzeit
+// per Drag & Drop korrigieren.
+const BOX_DEFAULT_HEIGHT = 260;
 const GRID_GAP = 40;
 const GRID_COLUMNS = 6;
 const MAX_BOX_FUNCTIONS = 3;
-const MAX_BOX_GOODS = 6;
 
 const MapPositions = {
   DATA_PATH: 'data/map-positions.json',
@@ -207,11 +213,14 @@ function createIslandBox(island, pos) {
   box.dataset.islandId = island.id;
   box.style.left = `${pos.x}px`;
   box.style.top = `${pos.y}px`;
-  const combinedGoods = [...(island.vorkommen || []), ...(island.fruchtbarkeiten || []), ...(island.goods || [])];
+  // Vollständig, ohne Kürzung: pro Bereich eine eigene Reihe, die bei Bedarf
+  // umbricht - die Box wächst dafür in der Höhe (siehe BOX_DEFAULT_HEIGHT).
   box.innerHTML = `
     <div class="map-island-box-title">${escapeHtml(island.name)}</div>
     ${renderBoxFunctions(island.functions)}
-    ${renderBoxGoods(combinedGoods)}
+    ${renderBoxGoods(island.vorkommen)}
+    ${renderBoxGoods(island.fruchtbarkeiten)}
+    ${renderBoxGoods(island.goods)}
   `;
   return box;
 }
@@ -229,12 +238,10 @@ function renderBoxFunctions(functions) {
 }
 
 function renderBoxGoods(goods) {
-  if (!goods.length) return '';
-  const shown = goods.slice(0, MAX_BOX_GOODS);
-  const overflow = goods.length - shown.length;
+  if (!goods || !goods.length) return '';
   return `
     <div class="map-island-box-goods">
-      ${shown
+      ${goods
         .map((g) => {
           const name = Translations.good(g.good, g.good);
           const titleText = g.count ? `${name} ×${g.count}` : name;
@@ -246,7 +253,6 @@ function renderBoxGoods(goods) {
           `;
         })
         .join('')}
-      ${overflow > 0 ? `<span class="map-good-more" title="${overflow} weitere Güter">+${overflow}</span>` : ''}
     </div>
   `;
 }

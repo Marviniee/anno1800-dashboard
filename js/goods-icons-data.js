@@ -32,7 +32,7 @@ const GOODS_ICON_LIST = [
 // sinnvoll (mehrere Fundstellen pro Insel möglich).
 const RAW_MATERIAL_ICON_LIST = [
   'Bauxite', 'Cement', 'Clay', 'Coal', 'Copper', 'Gold_Ore', 'Iron',
-  'Oilwell', 'Quartz_sand', 'Saltpeter', 'Zinc',
+  'Oilwell', 'Quartz_sand', 'Zinc',
 ];
 
 // FRUCHTBARKEITEN: angebaute Feldfrüchte bzw. Farmen, die im Spiel eine
@@ -41,12 +41,14 @@ const RAW_MATERIAL_ICON_LIST = [
 // - die Alpakafarm braucht nur Weideflächen, keine Fruchtbarkeit, deshalb
 // dort nicht gelistet). Furs (Jagdgründe/Hunting Cabin) ist streng genommen
 // kein Ackerbau, kommt aber auf Marvins Wunsch bewusst hier rein statt bei
-// Vorkommen oder Produzierte Güter. Fruchtbarkeit ist im Spiel binär
-// (vorhanden oder nicht) - kein Mengenfeld, nur Auswahl.
+// Vorkommen oder Produzierte Güter. Saltpeter wurde korrigiert: das
+// Salpeterwerk braucht Küstenlage + eine Salpeter-Fruchtbarkeit, ist also
+// keine Mine wie Eisen/Kohle. Fruchtbarkeit ist im Spiel binär (vorhanden
+// oder nicht) - kein Mengenfeld, nur Auswahl.
 const FERTILITY_ICON_LIST = [
   'Caoutchouc', 'Cocoa', 'Coffee_beans', 'Corn', 'Cotton', 'Furs', 'Grain',
   'Grapes', 'Hops', 'Pearls', 'Plantains', 'Potato', 'Red_peppers',
-  'Sugar_cane', 'Tobacco',
+  'Saltpeter', 'Sugar_cane', 'Tobacco',
 ];
 
 // PRODUZIERTE GÜTER: alles Übrige - per Gebäude/Verarbeitung entstanden,

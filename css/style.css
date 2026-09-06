@@ -747,13 +747,6 @@ body {
   color: var(--text);
 }
 
-.map-good-more {
-  font-size: 10px;
-  color: var(--text-muted);
-  padding: 0 2px;
-  flex-shrink: 0;
-}
-
 .map-header-actions {
   display: flex;
   align-items: center;

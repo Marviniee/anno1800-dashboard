@@ -20,10 +20,6 @@
       {
         "good": "Oilwell",
         "count": 7
-      },
-      {
-        "good": "Saltpeter",
-        "count": null
       }
     ],
     "fruchtbarkeiten": [
@@ -35,6 +31,9 @@
       },
       {
         "good": "Grapes"
+      },
+      {
+        "good": "Saltpeter"
       }
     ],
     "goods": [],
@@ -246,10 +245,6 @@
       {
         "good": "Copper",
         "count": 1
-      },
-      {
-        "good": "Saltpeter",
-        "count": 1
       }
     ],
     "fruchtbarkeiten": [
@@ -261,6 +256,9 @@
       },
       {
         "good": "Hops"
+      },
+      {
+        "good": "Saltpeter"
       }
     ],
     "goods": [],
