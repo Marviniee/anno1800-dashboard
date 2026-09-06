@@ -145,5 +145,39 @@
     ],
     "goods": [],
     "id": "e2056329-5329-4d18-8c83-2392a6559f7f"
+  },
+  {
+    "name": "Monteoise",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Iron",
+        "count": 2
+      },
+      {
+        "good": "Coal",
+        "count": 2
+      },
+      {
+        "good": "Zinc",
+        "count": 2
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Potato"
+      },
+      {
+        "good": "Hops"
+      },
+      {
+        "good": "Red_peppers"
+      },
+      {
+        "good": "Grapes"
+      }
+    ],
+    "goods": [],
+    "id": "4c21ea7a-d1a6-48db-95af-a258f437488a"
   }
 ]
