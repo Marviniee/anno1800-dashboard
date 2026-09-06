@@ -218,5 +218,48 @@
     ],
     "goods": [],
     "id": "02bc113a-e9dd-4881-8dbc-d987ca8917bd"
+  },
+  {
+    "name": "Wondse",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Clay",
+        "count": 2
+      },
+      {
+        "good": "Coal",
+        "count": 2
+      },
+      {
+        "good": "Iron",
+        "count": 1
+      },
+      {
+        "good": "Zinc",
+        "count": 2
+      },
+      {
+        "good": "Copper",
+        "count": 1
+      },
+      {
+        "good": "Saltpeter",
+        "count": 1
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Potato"
+      },
+      {
+        "good": "Hops"
+      }
+    ],
+    "goods": [],
+    "id": "8249d644-ee42-4dce-b073-dff2d3303ecb"
   }
 ]
