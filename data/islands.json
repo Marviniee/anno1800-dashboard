@@ -1,28 +1,5 @@
 [
   {
-    "name": "Montpelican",
-    "functions": [],
-    "goods": [
-      {
-        "good": "Clay",
-        "role": "producer"
-      },
-      {
-        "good": "Iron",
-        "role": "producer"
-      },
-      {
-        "good": "Coal",
-        "role": "producer"
-      },
-      {
-        "good": "Oilwell",
-        "role": "producer"
-      }
-    ],
-    "id": "90eac99e-5413-41b3-ba28-6dafe1e57ab9"
-  },
-  {
     "name": "qwertzu",
     "functions": [],
     "goods": [
