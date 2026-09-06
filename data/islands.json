@@ -429,7 +429,9 @@
   },
   {
     "name": "Wessungen",
-    "functions": [],
+    "functions": [
+      "Schiffsproduktion"
+    ],
     "vorkommen": [
       {
         "good": "Iron",
