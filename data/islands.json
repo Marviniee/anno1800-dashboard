@@ -4,19 +4,19 @@
     "functions": [],
     "goods": [
       {
-        "good": "Lehm",
+        "good": "Clay",
         "role": "producer"
       },
       {
-        "good": "Eisen",
+        "good": "Iron",
         "role": "producer"
       },
       {
-        "good": "Steinkohle",
+        "good": "Coal",
         "role": "producer"
       },
       {
-        "good": "Öl",
+        "good": "Oilwell",
         "role": "producer"
       }
     ],

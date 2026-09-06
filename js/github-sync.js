@@ -106,24 +106,38 @@ const GitHubSync = {
   },
 
   // Schreibt eine JSON-Datei per Commit über die GitHub Contents-API.
+  // Holt den SHA vor JEDEM Versuch frisch (nie zwischengespeichert). Schlägt
+  // der erste Versuch mit 409 fehl (ein anderer Schreibvorgang - z.B. eine
+  // zweite schnelle Änderung kurz danach oder ein anderes Gerät - kam
+  // zwischen SHA-Abfrage und PUT dazwischen), wird einmal mit frisch
+  // geholtem SHA erneut versucht, bevor ein Fehler an den Aufrufer geht.
   async writeJson(path, data, message) {
     if (!this.hasToken()) {
       throw new Error('Kein GitHub-Token hinterlegt. Bitte in den Einstellungen eintragen.');
     }
 
-    const sha = await this.getFileSha(path);
-    const content = this.encodeBase64(JSON.stringify(data, null, 2) + '\n');
+    const attemptWrite = async () => {
+      const sha = await this.getFileSha(path);
+      const content = this.encodeBase64(JSON.stringify(data, null, 2) + '\n');
 
-    const res = await fetch(this.apiUrl(path), {
-      method: 'PUT',
-      headers: { ...this.authHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message,
-        content,
-        branch: this.BRANCH,
-        ...(sha ? { sha } : {}),
-      }),
-    });
+      return fetch(this.apiUrl(path), {
+        method: 'PUT',
+        headers: { ...this.authHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message,
+          content,
+          branch: this.BRANCH,
+          ...(sha ? { sha } : {}),
+        }),
+      });
+    };
+
+    let res = await attemptWrite();
+
+    if (res.status === 409) {
+      console.warn(`GitHubSync.writeJson: 409-Konflikt bei ${path}, versuche mit frischem SHA erneut...`);
+      res = await attemptWrite();
+    }
 
     if (!res.ok) {
       const errBody = await res.json().catch(() => ({}));

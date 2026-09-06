@@ -1091,8 +1091,13 @@ body {
   object-fit: contain;
 }
 
-.chain-node-icon.icon-missing {
-  visibility: hidden;
+/* Gilt für alle Waren-Icons (Warenketten, Insel-Übersicht, Insel-Formular,
+   Karte) - ein Icon, das nicht geladen werden konnte (z.B. eine
+   Alt-Insel mit Freitext-Ware statt kanonischer Icon-ID), wird komplett
+   ausgeblendet statt das native "kaputtes Bild"-Symbol des Browsers zu
+   zeigen. */
+.icon-missing {
+  display: none;
 }
 
 .chain-node-amount {
