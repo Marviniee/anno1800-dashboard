@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "test-1",
+    "name": "Migrationstest-Insel",
+    "functions": [
+      "Test"
+    ],
+    "goods": []
+  }
+]
