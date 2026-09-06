@@ -265,5 +265,26 @@
     ],
     "goods": [],
     "id": "8249d644-ee42-4dce-b073-dff2d3303ecb"
+  },
+  {
+    "name": "Zwollen",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Clay",
+        "count": 3
+      },
+      {
+        "good": "Coal",
+        "count": 2
+      },
+      {
+        "good": "Copper",
+        "count": 2
+      }
+    ],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "id": "cd9d4b02-a6aa-4d1f-9e96-d2c8c093647e"
   }
 ]
