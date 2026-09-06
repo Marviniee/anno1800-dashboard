@@ -117,16 +117,16 @@
     "Sugar": "Zucker",
     "Chocolate": "Schokolade",
     "Bauxite": "Bauxit",
-    "Aluminium_Profiles": "Aluminiumprofile",
+    "Aluminium_Profiles": "Aluminium",
     "Helium": "Helium",
     "Industrial_Lubricant": "Industrieschmiermittel",
     "Teff_Grass": "Tef",
-    "Wansa_Wood": "Wanza-Holz",
+    "Wansa_Wood": "Wanza Holz",
     "Mud_bricks": "Lehmziegel"
   },
 
   "goodsNotVerified": [
-    "Bauxite", "Aluminium_Profiles", "Helium", "Industrial_Lubricant"
+    "Helium", "Industrial_Lubricant"
   ],
 
   "buildings": {
