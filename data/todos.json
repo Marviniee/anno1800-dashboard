@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "test-todo-1",
+    "text": "Migrationstest-Todo",
+    "importance": "medium",
+    "done": false,
+    "islandId": null
+  }
+]
