@@ -5,7 +5,11 @@
  *   name: string,
  *   functions: string[],            // Freitext-Tags, z.B. "Hauptstadt"
  *   vorkommen: [
- *     { good: string, count: number | null }   // Rohstoffquellen vor Ort
+ *     { good: string, count: number | null }   // Boden-/Minenfunde, abgebaut
+ *   ],
+ *   fruchtbarkeiten: [
+ *     { good: string }               // Feldfrüchte mit Fruchtbarkeitsbedarf,
+ *                                     // binär vorhanden/nicht - kein count
  *   ],
  *   goods: [
  *     { good: string, role: 'producer' | 'consumer' | 'both', count: number | null }
@@ -17,12 +21,20 @@
  * Translations.good(). count ist die Anzahl Vorkommen bzw. Fabriken,
  * optional (null wenn nicht angegeben).
  *
- * vorkommen vs. goods: automatisch aus data/production-chains.json abgeleitet
- * (RAW_MATERIAL_ICON_LIST = Güter, die in jeder Kette nur auf Level 0
- * auftreten, PRODUCED_GOOD_ICON_LIST = alles mit mindestens einer Vorstufe).
- * Ein Vorkommen hat keine Rolle (immer vor Ort verfügbar) - für die
- * automatische Handelsrouten-Berechnung auf der Karte zählt es wie ein
- * "Produzent" dieser Ware (siehe computeTradeEdges in map.js).
+ * Drei Bereiche (js/goods-icons-data.js):
+ *  - vorkommen: RAW_MATERIAL_ICON_LIST - echte Boden-/Minenfunde (Erze, Öl,
+ *    Lehm, Quarzsand, Salpeter, Zement), keine Rolle, Menge = Anzahl Fundstellen.
+ *  - fruchtbarkeiten: FERTILITY_ICON_LIST - Feldfrüchte, die im Spiel eine
+ *    Fruchtbarkeit auf der Insel brauchen (verifiziert über anno1800-Wiki:
+ *    Fandom "Fertilities and resources"). Binär, kein Mengenfeld.
+ *  - goods: PRODUCED_GOOD_ICON_LIST - alles Übrige (per Gebäude verarbeitet,
+ *    oder mangels eigener Kategorie Farm-/Jagd-/Fischerei-Rohstoffe ohne
+ *    Fruchtbarkeitsbedarf wie Holz/Wolle/Fisch/Alpakawolle), mit Rolle.
+ *
+ * Für die automatische Handelsrouten-Berechnung auf der Karte zählen sowohl
+ * ein Vorkommen als auch eine Fruchtbarkeit wie ein "Produzent" dieser Ware
+ * (siehe computeTradeEdges in map.js) - beides ist immer vor Ort verfügbar,
+ * ohne eigene Rolle.
  */
 
 const Islands = {
@@ -32,13 +44,17 @@ const Islands = {
   async load() {
     this.cache = await GitHubSync.readJson(this.DATA_PATH, []);
 
-    // Einmalige, automatische Migration von Alt-Daten: vor der Trennung von
-    // Vorkommen/produzierten Gütern lagen alle Einträge in "goods". Rohstoffe
-    // darunter (anhand RAW_MATERIAL_ICON_LIST erkannt) wandern nach
-    // "vorkommen", die Rolle entfällt dabei (ein Vorkommen ist immer da).
+    // Automatische Migration von Alt-Daten. Zwei Stufen, je nach Ausgangslage:
+    //  1) Ganz alte Inseln: alles lag in "goods" - Rohstoffe (RAW_MATERIAL_
+    //     ICON_LIST) wandern nach "vorkommen".
+    //  2) Inseln aus der ersten Vorkommen/Güter-Trennung: Feldfrüchte, die
+    //     damals noch als Vorkommen galten (grobe Level-0-Heuristik), wandern
+    //     jetzt anhand FERTILITY_ICON_LIST von "vorkommen" nach
+    //     "fruchtbarkeiten". Die Rolle entfällt in beiden Fällen.
     let migrated = false;
     this.cache.forEach((island) => {
       if (!island.vorkommen) island.vorkommen = [];
+      if (!island.fruchtbarkeiten) island.fruchtbarkeiten = [];
       if (!island.goods) island.goods = [];
 
       const stillGoods = [];
@@ -46,15 +62,29 @@ const Islands = {
         if (RAW_MATERIAL_ICON_LIST.includes(g.good)) {
           island.vorkommen.push({ good: g.good, count: g.count ?? null });
           migrated = true;
+        } else if (FERTILITY_ICON_LIST.includes(g.good)) {
+          island.fruchtbarkeiten.push({ good: g.good });
+          migrated = true;
         } else {
           stillGoods.push(g);
         }
       });
       island.goods = stillGoods;
+
+      const stillVorkommen = [];
+      island.vorkommen.forEach((v) => {
+        if (FERTILITY_ICON_LIST.includes(v.good)) {
+          island.fruchtbarkeiten.push({ good: v.good });
+          migrated = true;
+        } else {
+          stillVorkommen.push(v);
+        }
+      });
+      island.vorkommen = stillVorkommen;
     });
 
     if (migrated) {
-      this._persist('Migration: Vorkommen von produzierten Gütern getrennt');
+      this._persist('Migration: Vorkommen, Fruchtbarkeiten und produzierte Güter getrennt');
     }
   },
 
@@ -100,10 +130,42 @@ const ROLE_LABELS = {
   both: 'Beides',
 };
 
+// Konfiguration der drei Güter-Bereiche im Insel-Formular. hasCount/hasRole
+// steuern, welche Felder in der Auswahl-Liste gerendert werden.
+const GOODS_KIND_CONFIG = {
+  vorkommen: {
+    iconList: RAW_MATERIAL_ICON_LIST,
+    hasRole: false,
+    hasCount: true,
+    tabLabel: 'Vorkommen',
+    searchPlaceholder: 'Vorkommen suchen...',
+    emptyGridMsg: 'Kein Vorkommen gefunden.',
+    emptyListMsg: 'Noch keine Vorkommen ausgewählt.',
+  },
+  fruchtbarkeiten: {
+    iconList: FERTILITY_ICON_LIST,
+    hasRole: false,
+    hasCount: false,
+    tabLabel: 'Fruchtbarkeiten',
+    searchPlaceholder: 'Fruchtbarkeit suchen...',
+    emptyGridMsg: 'Keine Fruchtbarkeit gefunden.',
+    emptyListMsg: 'Noch keine Fruchtbarkeiten ausgewählt.',
+  },
+  goods: {
+    iconList: PRODUCED_GOOD_ICON_LIST,
+    hasRole: true,
+    hasCount: true,
+    tabLabel: 'Produzierte Güter',
+    searchPlaceholder: 'Ware suchen...',
+    emptyGridMsg: 'Keine Ware gefunden.',
+    emptyListMsg: 'Noch keine Güter ausgewählt.',
+  },
+};
+const GOODS_KINDS = Object.keys(GOODS_KIND_CONFIG);
+
 let editingIslandId = null;
 let draftFunctions = [];
-let draftVorkommen = []; // [{ good, count }]
-let draftGoods = []; // [{ good, role, count }]
+let draftByKind = { vorkommen: [], fruchtbarkeiten: [], goods: [] };
 let activeGoodsTab = 'vorkommen';
 
 function renderIslandsView() {
@@ -159,6 +221,8 @@ function renderIslandCard(island) {
       ${functionsHtml}
       <div class="island-section-label">Vorkommen</div>
       ${renderGoodsTagRow(island.vorkommen || [], false)}
+      <div class="island-section-label">Fruchtbarkeiten</div>
+      ${renderGoodsTagRow(island.fruchtbarkeiten || [], false)}
       <div class="island-section-label">Produzierte Güter</div>
       ${renderGoodsTagRow(island.goods || [], true)}
     </div>
@@ -184,8 +248,11 @@ function openIslandModal(islandId) {
   const island = islandId ? Islands.getAll().find((i) => i.id === islandId) : null;
 
   draftFunctions = island ? [...island.functions] : [];
-  draftVorkommen = island ? (island.vorkommen || []).map((v) => ({ ...v })) : [];
-  draftGoods = island ? island.goods.map((g) => ({ ...g })) : [];
+  draftByKind = {
+    vorkommen: island ? (island.vorkommen || []).map((v) => ({ ...v })) : [],
+    fruchtbarkeiten: island ? (island.fruchtbarkeiten || []).map((v) => ({ ...v })) : [],
+    goods: island ? (island.goods || []).map((g) => ({ ...g })) : [],
+  };
   activeGoodsTab = 'vorkommen';
 
   const overlay = document.createElement('div');
@@ -211,23 +278,19 @@ function openIslandModal(islandId) {
 
       <div class="form-group">
         <div class="goods-tabs">
-          <button type="button" class="goods-tab" data-tab="vorkommen">Vorkommen</button>
-          <button type="button" class="goods-tab" data-tab="goods">Produzierte Güter</button>
+          ${GOODS_KINDS.map((kind) => `<button type="button" class="goods-tab" data-tab="${kind}">${GOODS_KIND_CONFIG[kind].tabLabel}</button>`).join('')}
         </div>
 
-        <div id="vorkommen-panel">
-          <input type="text" id="vorkommen-search" class="good-search" placeholder="Vorkommen suchen...">
-          <div class="good-icon-grid" id="vorkommen-icon-grid"></div>
-          <div class="island-section-label">Ausgewählte Vorkommen</div>
-          <div id="vorkommen-entry-list"></div>
-        </div>
-
-        <div id="goods-panel" hidden>
-          <input type="text" id="good-search" class="good-search" placeholder="Ware suchen...">
-          <div class="good-icon-grid" id="good-icon-grid"></div>
-          <div class="island-section-label">Ausgewählte produzierte Güter</div>
-          <div id="good-entry-list"></div>
-        </div>
+        ${GOODS_KINDS.map(
+          (kind) => `
+          <div id="${kind}-panel" hidden>
+            <input type="text" id="${kind}-search" class="good-search" placeholder="${GOODS_KIND_CONFIG[kind].searchPlaceholder}">
+            <div class="good-icon-grid" id="${kind}-icon-grid"></div>
+            <div class="island-section-label">Ausgewählt</div>
+            <div id="${kind}-entry-list"></div>
+          </div>
+        `
+        ).join('')}
       </div>
 
       <div class="modal-actions">
@@ -239,10 +302,11 @@ function openIslandModal(islandId) {
   document.body.appendChild(overlay);
 
   renderFunctionChips();
-  renderIconPickerGrid('vorkommen');
-  renderIconPickerGrid('goods');
-  renderEntryList('vorkommen');
-  renderEntryList('goods');
+  GOODS_KINDS.forEach((kind) => {
+    renderIconPickerGrid(kind);
+    renderEntryList(kind);
+    document.getElementById(`${kind}-search`).addEventListener('input', () => renderIconPickerGrid(kind));
+  });
   setActiveGoodsTab(activeGoodsTab);
 
   document.getElementById('btn-add-function').addEventListener('click', addFunctionFromInput);
@@ -257,9 +321,6 @@ function openIslandModal(islandId) {
     btn.addEventListener('click', () => setActiveGoodsTab(btn.dataset.tab));
   });
 
-  document.getElementById('vorkommen-search').addEventListener('input', () => renderIconPickerGrid('vorkommen'));
-  document.getElementById('good-search').addEventListener('input', () => renderIconPickerGrid('goods'));
-
   document.getElementById('btn-cancel-modal').addEventListener('click', closeIslandModal);
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeIslandModal();
@@ -270,8 +331,9 @@ function openIslandModal(islandId) {
 
 function setActiveGoodsTab(tab) {
   activeGoodsTab = tab;
-  document.getElementById('vorkommen-panel').hidden = tab !== 'vorkommen';
-  document.getElementById('goods-panel').hidden = tab !== 'goods';
+  GOODS_KINDS.forEach((kind) => {
+    document.getElementById(`${kind}-panel`).hidden = kind !== tab;
+  });
   document.querySelectorAll('.goods-tab').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.tab === tab);
   });
@@ -305,30 +367,22 @@ function renderFunctionChips() {
   });
 }
 
-// kind: 'vorkommen' | 'goods'
-function draftArrayFor(kind) {
-  return kind === 'vorkommen' ? draftVorkommen : draftGoods;
-}
-
-function iconListFor(kind) {
-  return kind === 'vorkommen' ? RAW_MATERIAL_ICON_LIST : PRODUCED_GOOD_ICON_LIST;
-}
-
 function renderIconPickerGrid(kind) {
-  const grid = document.getElementById(kind === 'vorkommen' ? 'vorkommen-icon-grid' : 'good-icon-grid');
-  const searchInput = document.getElementById(kind === 'vorkommen' ? 'vorkommen-search' : 'good-search');
+  const config = GOODS_KIND_CONFIG[kind];
+  const grid = document.getElementById(`${kind}-icon-grid`);
+  const searchInput = document.getElementById(`${kind}-search`);
   const term = (searchInput.value || '').trim().toLowerCase();
-  const draftArray = draftArrayFor(kind);
+  const draftArray = draftByKind[kind];
   const selectedIds = new Set(draftArray.map((g) => g.good));
 
-  const filtered = iconListFor(kind).filter((icon) => {
+  const filtered = config.iconList.filter((icon) => {
     if (!term) return true;
     const name = Translations.good(icon, icon).toLowerCase();
     return name.includes(term) || icon.toLowerCase().includes(term);
   });
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty-state" style="padding:16px 0;">Keine Ware gefunden.</div>`;
+    grid.innerHTML = `<div class="empty-state" style="padding:16px 0;">${config.emptyGridMsg}</div>`;
     return;
   }
 
@@ -351,14 +405,14 @@ function renderIconPickerGrid(kind) {
 }
 
 function toggleGoodSelection(kind, iconId) {
-  const draftArray = draftArrayFor(kind);
+  const config = GOODS_KIND_CONFIG[kind];
+  const draftArray = draftByKind[kind];
   const idx = draftArray.findIndex((g) => g.good === iconId);
   if (idx === -1) {
-    if (kind === 'vorkommen') {
-      draftVorkommen.push({ good: iconId, count: null });
-    } else {
-      draftGoods.push({ good: iconId, role: 'producer', count: null });
-    }
+    const entry = { good: iconId };
+    if (config.hasRole) entry.role = 'producer';
+    if (config.hasCount) entry.count = null;
+    draftArray.push(entry);
   } else {
     draftArray.splice(idx, 1);
   }
@@ -367,53 +421,58 @@ function toggleGoodSelection(kind, iconId) {
 }
 
 function renderEntryList(kind) {
-  const isVorkommen = kind === 'vorkommen';
-  const list = document.getElementById(isVorkommen ? 'vorkommen-entry-list' : 'good-entry-list');
-  const draftArray = draftArrayFor(kind);
+  const config = GOODS_KIND_CONFIG[kind];
+  const list = document.getElementById(`${kind}-entry-list`);
+  const draftArray = draftByKind[kind];
 
   if (draftArray.length === 0) {
-    list.innerHTML = `<div class="empty-state" style="padding:12px 0;">${isVorkommen ? 'Noch keine Vorkommen ausgewählt.' : 'Noch keine Güter ausgewählt.'}</div>`;
+    list.innerHTML = `<div class="empty-state" style="padding:12px 0;">${config.emptyListMsg}</div>`;
     return;
   }
 
   list.innerHTML = draftArray
     .map((g, idx) => {
       const name = Translations.good(g.good, g.good);
-      const roleSelectHtml = isVorkommen
-        ? ''
-        : `
+      const roleSelectHtml = config.hasRole
+        ? `
         <select class="role-select" data-role-idx="${idx}">
           <option value="producer" ${g.role === 'producer' ? 'selected' : ''}>Produzent</option>
           <option value="consumer" ${g.role === 'consumer' ? 'selected' : ''}>Konsument</option>
           <option value="both" ${g.role === 'both' ? 'selected' : ''}>Beides</option>
         </select>
-      `;
+      `
+        : '';
+      const countInputHtml = config.hasCount
+        ? `<input type="number" min="0" class="good-count-input" data-count-idx="${idx}" placeholder="Anzahl" value="${g.count ?? ''}">`
+        : '';
       return `
         <div class="good-entry-row">
           ${goodIconHtml(g.good, name, 'good-entry-icon')}
           <span class="good-entry-name">${escapeHtml(name)}</span>
           ${roleSelectHtml}
-          <input type="number" min="0" class="good-count-input" data-count-idx="${idx}" placeholder="Anzahl" value="${g.count ?? ''}">
+          ${countInputHtml}
           <button class="icon-btn" data-remove-idx="${idx}" title="Entfernen">✕</button>
         </div>
       `;
     })
     .join('');
 
-  if (!isVorkommen) {
+  if (config.hasRole) {
     list.querySelectorAll('[data-role-idx]').forEach((select) => {
       select.addEventListener('change', () => {
-        draftGoods[Number(select.dataset.roleIdx)].role = select.value;
+        draftArray[Number(select.dataset.roleIdx)].role = select.value;
       });
     });
   }
-  list.querySelectorAll('[data-count-idx]').forEach((input) => {
-    input.addEventListener('input', () => {
-      const idx = Number(input.dataset.countIdx);
-      const val = input.value.trim();
-      draftArray[idx].count = val === '' ? null : Number(val);
+  if (config.hasCount) {
+    list.querySelectorAll('[data-count-idx]').forEach((input) => {
+      input.addEventListener('input', () => {
+        const idx = Number(input.dataset.countIdx);
+        const val = input.value.trim();
+        draftArray[idx].count = val === '' ? null : Number(val);
+      });
     });
-  });
+  }
   list.querySelectorAll('[data-remove-idx]').forEach((btn) => {
     btn.addEventListener('click', () => {
       draftArray.splice(Number(btn.dataset.removeIdx), 1);
@@ -433,8 +492,9 @@ function saveIslandFromModal() {
   const islandData = {
     name,
     functions: draftFunctions,
-    vorkommen: draftVorkommen,
-    goods: draftGoods,
+    vorkommen: draftByKind.vorkommen,
+    fruchtbarkeiten: draftByKind.fruchtbarkeiten,
+    goods: draftByKind.goods,
   };
 
   if (editingIslandId) {
@@ -452,8 +512,7 @@ function closeIslandModal() {
   if (overlay) overlay.remove();
   editingIslandId = null;
   draftFunctions = [];
-  draftVorkommen = [];
-  draftGoods = [];
+  draftByKind = { vorkommen: [], fruchtbarkeiten: [], goods: [] };
 }
 
 function escapeHtml(str) {

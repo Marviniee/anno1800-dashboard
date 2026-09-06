@@ -207,7 +207,7 @@ function createIslandBox(island, pos) {
   box.dataset.islandId = island.id;
   box.style.left = `${pos.x}px`;
   box.style.top = `${pos.y}px`;
-  const combinedGoods = [...(island.vorkommen || []), ...(island.goods || [])];
+  const combinedGoods = [...(island.vorkommen || []), ...(island.fruchtbarkeiten || []), ...(island.goods || [])];
   box.innerHTML = `
     <div class="map-island-box-title">${escapeHtml(island.name)}</div>
     ${renderBoxFunctions(island.functions)}
@@ -270,12 +270,19 @@ function computeTradeEdges(islands) {
   }
 
   islands.forEach((island) => {
-    // Ein Vorkommen zählt für die Handelsrouten-Berechnung wie ein Produzent
-    // dieser Rohware (keine eigene Rolle, immer vor Ort verfügbar).
+    // Ein Vorkommen oder eine Fruchtbarkeit zählt für die Handelsrouten-
+    // Berechnung wie ein Produzent dieser Rohware (keine eigene Rolle,
+    // immer vor Ort verfügbar).
     (island.vorkommen || []).forEach((v) => {
       const norm = normalizeGoodName(v.good);
       if (!norm) return;
       ensureEntry(norm, v.good).producers.add(island.id);
+    });
+
+    (island.fruchtbarkeiten || []).forEach((f) => {
+      const norm = normalizeGoodName(f.good);
+      if (!norm) return;
+      ensureEntry(norm, f.good).producers.add(island.id);
     });
 
     (island.goods || []).forEach((g) => {
