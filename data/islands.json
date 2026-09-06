@@ -35,5 +35,22 @@
     ],
     "goods": [],
     "id": "8ba791ab-1501-4351-8f97-929e7156bfe7"
+  },
+  {
+    "name": "Molgenkirke",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Clay",
+        "count": 1
+      },
+      {
+        "good": "Iron",
+        "count": null
+      }
+    ],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "id": "8ce00510-43a2-4dda-a784-9a440684a26f"
   }
 ]
