@@ -296,5 +296,48 @@
     ],
     "goods": [],
     "id": "cd9d4b02-a6aa-4d1f-9e96-d2c8c093647e"
+  },
+  {
+    "name": "Nubottle",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Clay",
+        "count": 1
+      },
+      {
+        "good": "Coal",
+        "count": 1
+      },
+      {
+        "good": "Iron",
+        "count": 2
+      },
+      {
+        "good": "Zinc",
+        "count": 2
+      },
+      {
+        "good": "Copper",
+        "count": 1
+      },
+      {
+        "good": "Cement",
+        "count": 1
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Red_peppers"
+      },
+      {
+        "good": "Hops"
+      }
+    ],
+    "goods": [],
+    "id": "c8385ce0-463e-40ca-a623-6d93c2089959"
   }
 ]
