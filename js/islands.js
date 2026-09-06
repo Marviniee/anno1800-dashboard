@@ -4,20 +4,25 @@
  *   id: string,
  *   name: string,
  *   functions: string[],            // Freitext-Tags, z.B. "Hauptstadt"
+ *   vorkommen: [
+ *     { good: string, count: number | null }   // Rohstoffquellen vor Ort
+ *   ],
  *   goods: [
  *     { good: string, role: 'producer' | 'consumer' | 'both', count: number | null }
  *   ]
  * }
  *
  * good ist die kanonische Icon-ID aus GOODS_ICON_LIST (js/goods-icons-data.js,
- * z.B. "Oilwell"), nicht mehr Freitext - die deutsche Anzeige kommt über
- * Translations.good(). count ist die Anzahl Vorkommen (z.B. 3 Eisenvorkommen),
- * optional; ältere Einträge ohne count werden als count: null/undefined
- * behandelt und einfach ohne Mengenangabe angezeigt.
+ * z.B. "Oilwell"), nicht Freitext - die deutsche Anzeige kommt über
+ * Translations.good(). count ist die Anzahl Vorkommen bzw. Fabriken,
+ * optional (null wenn nicht angegeben).
  *
- * Das goods[].role-Feld ist die Grundlage für spätere Handelsrouten:
- * Route = Produzent-Insel -> Konsument-Insel je Ware. Dafür muss dieses
- * Insel-Datenmodell nicht mehr geändert werden.
+ * vorkommen vs. goods: automatisch aus data/production-chains.json abgeleitet
+ * (RAW_MATERIAL_ICON_LIST = Güter, die in jeder Kette nur auf Level 0
+ * auftreten, PRODUCED_GOOD_ICON_LIST = alles mit mindestens einer Vorstufe).
+ * Ein Vorkommen hat keine Rolle (immer vor Ort verfügbar) - für die
+ * automatische Handelsrouten-Berechnung auf der Karte zählt es wie ein
+ * "Produzent" dieser Ware (siehe computeTradeEdges in map.js).
  */
 
 const Islands = {
@@ -26,6 +31,31 @@ const Islands = {
 
   async load() {
     this.cache = await GitHubSync.readJson(this.DATA_PATH, []);
+
+    // Einmalige, automatische Migration von Alt-Daten: vor der Trennung von
+    // Vorkommen/produzierten Gütern lagen alle Einträge in "goods". Rohstoffe
+    // darunter (anhand RAW_MATERIAL_ICON_LIST erkannt) wandern nach
+    // "vorkommen", die Rolle entfällt dabei (ein Vorkommen ist immer da).
+    let migrated = false;
+    this.cache.forEach((island) => {
+      if (!island.vorkommen) island.vorkommen = [];
+      if (!island.goods) island.goods = [];
+
+      const stillGoods = [];
+      island.goods.forEach((g) => {
+        if (RAW_MATERIAL_ICON_LIST.includes(g.good)) {
+          island.vorkommen.push({ good: g.good, count: g.count ?? null });
+          migrated = true;
+        } else {
+          stillGoods.push(g);
+        }
+      });
+      island.goods = stillGoods;
+    });
+
+    if (migrated) {
+      this._persist('Migration: Vorkommen von produzierten Gütern getrennt');
+    }
   },
 
   getAll() {
@@ -72,7 +102,9 @@ const ROLE_LABELS = {
 
 let editingIslandId = null;
 let draftFunctions = [];
-let draftGoods = []; // [{ good, role }]
+let draftVorkommen = []; // [{ good, count }]
+let draftGoods = []; // [{ good, role, count }]
+let activeGoodsTab = 'vorkommen';
 
 function renderIslandsView() {
   const view = document.getElementById('view-inseln');
@@ -115,16 +147,6 @@ function renderIslandCard(island) {
     ? `<div class="tag-row">${island.functions.map((f) => `<span class="tag function-tag">${escapeHtml(f)}</span>`).join('')}</div>`
     : '';
 
-  const goodsHtml = island.goods.length
-    ? `<div class="tag-row">${island.goods
-        .map((g) => {
-          const name = Translations.good(g.good, g.good);
-          const countLabel = g.count ? ` ×${g.count}` : '';
-          return `<span class="good-tag">${goodIconHtml(g.good, name, 'good-tag-icon')}<span class="role-dot ${g.role}"></span>${escapeHtml(name)}${countLabel}</span>`;
-        })
-        .join('')}</div>`
-    : `<div class="empty-state" style="padding:8px 0;">Keine Güter erfasst</div>`;
-
   return `
     <div class="island-card">
       <div class="island-card-header">
@@ -135,10 +157,26 @@ function renderIslandCard(island) {
         </div>
       </div>
       ${functionsHtml}
-      <div class="island-section-label">Güter vor Ort</div>
-      ${goodsHtml}
+      <div class="island-section-label">Vorkommen</div>
+      ${renderGoodsTagRow(island.vorkommen || [], false)}
+      <div class="island-section-label">Produzierte Güter</div>
+      ${renderGoodsTagRow(island.goods || [], true)}
     </div>
   `;
+}
+
+function renderGoodsTagRow(items, showRole) {
+  if (!items.length) {
+    return `<div class="empty-state" style="padding:8px 0;">Keine erfasst</div>`;
+  }
+  return `<div class="tag-row">${items
+    .map((g) => {
+      const name = Translations.good(g.good, g.good);
+      const countLabel = g.count ? ` ×${g.count}` : '';
+      const roleDot = showRole ? `<span class="role-dot ${g.role}"></span>` : '';
+      return `<span class="good-tag">${goodIconHtml(g.good, name, 'good-tag-icon')}${roleDot}${escapeHtml(name)}${countLabel}</span>`;
+    })
+    .join('')}</div>`;
 }
 
 function openIslandModal(islandId) {
@@ -146,7 +184,9 @@ function openIslandModal(islandId) {
   const island = islandId ? Islands.getAll().find((i) => i.id === islandId) : null;
 
   draftFunctions = island ? [...island.functions] : [];
+  draftVorkommen = island ? (island.vorkommen || []).map((v) => ({ ...v })) : [];
   draftGoods = island ? island.goods.map((g) => ({ ...g })) : [];
+  activeGoodsTab = 'vorkommen';
 
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
@@ -170,14 +210,24 @@ function openIslandModal(islandId) {
       </div>
 
       <div class="form-group">
-        <label for="good-search">Güter vor Ort</label>
-        <input type="text" id="good-search" class="good-search" placeholder="Ware suchen...">
-        <div class="good-icon-grid" id="good-icon-grid"></div>
-      </div>
+        <div class="goods-tabs">
+          <button type="button" class="goods-tab" data-tab="vorkommen">Vorkommen</button>
+          <button type="button" class="goods-tab" data-tab="goods">Produzierte Güter</button>
+        </div>
 
-      <div class="form-group">
-        <label>Ausgewählte Güter</label>
-        <div id="good-entry-list"></div>
+        <div id="vorkommen-panel">
+          <input type="text" id="vorkommen-search" class="good-search" placeholder="Vorkommen suchen...">
+          <div class="good-icon-grid" id="vorkommen-icon-grid"></div>
+          <div class="island-section-label">Ausgewählte Vorkommen</div>
+          <div id="vorkommen-entry-list"></div>
+        </div>
+
+        <div id="goods-panel" hidden>
+          <input type="text" id="good-search" class="good-search" placeholder="Ware suchen...">
+          <div class="good-icon-grid" id="good-icon-grid"></div>
+          <div class="island-section-label">Ausgewählte produzierte Güter</div>
+          <div id="good-entry-list"></div>
+        </div>
       </div>
 
       <div class="modal-actions">
@@ -189,8 +239,11 @@ function openIslandModal(islandId) {
   document.body.appendChild(overlay);
 
   renderFunctionChips();
-  renderGoodIconGrid();
-  renderGoodEntries();
+  renderIconPickerGrid('vorkommen');
+  renderIconPickerGrid('goods');
+  renderEntryList('vorkommen');
+  renderEntryList('goods');
+  setActiveGoodsTab(activeGoodsTab);
 
   document.getElementById('btn-add-function').addEventListener('click', addFunctionFromInput);
   document.getElementById('input-function').addEventListener('keydown', (e) => {
@@ -200,7 +253,12 @@ function openIslandModal(islandId) {
     }
   });
 
-  document.getElementById('good-search').addEventListener('input', renderGoodIconGrid);
+  document.querySelectorAll('.goods-tab').forEach((btn) => {
+    btn.addEventListener('click', () => setActiveGoodsTab(btn.dataset.tab));
+  });
+
+  document.getElementById('vorkommen-search').addEventListener('input', () => renderIconPickerGrid('vorkommen'));
+  document.getElementById('good-search').addEventListener('input', () => renderIconPickerGrid('goods'));
 
   document.getElementById('btn-cancel-modal').addEventListener('click', closeIslandModal);
   overlay.addEventListener('click', (e) => {
@@ -208,6 +266,15 @@ function openIslandModal(islandId) {
   });
 
   document.getElementById('btn-save-island').addEventListener('click', saveIslandFromModal);
+}
+
+function setActiveGoodsTab(tab) {
+  activeGoodsTab = tab;
+  document.getElementById('vorkommen-panel').hidden = tab !== 'vorkommen';
+  document.getElementById('goods-panel').hidden = tab !== 'goods';
+  document.querySelectorAll('.goods-tab').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
 }
 
 function addFunctionFromInput() {
@@ -238,12 +305,23 @@ function renderFunctionChips() {
   });
 }
 
-function renderGoodIconGrid() {
-  const grid = document.getElementById('good-icon-grid');
-  const term = (document.getElementById('good-search').value || '').trim().toLowerCase();
-  const selectedIds = new Set(draftGoods.map((g) => g.good));
+// kind: 'vorkommen' | 'goods'
+function draftArrayFor(kind) {
+  return kind === 'vorkommen' ? draftVorkommen : draftGoods;
+}
 
-  const filtered = GOODS_ICON_LIST.filter((icon) => {
+function iconListFor(kind) {
+  return kind === 'vorkommen' ? RAW_MATERIAL_ICON_LIST : PRODUCED_GOOD_ICON_LIST;
+}
+
+function renderIconPickerGrid(kind) {
+  const grid = document.getElementById(kind === 'vorkommen' ? 'vorkommen-icon-grid' : 'good-icon-grid');
+  const searchInput = document.getElementById(kind === 'vorkommen' ? 'vorkommen-search' : 'good-search');
+  const term = (searchInput.value || '').trim().toLowerCase();
+  const draftArray = draftArrayFor(kind);
+  const selectedIds = new Set(draftArray.map((g) => g.good));
+
+  const filtered = iconListFor(kind).filter((icon) => {
     if (!term) return true;
     const name = Translations.good(icon, icon).toLowerCase();
     return name.includes(term) || icon.toLowerCase().includes(term);
@@ -259,7 +337,7 @@ function renderGoodIconGrid() {
       const name = Translations.good(icon, icon);
       const selected = selectedIds.has(icon);
       return `
-        <button type="button" class="good-icon-tile ${selected ? 'selected' : ''}" data-good-id="${icon}" title="${escapeHtml(name)}">
+        <button type="button" class="good-icon-tile ${selected ? 'selected' : ''}" data-good-id="${icon}" data-kind="${kind}" title="${escapeHtml(name)}">
           ${goodIconHtml(icon, name, 'good-icon-tile-img')}
           <span class="good-icon-tile-label">${escapeHtml(name)}</span>
         </button>
@@ -268,64 +346,79 @@ function renderGoodIconGrid() {
     .join('');
 
   grid.querySelectorAll('[data-good-id]').forEach((btn) => {
-    btn.addEventListener('click', () => toggleGoodSelection(btn.dataset.goodId));
+    btn.addEventListener('click', () => toggleGoodSelection(btn.dataset.kind, btn.dataset.goodId));
   });
 }
 
-function toggleGoodSelection(iconId) {
-  const idx = draftGoods.findIndex((g) => g.good === iconId);
+function toggleGoodSelection(kind, iconId) {
+  const draftArray = draftArrayFor(kind);
+  const idx = draftArray.findIndex((g) => g.good === iconId);
   if (idx === -1) {
-    draftGoods.push({ good: iconId, role: 'producer', count: null });
+    if (kind === 'vorkommen') {
+      draftVorkommen.push({ good: iconId, count: null });
+    } else {
+      draftGoods.push({ good: iconId, role: 'producer', count: null });
+    }
   } else {
-    draftGoods.splice(idx, 1);
+    draftArray.splice(idx, 1);
   }
-  renderGoodIconGrid();
-  renderGoodEntries();
+  renderIconPickerGrid(kind);
+  renderEntryList(kind);
 }
 
-function renderGoodEntries() {
-  const list = document.getElementById('good-entry-list');
-  if (draftGoods.length === 0) {
-    list.innerHTML = `<div class="empty-state" style="padding:12px 0;">Noch keine Güter ausgewählt.</div>`;
+function renderEntryList(kind) {
+  const isVorkommen = kind === 'vorkommen';
+  const list = document.getElementById(isVorkommen ? 'vorkommen-entry-list' : 'good-entry-list');
+  const draftArray = draftArrayFor(kind);
+
+  if (draftArray.length === 0) {
+    list.innerHTML = `<div class="empty-state" style="padding:12px 0;">${isVorkommen ? 'Noch keine Vorkommen ausgewählt.' : 'Noch keine Güter ausgewählt.'}</div>`;
     return;
   }
-  list.innerHTML = draftGoods
+
+  list.innerHTML = draftArray
     .map((g, idx) => {
       const name = Translations.good(g.good, g.good);
-      return `
-      <div class="good-entry-row">
-        ${goodIconHtml(g.good, name, 'good-entry-icon')}
-        <span class="good-entry-name">${escapeHtml(name)}</span>
+      const roleSelectHtml = isVorkommen
+        ? ''
+        : `
         <select class="role-select" data-role-idx="${idx}">
           <option value="producer" ${g.role === 'producer' ? 'selected' : ''}>Produzent</option>
           <option value="consumer" ${g.role === 'consumer' ? 'selected' : ''}>Konsument</option>
           <option value="both" ${g.role === 'both' ? 'selected' : ''}>Beides</option>
         </select>
-        <input type="number" min="0" class="good-count-input" data-count-idx="${idx}" placeholder="Anzahl" value="${g.count ?? ''}">
-        <button class="icon-btn" data-remove-good="${idx}" title="Entfernen">✕</button>
-      </div>
-    `;
+      `;
+      return `
+        <div class="good-entry-row">
+          ${goodIconHtml(g.good, name, 'good-entry-icon')}
+          <span class="good-entry-name">${escapeHtml(name)}</span>
+          ${roleSelectHtml}
+          <input type="number" min="0" class="good-count-input" data-count-idx="${idx}" placeholder="Anzahl" value="${g.count ?? ''}">
+          <button class="icon-btn" data-remove-idx="${idx}" title="Entfernen">✕</button>
+        </div>
+      `;
     })
     .join('');
 
-  list.querySelectorAll('[data-role-idx]').forEach((select) => {
-    select.addEventListener('change', () => {
-      draftGoods[Number(select.dataset.roleIdx)].role = select.value;
+  if (!isVorkommen) {
+    list.querySelectorAll('[data-role-idx]').forEach((select) => {
+      select.addEventListener('change', () => {
+        draftGoods[Number(select.dataset.roleIdx)].role = select.value;
+      });
     });
-  });
+  }
   list.querySelectorAll('[data-count-idx]').forEach((input) => {
     input.addEventListener('input', () => {
       const idx = Number(input.dataset.countIdx);
       const val = input.value.trim();
-      draftGoods[idx].count = val === '' ? null : Number(val);
+      draftArray[idx].count = val === '' ? null : Number(val);
     });
   });
-  list.querySelectorAll('[data-remove-good]').forEach((btn) => {
+  list.querySelectorAll('[data-remove-idx]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const idx = Number(btn.dataset.removeGood);
-      draftGoods.splice(idx, 1);
-      renderGoodEntries();
-      renderGoodIconGrid();
+      draftArray.splice(Number(btn.dataset.removeIdx), 1);
+      renderEntryList(kind);
+      renderIconPickerGrid(kind);
     });
   });
 }
@@ -340,6 +433,7 @@ function saveIslandFromModal() {
   const islandData = {
     name,
     functions: draftFunctions,
+    vorkommen: draftVorkommen,
     goods: draftGoods,
   };
 
@@ -358,6 +452,7 @@ function closeIslandModal() {
   if (overlay) overlay.remove();
   editingIslandId = null;
   draftFunctions = [];
+  draftVorkommen = [];
   draftGoods = [];
 }
 

@@ -414,6 +414,34 @@ body {
   margin-bottom: 8px;
 }
 
+.goods-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.goods-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 8px 4px;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.goods-tab:hover {
+  color: var(--text);
+}
+
+.goods-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
 .good-icon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));

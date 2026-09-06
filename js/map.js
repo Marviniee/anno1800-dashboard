@@ -207,10 +207,11 @@ function createIslandBox(island, pos) {
   box.dataset.islandId = island.id;
   box.style.left = `${pos.x}px`;
   box.style.top = `${pos.y}px`;
+  const combinedGoods = [...(island.vorkommen || []), ...(island.goods || [])];
   box.innerHTML = `
     <div class="map-island-box-title">${escapeHtml(island.name)}</div>
     ${renderBoxFunctions(island.functions)}
-    ${renderBoxGoods(island.goods)}
+    ${renderBoxGoods(combinedGoods)}
   `;
   return box;
 }
@@ -261,15 +262,28 @@ function pairKey(idA, idB) {
 function computeTradeEdges(islands) {
   const goodMap = {}; // normalized good -> { displayName, producers: Set, consumers: Set }
 
+  function ensureEntry(norm, good) {
+    if (!goodMap[norm]) {
+      goodMap[norm] = { displayName: Translations.good(good, good.trim()), producers: new Set(), consumers: new Set() };
+    }
+    return goodMap[norm];
+  }
+
   islands.forEach((island) => {
-    island.goods.forEach((g) => {
+    // Ein Vorkommen zählt für die Handelsrouten-Berechnung wie ein Produzent
+    // dieser Rohware (keine eigene Rolle, immer vor Ort verfügbar).
+    (island.vorkommen || []).forEach((v) => {
+      const norm = normalizeGoodName(v.good);
+      if (!norm) return;
+      ensureEntry(norm, v.good).producers.add(island.id);
+    });
+
+    (island.goods || []).forEach((g) => {
       const norm = normalizeGoodName(g.good);
       if (!norm) return;
-      if (!goodMap[norm]) {
-        goodMap[norm] = { displayName: Translations.good(g.good, g.good.trim()), producers: new Set(), consumers: new Set() };
-      }
-      if (g.role === 'producer' || g.role === 'both') goodMap[norm].producers.add(island.id);
-      if (g.role === 'consumer' || g.role === 'both') goodMap[norm].consumers.add(island.id);
+      const entry = ensureEntry(norm, g.good);
+      if (g.role === 'producer' || g.role === 'both') entry.producers.add(island.id);
+      if (g.role === 'consumer' || g.role === 'both') entry.consumers.add(island.id);
     });
   });
 

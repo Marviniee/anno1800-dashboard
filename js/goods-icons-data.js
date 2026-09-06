@@ -19,3 +19,34 @@ const GOODS_ICON_LIST = [
   'Timber', 'Tobacco', 'Tortilla', 'Wansa_Wood', 'Weapons', 'Windows',
   'Wood', 'Wood_veneers', 'Wool', 'Work_clothes', 'Zinc',
 ];
+
+// Automatisch aus data/production-chains.json abgeleitet (Node-level-Feld):
+// ein Gut gehört zu RAW_MATERIAL_ICON_LIST, wenn es in JEDER Kette, in der es
+// vorkommt, nur auf Level 0 auftritt (kein Vorprodukt - direkt aus einem
+// Rohstoff-Gebäude wie Mine/Plantage/Ölfeld). Alle anderen (mindestens eine
+// Vorstufe in mindestens einer Kette) gehören zu PRODUCED_GOOD_ICON_LIST.
+// Beim Nachschlagen (September 2026, 90 Icons insgesamt) trat kein einziges
+// Gut uneinheitlich auf (mal Level 0, mal höher) - die Trennung ist über
+// alle Ketten hinweg eindeutig, keine Grenzfälle nötig.
+const RAW_MATERIAL_ICON_LIST = [
+  'Alpaca_wool', 'Bauxite', 'Beef', 'Caoutchouc', 'Cement', 'Charcoal_kiln',
+  'Clay', 'Coal', 'Cocoa', 'Coffee_beans', 'Copper', 'Corn', 'Cotton',
+  'Fish', 'Fish_Oil', 'Furs', 'Gold_Ore', 'Grain', 'Grapes', 'Hops', 'Iron',
+  'Oilwell', 'Pearls', 'Pigs', 'Plantains', 'Potato', 'Quartz_sand',
+  'Red_peppers', 'Saltpeter', 'Sugar_cane', 'Teff_Grass', 'Tobacco',
+  'Wansa_Wood', 'Wood', 'Wool', 'Zinc',
+];
+
+const PRODUCED_GOOD_ICON_LIST = [
+  'Advanced_weapons', 'Aluminium_Profiles', 'Beer', 'Bowler_hats', 'Brass',
+  'Bread', 'Bricks', 'Canned_food', 'Carbon_filament', 'Champagne',
+  'Chassis', 'Chocolate', 'Cigars', 'Coffee', 'Cotton_fabric', 'Dynamite',
+  'Felt', 'Flour', 'Fried_plantains', 'Fur_Coats', 'Glass', 'Glasses',
+  'Gold', 'Goulash', 'Gramophone', 'Helium', 'High_wheeler',
+  'Industrial_Lubricant', 'Jewelry', 'Light_bulb', 'Malt', 'Mud_bricks',
+  'Oil_Power_Plant', 'Pocket_watch', 'Poncho', 'Reinforced_concrete', 'Rum',
+  'Sails', 'Sausages', 'Schnapps', 'Sewing_machines', 'Soap',
+  'Steam_carriages', 'Steam_motors', 'Steel', 'Steel_beams', 'Sugar',
+  'Tallow', 'Timber', 'Tortilla', 'Weapons', 'Windows', 'Wood_veneers',
+  'Work_clothes',
+];
