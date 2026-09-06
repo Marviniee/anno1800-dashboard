@@ -313,7 +313,8 @@ body {
   margin-bottom: 6px;
 }
 
-.form-group input[type="text"] {
+.form-group input[type="text"],
+.form-group input[type="password"] {
   width: 100%;
   padding: 9px 10px;
   border-radius: var(--radius);
@@ -399,8 +400,45 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 18px 20px;
-  max-width: 420px;
+  max-width: 520px;
+  margin-bottom: 20px;
 }
+
+.settings-block-title {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+
+.settings-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.settings-hint code {
+  background: var(--bg-panel-alt);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 12px;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.settings-status {
+  margin-top: 10px;
+  font-size: 13px;
+  min-height: 18px;
+}
+
+.settings-status-ok { color: var(--producer); }
+.settings-status-error { color: var(--danger); }
+.settings-status-pending { color: var(--text-muted); }
 
 .settings-row {
   display: flex;
@@ -410,6 +448,45 @@ body {
 }
 
 .settings-row .label { color: var(--text-muted); }
+
+/* App-Ladezustand & Sync */
+.app-loading {
+  color: var(--text-muted);
+  padding: 60px 0;
+  text-align: center;
+}
+
+.legacy-migration-banner {
+  background: rgba(217, 164, 65, 0.12);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.link-button {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
+
+.sync-status {
+  font-size: 12px;
+  padding: 4px 12px;
+  min-height: 18px;
+  color: var(--text-muted);
+}
+
+.sync-status.sync-saving { color: var(--text-muted); }
+.sync-status.sync-saved { color: var(--producer); }
+.sync-status.sync-error { color: var(--danger); }
 
 /* Karte */
 .map-canvas-wrapper {

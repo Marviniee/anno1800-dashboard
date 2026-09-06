@@ -28,20 +28,21 @@
         </button>
       </nav>
       <div class="sidebar-footer">
+        <div id="sync-status" class="sync-status"></div>
         <button class="nav-item" data-view="einstellungen">
           <span class="nav-icon">⚙️</span> Einstellungen
         </button>
       </div>
     </aside>
 
-    <main class="content">
-      <section id="view-inseln" class="view active"></section>
-      <section id="view-karte" class="view">
-        <div class="placeholder-view">
-          <h2>Karte</h2>
-          <p>Kommt als nächster Baustein.</p>
-        </div>
-      </section>
+    <main class="content" id="main-content">
+      <div id="app-loading" class="app-loading">Lade Daten von GitHub...</div>
+      <div id="legacy-migration-banner" class="legacy-migration-banner" hidden>
+        Es wurden lokale Daten aus einer früheren Version gefunden, die noch nicht mit GitHub synchronisiert sind.
+        Trag in den <button class="link-button" data-view="einstellungen">Einstellungen</button> deinen GitHub-Token ein, um sie zu übernehmen.
+      </div>
+      <section id="view-inseln" class="view"></section>
+      <section id="view-karte" class="view"></section>
       <section id="view-todos" class="view"></section>
       <section id="view-warenketten" class="view"></section>
       <section id="view-einstellungen" class="view"></section>
@@ -49,6 +50,7 @@
   </div>
 
   <script src="js/storage.js"></script>
+  <script src="js/github-sync.js"></script>
   <script src="js/goods-data.js"></script>
   <script src="js/islands.js"></script>
   <script src="js/map.js"></script>

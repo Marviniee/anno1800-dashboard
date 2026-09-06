@@ -12,24 +12,41 @@ const GRID_GAP = 40;
 const GRID_COLUMNS = 6;
 
 const MapPositions = {
-  STORAGE_KEY: 'mapPositions',
+  DATA_PATH: 'data/map-positions.json',
+  cache: {},
+
+  async load() {
+    this.cache = await GitHubSync.readJson(this.DATA_PATH, {});
+  },
 
   getAll() {
-    return Storage.get(this.STORAGE_KEY, {});
+    return this.cache;
   },
 
   saveAll(positions) {
-    Storage.set(this.STORAGE_KEY, positions);
+    this.cache = positions;
+    this._persist('Kartenpositionen aktualisiert');
   },
 
   setPosition(islandId, x, y) {
-    const positions = this.getAll();
-    positions[islandId] = { x, y };
-    this.saveAll(positions);
+    this.cache[islandId] = { x, y };
+    this._persist(`Kartenposition aktualisiert: ${islandId}`);
   },
 
   clearAll() {
-    this.saveAll({});
+    this.cache = {};
+    this._persist('Kartenlayout zurückgesetzt');
+  },
+
+  _persist(message) {
+    setSyncStatus('saving');
+    GitHubSync.writeJson(this.DATA_PATH, this.cache, message)
+      .then(() => setSyncStatus('saved'))
+      .catch((e) => {
+        console.error('MapPositions persist failed', e);
+        setSyncStatus('error', e.message);
+        alert(`Speichern fehlgeschlagen: ${e.message}`);
+      });
   },
 };
 

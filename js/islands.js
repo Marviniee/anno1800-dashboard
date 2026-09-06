@@ -15,35 +15,46 @@
  */
 
 const Islands = {
-  STORAGE_KEY: 'islands',
+  DATA_PATH: 'data/islands.json',
+  cache: [],
 
-  getAll() {
-    return Storage.get(this.STORAGE_KEY, []);
+  async load() {
+    this.cache = await GitHubSync.readJson(this.DATA_PATH, []);
   },
 
-  saveAll(islands) {
-    Storage.set(this.STORAGE_KEY, islands);
+  getAll() {
+    return this.cache;
   },
 
   add(island) {
-    const islands = this.getAll();
     island.id = crypto.randomUUID();
-    islands.push(island);
-    this.saveAll(islands);
+    this.cache.push(island);
+    this._persist(`Insel hinzugefügt: ${island.name}`);
     return island;
   },
 
   update(id, updatedIsland) {
-    const islands = this.getAll();
-    const idx = islands.findIndex((i) => i.id === id);
+    const idx = this.cache.findIndex((i) => i.id === id);
     if (idx === -1) return;
-    islands[idx] = { ...updatedIsland, id };
-    this.saveAll(islands);
+    this.cache[idx] = { ...updatedIsland, id };
+    this._persist(`Insel bearbeitet: ${updatedIsland.name}`);
   },
 
   remove(id) {
-    const islands = this.getAll().filter((i) => i.id !== id);
-    this.saveAll(islands);
+    const island = this.cache.find((i) => i.id === id);
+    this.cache = this.cache.filter((i) => i.id !== id);
+    this._persist(`Insel gelöscht: ${island ? island.name : id}`);
+  },
+
+  _persist(message) {
+    setSyncStatus('saving');
+    GitHubSync.writeJson(this.DATA_PATH, this.cache, message)
+      .then(() => setSyncStatus('saved'))
+      .catch((e) => {
+        console.error('Islands persist failed', e);
+        setSyncStatus('error', e.message);
+        alert(`Speichern fehlgeschlagen: ${e.message}`);
+      });
   },
 };
 

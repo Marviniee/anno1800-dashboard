@@ -10,34 +10,46 @@
  */
 
 const Todos = {
-  STORAGE_KEY: 'todos',
+  DATA_PATH: 'data/todos.json',
+  cache: [],
 
-  getAll() {
-    return Storage.get(this.STORAGE_KEY, []);
+  async load() {
+    this.cache = await GitHubSync.readJson(this.DATA_PATH, []);
   },
 
-  saveAll(todos) {
-    Storage.set(this.STORAGE_KEY, todos);
+  getAll() {
+    return this.cache;
   },
 
   add(todo) {
-    const todos = this.getAll();
     todo.id = crypto.randomUUID();
-    todos.push(todo);
-    this.saveAll(todos);
+    this.cache.push(todo);
+    this._persist(`To-Do hinzugefügt: ${todo.text}`);
     return todo;
   },
 
   remove(id) {
-    this.saveAll(this.getAll().filter((t) => t.id !== id));
+    const todo = this.cache.find((t) => t.id === id);
+    this.cache = this.cache.filter((t) => t.id !== id);
+    this._persist(`To-Do gelöscht: ${todo ? todo.text : id}`);
   },
 
   toggleDone(id) {
-    const todos = this.getAll();
-    const todo = todos.find((t) => t.id === id);
+    const todo = this.cache.find((t) => t.id === id);
     if (!todo) return;
     todo.done = !todo.done;
-    this.saveAll(todos);
+    this._persist(`To-Do ${todo.done ? 'erledigt' : 'wieder geöffnet'}: ${todo.text}`);
+  },
+
+  _persist(message) {
+    setSyncStatus('saving');
+    GitHubSync.writeJson(this.DATA_PATH, this.cache, message)
+      .then(() => setSyncStatus('saved'))
+      .catch((e) => {
+        console.error('Todos persist failed', e);
+        setSyncStatus('error', e.message);
+        alert(`Speichern fehlgeschlagen: ${e.message}`);
+      });
   },
 };
 
