@@ -96,8 +96,14 @@ const GitHubSync = {
   },
 
   async getFileSha(path) {
+    // cache: 'no-store' ist entscheidend - ohne das kann der Browser eine
+    // frühere GET-Antwort für dieselbe URL wiederverwenden (GitHub sendet
+    // Caching-Header auf diesem Endpunkt), wodurch sowohl der erste
+    // Schreibversuch als auch der 409-Retry denselben veralteten SHA sehen
+    // und der Retry nie wirklich hilft.
     const res = await fetch(`${this.apiUrl(path)}?ref=${this.BRANCH}`, {
       headers: this.authHeaders(),
+      cache: 'no-store',
     });
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`GitHub API Fehler beim Lesen von ${path}: ${res.status}`);
