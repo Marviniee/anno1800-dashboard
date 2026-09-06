@@ -365,5 +365,41 @@
     ],
     "goods": [],
     "id": "07d7c50d-fa78-421c-b015-751b9fc8e032"
+  },
+  {
+    "name": "Hansberrenge",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Iron",
+        "count": 2
+      },
+      {
+        "good": "Coal",
+        "count": 2
+      },
+      {
+        "good": "Zinc",
+        "count": 1
+      },
+      {
+        "good": "Copper",
+        "count": 1
+      },
+      {
+        "good": "Cement",
+        "count": 2
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Hops"
+      }
+    ],
+    "goods": [],
+    "id": "0c82c08f-55bc-49a6-afca-7c5e2f9228f7"
   }
 ]
