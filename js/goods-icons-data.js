@@ -39,17 +39,19 @@ const RAW_MATERIAL_ICON_LIST = [
 // Fruchtbarkeit auf der Insel benötigen (verifiziert: Plantains/Caoutchouc/
 // Pearls brauchen jeweils eine Fruchtbarkeit; Alpaca_wool ausdrücklich NICHT
 // - die Alpakafarm braucht nur Weideflächen, keine Fruchtbarkeit, deshalb
-// dort nicht gelistet). Fruchtbarkeit ist im Spiel binär (vorhanden oder
-// nicht) - kein Mengenfeld, nur Auswahl.
+// dort nicht gelistet). Furs (Jagdgründe/Hunting Cabin) ist streng genommen
+// kein Ackerbau, kommt aber auf Marvins Wunsch bewusst hier rein statt bei
+// Vorkommen oder Produzierte Güter. Fruchtbarkeit ist im Spiel binär
+// (vorhanden oder nicht) - kein Mengenfeld, nur Auswahl.
 const FERTILITY_ICON_LIST = [
-  'Caoutchouc', 'Cocoa', 'Coffee_beans', 'Corn', 'Cotton', 'Grain', 'Grapes',
-  'Hops', 'Pearls', 'Plantains', 'Potato', 'Red_peppers', 'Sugar_cane',
-  'Tobacco',
+  'Caoutchouc', 'Cocoa', 'Coffee_beans', 'Corn', 'Cotton', 'Furs', 'Grain',
+  'Grapes', 'Hops', 'Pearls', 'Plantains', 'Potato', 'Red_peppers',
+  'Sugar_cane', 'Tobacco',
 ];
 
 // PRODUZIERTE GÜTER: alles Übrige - per Gebäude/Verarbeitung entstanden,
-// oder (mangels eigener Kategorie) Farm-/Jagd-/Fischerei-Rohstoffe ohne
-// Fruchtbarkeitsbedarf (Alpaca_wool, Beef, Fish, Fish_Oil, Furs, Pigs,
+// oder (mangels eigener Kategorie) Farm-/Fischerei-Rohstoffe ohne
+// Fruchtbarkeitsbedarf (Alpaca_wool, Beef, Fish, Fish_Oil, Pigs,
 // Teff_Grass, Wansa_Wood, Wood, Wool).
 const PRODUCED_GOOD_ICON_LIST = GOODS_ICON_LIST.filter(
   (icon) => !RAW_MATERIAL_ICON_LIST.includes(icon) && !FERTILITY_ICON_LIST.includes(icon)
