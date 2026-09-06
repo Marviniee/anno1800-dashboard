@@ -401,5 +401,47 @@
     ],
     "goods": [],
     "id": "0c82c08f-55bc-49a6-afca-7c5e2f9228f7"
+  },
+  {
+    "name": "Wessungen",
+    "functions": [],
+    "vorkommen": [
+      {
+        "good": "Iron",
+        "count": 2
+      },
+      {
+        "good": "Coal",
+        "count": 2
+      },
+      {
+        "good": "Zinc",
+        "count": 1
+      },
+      {
+        "good": "Copper",
+        "count": 1
+      },
+      {
+        "good": "Cement",
+        "count": 2
+      }
+    ],
+    "fruchtbarkeiten": [
+      {
+        "good": "Potato"
+      },
+      {
+        "good": "Grain"
+      },
+      {
+        "good": "Red_peppers"
+      },
+      {
+        "good": "Grapes"
+      }
+    ],
+    "goods": [],
+    "id": "49cf3ca3-9577-4189-acff-70d65ff73ae1"
   }
 ]
