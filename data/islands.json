@@ -239,7 +239,9 @@
   },
   {
     "name": "Wondse",
-    "functions": [],
+    "functions": [
+      "Versorgung =< Handwerker"
+    ],
     "vorkommen": [
       {
         "good": "Clay",
