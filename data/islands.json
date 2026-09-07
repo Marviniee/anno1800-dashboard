@@ -83,7 +83,9 @@
   },
   {
     "name": "Pingport",
-    "functions": [],
+    "functions": [
+      "Versorgung Bauern"
+    ],
     "vorkommen": [
       {
         "good": "Clay",
