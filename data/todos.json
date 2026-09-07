@@ -5,5 +5,12 @@
     "islandId": null,
     "done": true,
     "id": "b42150ff-4ef9-4911-bf60-2bdcdd8cf3d1"
+  },
+  {
+    "text": "Paprika Produktion aufsetzen",
+    "importance": "medium",
+    "islandId": "f3f42aaf-5155-465c-bd65-23e31c4fa42d",
+    "done": false,
+    "id": "497e1183-82a9-4de9-88a9-47966c30394d"
   }
 ]
