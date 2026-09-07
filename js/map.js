@@ -67,6 +67,7 @@ let routesPanelExpanded = true;
 let editingRouteId = null;
 let draftRouteStops = [];
 let draftRouteColor = ROUTE_COLOR_PALETTE[0];
+let draftRouteCargo = [];
 
 // Karten-Zoom: skaliert die Insel-Boxen und die SVG-Linien gemeinsam über
 // CSS transform:scale() auf den Canvas-Container. Anders als beim
@@ -522,7 +523,34 @@ function drawShipRoutes(svg, routes, boxEls) {
       group.appendChild(hitArea);
       group.appendChild(line);
 
-      const entry = { type: 'route', edge: { a: seg.from, b: seg.to }, line, hitArea };
+      let cargoGroup = null;
+      let cargoBg = null;
+      const cargoIcons = [];
+      if (route.cargo && route.cargo.length > 0) {
+        cargoGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        cargoGroup.setAttribute('class', 'route-cargo-group');
+        cargoGroup.style.pointerEvents = 'none';
+
+        cargoBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        cargoBg.setAttribute('class', 'route-cargo-bg');
+        cargoBg.setAttribute('rx', '4');
+        cargoGroup.appendChild(cargoBg);
+
+        route.cargo.forEach((iconId) => {
+          const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+          img.setAttribute('class', 'route-cargo-icon');
+          img.setAttribute('width', '18');
+          img.setAttribute('height', '18');
+          img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `assets/goods-icons/${encodeURIComponent(iconId)}.png`);
+          img.setAttribute('href', `assets/goods-icons/${encodeURIComponent(iconId)}.png`);
+          cargoGroup.appendChild(img);
+          cargoIcons.push(img);
+        });
+
+        group.appendChild(cargoGroup);
+      }
+
+      const entry = { type: 'route', edge: { a: seg.from, b: seg.to }, line, hitArea, cargoGroup, cargoBg, cargoIcons };
       routeEls.push(entry);
       updateRoutePosition(entry, boxA, boxB);
     });
@@ -546,7 +574,42 @@ function updateRoutePosition(entry, boxA, boxB) {
   entry.hitArea.setAttribute('y1', start.y);
   entry.hitArea.setAttribute('x2', end.x);
   entry.hitArea.setAttribute('y2', end.y);
+
+  if (entry.cargoGroup) {
+    const midX = (start.x + end.x) / 2;
+    const midY = (start.y + end.y) / 2;
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const offsetX = (-dy / len) * 14;
+    const offsetY = (dx / len) * 14;
+
+    const count = entry.cargoIcons.length;
+    const iconSize = 18;
+    const padding = 4;
+    const gap = 2;
+    const totalWidth = count * iconSize + (count - 1) * gap + padding * 2;
+    const totalHeight = iconSize + padding * 2;
+    const originX = midX + offsetX - totalWidth / 2;
+    const originY = midY + offsetY - totalHeight / 2;
+
+    entry.cargoBg.setAttribute('x', originX);
+    entry.cargoBg.setAttribute('y', originY);
+    entry.cargoBg.setAttribute('width', totalWidth);
+    entry.cargoBg.setAttribute('height', totalHeight);
+
+    entry.cargoIcons.forEach((img, i) => {
+      img.setAttribute('x', originX + padding + i * (iconSize + gap));
+      img.setAttribute('y', originY + padding);
+    });
+  }
 }
+
+// Unterscheidung Klick (Detailansicht öffnen) vs. Drag (Insel verschieben):
+// Mausbewegung über die gesamte mousedown-bis-mouseup-Sequenz wird
+// aufsummiert; bleibt sie unter CLICK_MOVEMENT_THRESHOLD, war es ein Klick,
+// sonst ein abgeschlossener Drag (keine Detailansicht, Position speichern).
+const CLICK_MOVEMENT_THRESHOLD = 5;
 
 function setupDrag(box, islandId, allLineEls, boxEls) {
   box.addEventListener('mousedown', (e) => {
@@ -555,12 +618,15 @@ function setupDrag(box, islandId, allLineEls, boxEls) {
     const startY = e.clientY;
     const startLeft = box.offsetLeft;
     const startTop = box.offsetTop;
+    let maxMovement = 0;
 
     box.classList.add('dragging');
 
     const relatedLines = allLineEls.filter((entry) => entry.edge.a === islandId || entry.edge.b === islandId);
 
     function onMouseMove(moveEvent) {
+      maxMovement = Math.max(maxMovement, Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY));
+
       // Mausbewegung ist in echten Bildschirm-Pixeln, Box-Position dagegen in
       // unskalierten Canvas-Koordinaten (transform:scale ändert nur die
       // Darstellung, nicht die Layout-Maße) - Delta durch die Zoomstufe
@@ -587,7 +653,12 @@ function setupDrag(box, islandId, allLineEls, boxEls) {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       box.classList.remove('dragging');
-      MapPositions.setPosition(islandId, box.offsetLeft, box.offsetTop);
+
+      if (maxMovement < CLICK_MOVEMENT_THRESHOLD) {
+        openIslandDetail(islandId);
+      } else {
+        MapPositions.setPosition(islandId, box.offsetLeft, box.offsetTop);
+      }
     }
 
     document.addEventListener('mousemove', onMouseMove);
@@ -643,6 +714,7 @@ function openRouteModal(routeId) {
 
   draftRouteStops = route ? [...route.stops] : [];
   draftRouteColor = route ? route.color : ROUTE_COLOR_PALETTE[ShipRoutes.getAll().length % ROUTE_COLOR_PALETTE.length];
+  draftRouteCargo = route ? [...(route.cargo || [])] : [];
 
   const islands = Islands.getAll();
 
@@ -681,6 +753,13 @@ function openRouteModal(routeId) {
         <div id="route-stop-list"></div>
       </div>
 
+      <div class="form-group">
+        <label>Fracht (optional)</label>
+        <input type="text" id="route-cargo-search" class="good-search" placeholder="Ware suchen...">
+        <div class="good-icon-grid" id="route-cargo-grid"></div>
+        <div id="route-cargo-chips" class="chip-list"></div>
+      </div>
+
       <div class="modal-actions">
         <button class="btn" id="btn-cancel-route-modal">Abbrechen</button>
         <button class="btn btn-primary" id="btn-save-route">Speichern</button>
@@ -690,6 +769,10 @@ function openRouteModal(routeId) {
   document.body.appendChild(overlay);
 
   renderRouteStopList();
+  renderCargoGrid();
+  renderCargoChips();
+
+  document.getElementById('route-cargo-search').addEventListener('input', renderCargoGrid);
 
   document.getElementById('btn-add-stop').addEventListener('click', () => {
     const select = document.getElementById('input-route-stop');
@@ -768,6 +851,75 @@ function renderRouteStopList() {
   });
 }
 
+function renderCargoGrid() {
+  const grid = document.getElementById('route-cargo-grid');
+  const searchInput = document.getElementById('route-cargo-search');
+  const term = (searchInput.value || '').trim().toLowerCase();
+  const selectedIds = new Set(draftRouteCargo);
+
+  const filtered = GOODS_ICON_LIST.filter((icon) => {
+    if (!term) return true;
+    const name = Translations.good(icon, icon).toLowerCase();
+    return name.includes(term) || icon.toLowerCase().includes(term);
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="padding:16px 0;">Keine Waren gefunden.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered
+    .map((icon) => {
+      const name = Translations.good(icon, icon);
+      const selected = selectedIds.has(icon);
+      return `
+        <button type="button" class="good-icon-tile ${selected ? 'selected' : ''}" data-cargo-id="${icon}" title="${escapeHtml(name)}">
+          ${goodIconHtml(icon, name, 'good-icon-tile-img')}
+          <span class="good-icon-tile-label">${escapeHtml(name)}</span>
+        </button>
+      `;
+    })
+    .join('');
+
+  grid.querySelectorAll('[data-cargo-id]').forEach((btn) => {
+    btn.addEventListener('click', () => toggleCargoSelection(btn.dataset.cargoId));
+  });
+}
+
+function toggleCargoSelection(iconId) {
+  const idx = draftRouteCargo.indexOf(iconId);
+  if (idx === -1) {
+    draftRouteCargo.push(iconId);
+  } else {
+    draftRouteCargo.splice(idx, 1);
+  }
+  renderCargoGrid();
+  renderCargoChips();
+}
+
+function renderCargoChips() {
+  const row = document.getElementById('route-cargo-chips');
+  if (draftRouteCargo.length === 0) {
+    row.innerHTML = '';
+    return;
+  }
+  row.innerHTML = draftRouteCargo
+    .map((icon) => {
+      const name = Translations.good(icon, icon);
+      return `
+        <span class="chip route-cargo-chip">
+          ${goodIconHtml(icon, name, 'chip-icon')}
+          ${escapeHtml(name)}
+          <button type="button" class="chip-remove" data-remove-cargo="${icon}" title="Entfernen">✕</button>
+        </span>
+      `;
+    })
+    .join('');
+  row.querySelectorAll('[data-remove-cargo]').forEach((btn) => {
+    btn.addEventListener('click', () => toggleCargoSelection(btn.dataset.removeCargo));
+  });
+}
+
 function saveRouteFromModal() {
   const name = document.getElementById('input-route-name').value.trim();
   if (!name) {
@@ -779,7 +931,7 @@ function saveRouteFromModal() {
     return;
   }
 
-  const routeData = { name, color: draftRouteColor, stops: draftRouteStops };
+  const routeData = { name, color: draftRouteColor, stops: draftRouteStops, cargo: draftRouteCargo };
 
   if (editingRouteId) {
     ShipRoutes.update(editingRouteId, routeData);
@@ -796,4 +948,5 @@ function closeRouteModal() {
   if (overlay) overlay.remove();
   editingRouteId = null;
   draftRouteStops = [];
+  draftRouteCargo = [];
 }

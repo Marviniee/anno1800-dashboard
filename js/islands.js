@@ -191,16 +191,23 @@ function renderIslandsView() {
   document.getElementById('btn-add-island').addEventListener('click', () => openIslandModal());
 
   container.querySelectorAll('[data-edit-id]').forEach((btn) => {
-    btn.addEventListener('click', () => openIslandModal(btn.dataset.editId));
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openIslandModal(btn.dataset.editId);
+    });
   });
   container.querySelectorAll('[data-delete-id]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const island = islands.find((i) => i.id === btn.dataset.deleteId);
       if (confirm(`Insel "${island.name}" wirklich löschen?`)) {
         Islands.remove(btn.dataset.deleteId);
         renderIslandsView();
       }
     });
+  });
+  container.querySelectorAll('[data-detail-id]').forEach((card) => {
+    card.addEventListener('click', () => openIslandDetail(card.dataset.detailId));
   });
 }
 
@@ -210,7 +217,7 @@ function renderIslandCard(island) {
     : '';
 
   return `
-    <div class="island-card">
+    <div class="island-card" data-detail-id="${island.id}">
       <div class="island-card-header">
         <h3>${escapeHtml(island.name)}</h3>
         <div class="island-card-actions">
@@ -241,6 +248,59 @@ function renderGoodsTagRow(items, showRole) {
       return `<span class="good-tag">${goodIconHtml(g.good, name, 'good-tag-icon')}${roleDot}${escapeHtml(name)}${countLabel}</span>`;
     })
     .join('')}</div>`;
+}
+
+// Read-only Detailansicht, getrennt vom Bearbeiten-Modal. Wird sowohl von
+// der Insel-Übersichtsliste als auch von der Karte (Klick auf eine Box,
+// ohne nennenswerte Mausbewegung) geöffnet.
+function openIslandDetail(islandId) {
+  const island = Islands.getAll().find((i) => i.id === islandId);
+  if (!island) return;
+
+  const functionsHtml = (island.functions || []).length
+    ? `<div class="tag-row">${island.functions.map((f) => `<span class="tag function-tag">${escapeHtml(f)}</span>`).join('')}</div>`
+    : `<div class="empty-state" style="padding:8px 0;">Keine erfasst</div>`;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'island-detail-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2>${escapeHtml(island.name)}</h2>
+
+      <div class="island-section-label">Funktion(en)</div>
+      ${functionsHtml}
+
+      <div class="island-section-label">Vorkommen</div>
+      ${renderGoodsTagRow(island.vorkommen || [], false)}
+
+      <div class="island-section-label">Fruchtbarkeiten</div>
+      ${renderGoodsTagRow(island.fruchtbarkeiten || [], false)}
+
+      <div class="island-section-label">Produzierte Güter</div>
+      ${renderGoodsTagRow(island.goods || [], true)}
+
+      <div class="modal-actions">
+        <button class="btn" id="btn-close-island-detail">Schließen</button>
+        <button class="btn btn-primary" id="btn-edit-from-detail">Bearbeiten</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById('btn-close-island-detail').addEventListener('click', closeIslandDetail);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeIslandDetail();
+  });
+  document.getElementById('btn-edit-from-detail').addEventListener('click', () => {
+    closeIslandDetail();
+    openIslandModal(islandId);
+  });
+}
+
+function closeIslandDetail() {
+  const overlay = document.getElementById('island-detail-overlay');
+  if (overlay) overlay.remove();
 }
 
 function openIslandModal(islandId) {

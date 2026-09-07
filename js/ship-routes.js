@@ -5,6 +5,8 @@
  *   name: string,
  *   color: string,          // Hex-Farbe, aus ROUTE_COLOR_PALETTE oder frei gewählt
  *   stops: string[],        // geordnete Insel-IDs, mindestens 2
+ *   cargo: string[],        // optionale Fracht-Kennzeichnung: kanonische
+ *                           // Icon-IDs aus GOODS_ICON_LIST, keine Rolle/Menge
  * }
  *
  * Eine Route ist immer ein Rundlauf: die letzte Station fährt zurück zur
