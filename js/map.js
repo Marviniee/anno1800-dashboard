@@ -118,6 +118,13 @@ function setupPinchZoom(wrapper) {
     return Math.hypot(dx, dy);
   }
 
+  function midpointOf(touches) {
+    return {
+      x: (touches[0].clientX + touches[1].clientX) / 2,
+      y: (touches[0].clientY + touches[1].clientY) / 2,
+    };
+  }
+
   wrapper.addEventListener(
     'touchstart',
     (e) => {
@@ -126,9 +133,22 @@ function setupPinchZoom(wrapper) {
       // verschoben wird (2. Finger kommt dazu) - Drag hat Vorrang.
       if (document.querySelector('.map-island-box.dragging')) return;
 
+      // Karten-Punkt unter dem Pinch-Mittelpunkt merken (in unskalierten
+      // Canvas-Koordinaten), damit er während der ganzen Geste exakt unter
+      // den Fingern bleibt statt wegzurutschen: scrollLeft/Top + Position
+      // relativ zum Wrapper ergibt die Position im skalierten Canvas
+      // (.map-canvas-scale-container), geteilt durch den aktuellen Zoom
+      // ergibt die zoom-unabhängige Canvas-Koordinate.
+      const mid = midpointOf(e.touches);
+      const rect = wrapper.getBoundingClientRect();
+      const scaledX = wrapper.scrollLeft + (mid.x - rect.left);
+      const scaledY = wrapper.scrollTop + (mid.y - rect.top);
+
       pinchState = {
         startDistance: distanceBetween(e.touches),
         startZoom: kartenZoom,
+        anchorCanvasX: scaledX / kartenZoom,
+        anchorCanvasY: scaledY / kartenZoom,
       };
     },
     { passive: true }
@@ -144,6 +164,19 @@ function setupPinchZoom(wrapper) {
       const rawZoom = Math.min(KARTEN_ZOOM_MAX, Math.max(KARTEN_ZOOM_MIN, pinchState.startZoom * ratio));
       kartenZoom = rawZoom;
       applyKartenZoom();
+
+      // Scroll-Position so nachführen, dass der gemerkte Karten-Punkt
+      // wieder exakt unter dem (aktuellen) Pinch-Mittelpunkt liegt - sonst
+      // "haftet" der Zoom nicht an den Fingern, weil applyKartenZoom() nur
+      // die Skalierung ändert, ohne den sichtbaren Ausschnitt anzupassen.
+      const mid = midpointOf(e.touches);
+      const rect = wrapper.getBoundingClientRect();
+      wrapper.scrollLeft = pinchState.anchorCanvasX * kartenZoom - (mid.x - rect.left);
+      wrapper.scrollTop = pinchState.anchorCanvasY * kartenZoom - (mid.y - rect.top);
+
+      // Für den finalen Rundungs-Schritt in endPinch() gebraucht (dort gibt
+      // es keine zwei Touches mehr, um den Mittelpunkt neu zu berechnen).
+      pinchState.lastMid = mid;
     },
     { passive: false }
   );
@@ -151,10 +184,21 @@ function setupPinchZoom(wrapper) {
   function endPinch(e) {
     if (!pinchState) return;
     if (e.touches.length >= 2) return;
+    const { anchorCanvasX, anchorCanvasY, lastMid } = pinchState;
     pinchState = null;
+
     // Auf den kanonischen 10%-Schritt runden und speichern, wie beim
-    // Button-Zoom.
+    // Button-Zoom - das ändert kartenZoom noch einmal geringfügig, deshalb
+    // Scroll-Position hier ein letztes Mal mit dem zuletzt bekannten
+    // Pinch-Mittelpunkt nachziehen, sonst "springt" die Karte beim Loslassen
+    // minimal.
     setKartenZoom(kartenZoom);
+
+    if (lastMid) {
+      const rect = wrapper.getBoundingClientRect();
+      wrapper.scrollLeft = anchorCanvasX * kartenZoom - (lastMid.x - rect.left);
+      wrapper.scrollTop = anchorCanvasY * kartenZoom - (lastMid.y - rect.top);
+    }
   }
 
   wrapper.addEventListener('touchend', endPinch);
