@@ -41,7 +41,9 @@
   },
   {
     "name": "Molgenkirke",
-    "functions": [],
+    "functions": [
+      "Versorgung Arbeiter"
+    ],
     "vorkommen": [
       {
         "good": "Clay",
