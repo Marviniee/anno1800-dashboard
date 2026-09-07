@@ -19,5 +19,12 @@
     "islandId": "8ce00510-43a2-4dda-a784-9a440684a26f",
     "done": false,
     "id": "9170ae29-d91b-489c-a2ca-19fa622b9112"
+  },
+  {
+    "text": "Alle Schiffe produzieren können (Ingenieure versorgen - lokal)",
+    "importance": "high",
+    "islandId": "49cf3ca3-9577-4189-acff-70d65ff73ae1",
+    "done": false,
+    "id": "6a781d67-e1a3-4427-a6bc-3410b6df7d90"
   }
 ]
