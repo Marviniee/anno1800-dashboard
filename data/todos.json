@@ -26,5 +26,12 @@
     "islandId": "49cf3ca3-9577-4189-acff-70d65ff73ae1",
     "done": true,
     "id": "6a781d67-e1a3-4427-a6bc-3410b6df7d90"
+  },
+  {
+    "text": "Hafen in Wessungen schön bauen",
+    "importance": "low",
+    "islandId": "49cf3ca3-9577-4189-acff-70d65ff73ae1",
+    "done": false,
+    "id": "7e2844fe-2927-4524-a1da-b5e7c2dfb632"
   }
 ]
