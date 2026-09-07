@@ -101,6 +101,66 @@ function applyKartenZoom() {
   if (label) label.textContent = `${Math.round(kartenZoom * 100)}%`;
 }
 
+// 2-Finger-Pinch zum Zoomen, zusätzlich zu den +/--Buttons. Teilt sich den
+// gleichen kartenZoom-Zustand und dieselben Grenzen (KARTEN_ZOOM_MIN/MAX) -
+// während der Geste wird kartenZoom für flüssiges visuelles Feedback direkt
+// (ungerundet) gesetzt, beim Loslassen übernimmt setKartenZoom() wie beim
+// Button-Zoom die 10%-Rundung + Speicherung, damit beide Zoom-Wege immer
+// zum selben kanonischen Endzustand konvergieren. Zoomt bewusst wie die
+// Buttons von der Canvas-Ecke aus (kein Scroll-Ausgleich um die Pinch-Mitte)
+// - einfacher und konsistent zum bestehenden Verhalten.
+let pinchState = null;
+
+function setupPinchZoom(wrapper) {
+  function distanceBetween(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  wrapper.addEventListener(
+    'touchstart',
+    (e) => {
+      if (e.touches.length !== 2) return;
+      // Nicht pinchen, während gerade eine Insel-Box per 1-Finger-Drag
+      // verschoben wird (2. Finger kommt dazu) - Drag hat Vorrang.
+      if (document.querySelector('.map-island-box.dragging')) return;
+
+      pinchState = {
+        startDistance: distanceBetween(e.touches),
+        startZoom: kartenZoom,
+      };
+    },
+    { passive: true }
+  );
+
+  wrapper.addEventListener(
+    'touchmove',
+    (e) => {
+      if (!pinchState || e.touches.length !== 2) return;
+      e.preventDefault();
+
+      const ratio = distanceBetween(e.touches) / pinchState.startDistance;
+      const rawZoom = Math.min(KARTEN_ZOOM_MAX, Math.max(KARTEN_ZOOM_MIN, pinchState.startZoom * ratio));
+      kartenZoom = rawZoom;
+      applyKartenZoom();
+    },
+    { passive: false }
+  );
+
+  function endPinch(e) {
+    if (!pinchState) return;
+    if (e.touches.length >= 2) return;
+    pinchState = null;
+    // Auf den kanonischen 10%-Schritt runden und speichern, wie beim
+    // Button-Zoom.
+    setKartenZoom(kartenZoom);
+  }
+
+  wrapper.addEventListener('touchend', endPinch);
+  wrapper.addEventListener('touchcancel', endPinch);
+}
+
 function renderMapView() {
   const view = document.getElementById('view-karte');
   const islands = Islands.getAll();
@@ -194,6 +254,7 @@ function renderMapView() {
   wrapper.appendChild(scaleContainer);
   view.appendChild(wrapper);
   applyKartenZoom();
+  setupPinchZoom(wrapper);
 
   document.getElementById('btn-reset-layout').addEventListener('click', () => {
     if (confirm('Layout zurücksetzen? Alle Inseln werden neu im Raster angeordnet.')) {
