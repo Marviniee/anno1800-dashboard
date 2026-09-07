@@ -63,11 +63,12 @@ const MapPositions = {
   },
 };
 
-let routesPanelExpanded = true;
+let routesDropdownOpen = false;
+let routesDropdownOutsideClickHandler = null;
 let editingRouteId = null;
 let draftRouteStops = [];
 let draftRouteColor = ROUTE_COLOR_PALETTE[0];
-let draftRouteCargo = [];
+let draftRouteCargo = null;
 
 // Karten-Zoom: skaliert die Insel-Boxen und die SVG-Linien gemeinsam über
 // CSS transform:scale() auf den Canvas-Container. Anders als beim
@@ -116,6 +117,11 @@ function renderMapView() {
           <span id="karten-zoom-label" class="map-zoom-label">100%</span>
           <button class="btn btn-small" id="btn-karten-zoom-in" title="Vergrößern">+</button>
         </div>
+        <div class="route-dropdown">
+          <button class="btn" id="btn-toggle-routes-panel">Schiffsrouten (${routes.length}) ${routesDropdownOpen ? '▾' : '▸'}</button>
+          <div id="routes-list-container" class="route-dropdown-list" ${routesDropdownOpen ? '' : 'hidden'}></div>
+        </div>
+        <button class="btn btn-primary" id="btn-add-island">+ Insel hinzufügen</button>
         <button class="btn btn-primary" id="btn-add-route">+ Route anlegen</button>
         <button class="btn" id="btn-reset-layout">Layout zurücksetzen</button>
       </div>
@@ -126,29 +132,39 @@ function renderMapView() {
   document.getElementById('btn-karten-zoom-in').addEventListener('click', () => setKartenZoom(kartenZoom + KARTEN_ZOOM_STEP));
   applyKartenZoom();
 
+  document.getElementById('btn-add-island').addEventListener('click', () => openIslandModal());
+
+  renderRoutesList(routes, islands);
+
+  document.getElementById('btn-toggle-routes-panel').addEventListener('click', (e) => {
+    e.stopPropagation();
+    routesDropdownOpen = !routesDropdownOpen;
+    renderMapView();
+  });
+
+  // Vorherigen Outside-Click-Listener immer entfernen, bevor ggf. ein neuer
+  // gesetzt wird - sonst sammeln sich bei mehrfachem renderMapView() bei
+  // offenem Dropdown (z.B. nach dem Speichern einer Route) mehrere Listener an.
+  if (routesDropdownOutsideClickHandler) {
+    document.removeEventListener('click', routesDropdownOutsideClickHandler);
+    routesDropdownOutsideClickHandler = null;
+  }
+  if (routesDropdownOpen) {
+    routesDropdownOutsideClickHandler = () => {
+      routesDropdownOpen = false;
+      routesDropdownOutsideClickHandler = null;
+      renderMapView();
+    };
+    document.addEventListener('click', routesDropdownOutsideClickHandler, { once: true });
+  }
+
   if (islands.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'empty-state';
-    empty.textContent = 'Noch keine Inseln angelegt. Leg zuerst unter "Inseln" welche an.';
+    empty.textContent = 'Noch keine Inseln angelegt. Leg mit "+ Insel hinzufügen" oben deine erste Insel an.';
     view.appendChild(empty);
     return;
   }
-
-  const routePanel = document.createElement('div');
-  routePanel.className = 'route-panel';
-  routePanel.innerHTML = `
-    <button class="route-panel-toggle" id="btn-toggle-routes-panel">
-      ${routesPanelExpanded ? '▾' : '▸'} Schiffsrouten (${routes.length})
-    </button>
-    <div id="routes-list-container" ${routesPanelExpanded ? '' : 'hidden'}></div>
-  `;
-  view.appendChild(routePanel);
-  renderRoutesList(routes, islands);
-
-  document.getElementById('btn-toggle-routes-panel').addEventListener('click', () => {
-    routesPanelExpanded = !routesPanelExpanded;
-    renderMapView();
-  });
 
   const wrapper = document.createElement('div');
   wrapper.className = 'map-canvas-wrapper';
@@ -519,14 +535,19 @@ function drawShipRoutes(svg, routes, boxEls) {
       const hitTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
       hitTitle.textContent = route.name;
       hitArea.appendChild(hitTitle);
+      // Touch-Äquivalent zum Hover-Tooltip (Routenname): Tippen auf die Linie
+      // öffnet direkt das Bearbeiten-Modal der Route - auf Touch-Geräten gibt
+      // es sonst keine Möglichkeit, den Titel-Tooltip zu sehen.
+      hitArea.style.cursor = 'pointer';
+      hitArea.addEventListener('click', () => openRouteModal(route.id));
 
       group.appendChild(hitArea);
       group.appendChild(line);
 
       let cargoGroup = null;
       let cargoBg = null;
-      const cargoIcons = [];
-      if (route.cargo && route.cargo.length > 0) {
+      let cargoIcon = null;
+      if (route.cargo) {
         cargoGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         cargoGroup.setAttribute('class', 'route-cargo-group');
         cargoGroup.style.pointerEvents = 'none';
@@ -536,21 +557,18 @@ function drawShipRoutes(svg, routes, boxEls) {
         cargoBg.setAttribute('rx', '4');
         cargoGroup.appendChild(cargoBg);
 
-        route.cargo.forEach((iconId) => {
-          const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-          img.setAttribute('class', 'route-cargo-icon');
-          img.setAttribute('width', '18');
-          img.setAttribute('height', '18');
-          img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `assets/goods-icons/${encodeURIComponent(iconId)}.png`);
-          img.setAttribute('href', `assets/goods-icons/${encodeURIComponent(iconId)}.png`);
-          cargoGroup.appendChild(img);
-          cargoIcons.push(img);
-        });
+        cargoIcon = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        cargoIcon.setAttribute('class', 'route-cargo-icon');
+        cargoIcon.setAttribute('width', '18');
+        cargoIcon.setAttribute('height', '18');
+        cargoIcon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `assets/goods-icons/${encodeURIComponent(route.cargo)}.png`);
+        cargoIcon.setAttribute('href', `assets/goods-icons/${encodeURIComponent(route.cargo)}.png`);
+        cargoGroup.appendChild(cargoIcon);
 
         group.appendChild(cargoGroup);
       }
 
-      const entry = { type: 'route', edge: { a: seg.from, b: seg.to }, line, hitArea, cargoGroup, cargoBg, cargoIcons };
+      const entry = { type: 'route', edge: { a: seg.from, b: seg.to }, line, hitArea, cargoGroup, cargoBg, cargoIcon };
       routeEls.push(entry);
       updateRoutePosition(entry, boxA, boxB);
     });
@@ -584,11 +602,9 @@ function updateRoutePosition(entry, boxA, boxB) {
     const offsetX = (-dy / len) * 14;
     const offsetY = (dx / len) * 14;
 
-    const count = entry.cargoIcons.length;
     const iconSize = 18;
     const padding = 4;
-    const gap = 2;
-    const totalWidth = count * iconSize + (count - 1) * gap + padding * 2;
+    const totalWidth = iconSize + padding * 2;
     const totalHeight = iconSize + padding * 2;
     const originX = midX + offsetX - totalWidth / 2;
     const originY = midY + offsetY - totalHeight / 2;
@@ -598,10 +614,8 @@ function updateRoutePosition(entry, boxA, boxB) {
     entry.cargoBg.setAttribute('width', totalWidth);
     entry.cargoBg.setAttribute('height', totalHeight);
 
-    entry.cargoIcons.forEach((img, i) => {
-      img.setAttribute('x', originX + padding + i * (iconSize + gap));
-      img.setAttribute('y', originY + padding);
-    });
+    entry.cargoIcon.setAttribute('x', originX + padding);
+    entry.cargoIcon.setAttribute('y', originY + padding);
   }
 }
 
@@ -611,59 +625,105 @@ function updateRoutePosition(entry, boxA, boxB) {
 // sonst ein abgeschlossener Drag (keine Detailansicht, Position speichern).
 const CLICK_MOVEMENT_THRESHOLD = 5;
 
+// Gemeinsame Drag-Logik für Maus und Touch: erfasst die Startposition, liefert
+// move(clientX, clientY) und end() zurück, die vom jeweiligen Event-Paar
+// (mousemove/mouseup bzw. touchmove/touchend) aufgerufen werden.
+function beginBoxDrag(box, islandId, allLineEls, boxEls, startClientX, startClientY) {
+  const startLeft = box.offsetLeft;
+  const startTop = box.offsetTop;
+  let maxMovement = 0;
+
+  box.classList.add('dragging');
+
+  const relatedLines = allLineEls.filter((entry) => entry.edge.a === islandId || entry.edge.b === islandId);
+
+  function move(clientX, clientY) {
+    maxMovement = Math.max(maxMovement, Math.hypot(clientX - startClientX, clientY - startClientY));
+
+    // Bewegung ist in echten Bildschirm-Pixeln, Box-Position dagegen in
+    // unskalierten Canvas-Koordinaten (transform:scale ändert nur die
+    // Darstellung, nicht die Layout-Maße) - Delta durch die Zoomstufe
+    // teilen, sonst "hinkt" die Box der Maus/dem Finger hinterher/voraus.
+    const dx = (clientX - startClientX) / kartenZoom;
+    const dy = (clientY - startClientY) / kartenZoom;
+
+    let newLeft = startLeft + dx;
+    let newTop = startTop + dy;
+
+    newLeft = Math.max(0, Math.min(CANVAS_WIDTH - box.offsetWidth, newLeft));
+    newTop = Math.max(0, Math.min(CANVAS_HEIGHT - box.offsetHeight, newTop));
+
+    box.style.left = `${newLeft}px`;
+    box.style.top = `${newTop}px`;
+
+    relatedLines.forEach((entry) => {
+      const updater = entry.type === 'route' ? updateRoutePosition : updateEdgePosition;
+      updater(entry, boxEls[entry.edge.a], boxEls[entry.edge.b]);
+    });
+  }
+
+  function end() {
+    box.classList.remove('dragging');
+    if (maxMovement < CLICK_MOVEMENT_THRESHOLD) {
+      openIslandDetail(islandId);
+    } else {
+      MapPositions.setPosition(islandId, box.offsetLeft, box.offsetTop);
+    }
+  }
+
+  return { move, end };
+}
+
 function setupDrag(box, islandId, allLineEls, boxEls) {
   box.addEventListener('mousedown', (e) => {
     e.preventDefault();
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const startLeft = box.offsetLeft;
-    const startTop = box.offsetTop;
-    let maxMovement = 0;
-
-    box.classList.add('dragging');
-
-    const relatedLines = allLineEls.filter((entry) => entry.edge.a === islandId || entry.edge.b === islandId);
+    const drag = beginBoxDrag(box, islandId, allLineEls, boxEls, e.clientX, e.clientY);
 
     function onMouseMove(moveEvent) {
-      maxMovement = Math.max(maxMovement, Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY));
-
-      // Mausbewegung ist in echten Bildschirm-Pixeln, Box-Position dagegen in
-      // unskalierten Canvas-Koordinaten (transform:scale ändert nur die
-      // Darstellung, nicht die Layout-Maße) - Delta durch die Zoomstufe
-      // teilen, sonst "hinkt" die Box der Maus hinterher/voraus.
-      const dx = (moveEvent.clientX - startX) / kartenZoom;
-      const dy = (moveEvent.clientY - startY) / kartenZoom;
-
-      let newLeft = startLeft + dx;
-      let newTop = startTop + dy;
-
-      newLeft = Math.max(0, Math.min(CANVAS_WIDTH - box.offsetWidth, newLeft));
-      newTop = Math.max(0, Math.min(CANVAS_HEIGHT - box.offsetHeight, newTop));
-
-      box.style.left = `${newLeft}px`;
-      box.style.top = `${newTop}px`;
-
-      relatedLines.forEach((entry) => {
-        const updater = entry.type === 'route' ? updateRoutePosition : updateEdgePosition;
-        updater(entry, boxEls[entry.edge.a], boxEls[entry.edge.b]);
-      });
+      drag.move(moveEvent.clientX, moveEvent.clientY);
     }
-
     function onMouseUp() {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      box.classList.remove('dragging');
-
-      if (maxMovement < CLICK_MOVEMENT_THRESHOLD) {
-        openIslandDetail(islandId);
-      } else {
-        MapPositions.setPosition(islandId, box.offsetLeft, box.offsetTop);
-      }
+      drag.end();
     }
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  // Touch-Pendant zum Maus-Drag (iPad): ein einzelner Finger auf einer Insel-
+  // Box verschiebt sie. touchmove ruft preventDefault auf, damit der Browser
+  // in diesem Moment NICHT gleichzeitig den .map-canvas-wrapper scrollt -
+  // sonst würde ein Drag-Versuch mit der Karte "mitrutschen" statt die Box
+  // zu bewegen. Berührt der Nutzer dagegen den leeren Canvas-Hintergrund
+  // (kein touchstart-Listener dort), scrollt/pannt die Karte ganz normal per
+  // nativer Touch-Geste weiter - kein Konflikt.
+  box.addEventListener(
+    'touchstart',
+    (e) => {
+      if (e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      const drag = beginBoxDrag(box, islandId, allLineEls, boxEls, touch.clientX, touch.clientY);
+
+      function onTouchMove(moveEvent) {
+        moveEvent.preventDefault();
+        const t = moveEvent.touches[0];
+        drag.move(t.clientX, t.clientY);
+      }
+      function onTouchEnd() {
+        box.removeEventListener('touchmove', onTouchMove);
+        box.removeEventListener('touchend', onTouchEnd);
+        box.removeEventListener('touchcancel', onTouchEnd);
+        drag.end();
+      }
+
+      box.addEventListener('touchmove', onTouchMove, { passive: false });
+      box.addEventListener('touchend', onTouchEnd);
+      box.addEventListener('touchcancel', onTouchEnd);
+    },
+    { passive: true }
+  );
 }
 
 // ---- Schiffsrouten-Verwaltung (Liste + Anlegen/Bearbeiten/Löschen) ----
@@ -714,7 +774,7 @@ function openRouteModal(routeId) {
 
   draftRouteStops = route ? [...route.stops] : [];
   draftRouteColor = route ? route.color : ROUTE_COLOR_PALETTE[ShipRoutes.getAll().length % ROUTE_COLOR_PALETTE.length];
-  draftRouteCargo = route ? [...(route.cargo || [])] : [];
+  draftRouteCargo = route ? route.cargo || null : null;
 
   const islands = Islands.getAll();
 
@@ -754,10 +814,10 @@ function openRouteModal(routeId) {
       </div>
 
       <div class="form-group">
-        <label>Fracht (optional)</label>
+        <label>Fracht-Icon (optional)</label>
         <input type="text" id="route-cargo-search" class="good-search" placeholder="Ware suchen...">
         <div class="good-icon-grid" id="route-cargo-grid"></div>
-        <div id="route-cargo-chips" class="chip-list"></div>
+        <div id="route-cargo-selected" class="chip-list"></div>
       </div>
 
       <div class="modal-actions">
@@ -770,7 +830,7 @@ function openRouteModal(routeId) {
 
   renderRouteStopList();
   renderCargoGrid();
-  renderCargoChips();
+  renderCargoSelected();
 
   document.getElementById('route-cargo-search').addEventListener('input', renderCargoGrid);
 
@@ -855,7 +915,6 @@ function renderCargoGrid() {
   const grid = document.getElementById('route-cargo-grid');
   const searchInput = document.getElementById('route-cargo-search');
   const term = (searchInput.value || '').trim().toLowerCase();
-  const selectedIds = new Set(draftRouteCargo);
 
   const filtered = GOODS_ICON_LIST.filter((icon) => {
     if (!term) return true;
@@ -871,7 +930,7 @@ function renderCargoGrid() {
   grid.innerHTML = filtered
     .map((icon) => {
       const name = Translations.good(icon, icon);
-      const selected = selectedIds.has(icon);
+      const selected = draftRouteCargo === icon;
       return `
         <button type="button" class="good-icon-tile ${selected ? 'selected' : ''}" data-cargo-id="${icon}" title="${escapeHtml(name)}">
           ${goodIconHtml(icon, name, 'good-icon-tile-img')}
@@ -882,42 +941,33 @@ function renderCargoGrid() {
     .join('');
 
   grid.querySelectorAll('[data-cargo-id]').forEach((btn) => {
-    btn.addEventListener('click', () => toggleCargoSelection(btn.dataset.cargoId));
+    btn.addEventListener('click', () => selectCargoIcon(btn.dataset.cargoId));
   });
 }
 
-function toggleCargoSelection(iconId) {
-  const idx = draftRouteCargo.indexOf(iconId);
-  if (idx === -1) {
-    draftRouteCargo.push(iconId);
-  } else {
-    draftRouteCargo.splice(idx, 1);
-  }
+// Ein einzelnes Fracht-Icon pro Route: erneutes Klicken auf das bereits
+// gewählte Icon hebt die Auswahl wieder auf, ein anderes Icon ersetzt sie.
+function selectCargoIcon(iconId) {
+  draftRouteCargo = draftRouteCargo === iconId ? null : iconId;
   renderCargoGrid();
-  renderCargoChips();
+  renderCargoSelected();
 }
 
-function renderCargoChips() {
-  const row = document.getElementById('route-cargo-chips');
-  if (draftRouteCargo.length === 0) {
+function renderCargoSelected() {
+  const row = document.getElementById('route-cargo-selected');
+  if (!draftRouteCargo) {
     row.innerHTML = '';
     return;
   }
-  row.innerHTML = draftRouteCargo
-    .map((icon) => {
-      const name = Translations.good(icon, icon);
-      return `
-        <span class="chip route-cargo-chip">
-          ${goodIconHtml(icon, name, 'chip-icon')}
-          ${escapeHtml(name)}
-          <button type="button" class="chip-remove" data-remove-cargo="${icon}" title="Entfernen">✕</button>
-        </span>
-      `;
-    })
-    .join('');
-  row.querySelectorAll('[data-remove-cargo]').forEach((btn) => {
-    btn.addEventListener('click', () => toggleCargoSelection(btn.dataset.removeCargo));
-  });
+  const name = Translations.good(draftRouteCargo, draftRouteCargo);
+  row.innerHTML = `
+    <span class="chip route-cargo-chip">
+      ${goodIconHtml(draftRouteCargo, name, 'chip-icon')}
+      ${escapeHtml(name)}
+      <button type="button" class="chip-remove" id="btn-remove-cargo" title="Entfernen">✕</button>
+    </span>
+  `;
+  document.getElementById('btn-remove-cargo').addEventListener('click', () => selectCargoIcon(draftRouteCargo));
 }
 
 function saveRouteFromModal() {
@@ -948,5 +998,5 @@ function closeRouteModal() {
   if (overlay) overlay.remove();
   editingRouteId = null;
   draftRouteStops = [];
-  draftRouteCargo = [];
+  draftRouteCargo = null;
 }

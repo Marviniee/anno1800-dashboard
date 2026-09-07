@@ -5,8 +5,9 @@
  *   name: string,
  *   color: string,          // Hex-Farbe, aus ROUTE_COLOR_PALETTE oder frei gewählt
  *   stops: string[],        // geordnete Insel-IDs, mindestens 2
- *   cargo: string[],        // optionale Fracht-Kennzeichnung: kanonische
- *                           // Icon-IDs aus GOODS_ICON_LIST, keine Rolle/Menge
+ *   cargo: string | null,   // optionale Fracht-Kennzeichnung: eine einzelne
+ *                           // kanonische Icon-ID aus GOODS_ICON_LIST (oder
+ *                           // null), keine Rolle/Menge, nur ein Icon pro Route
  * }
  *
  * Eine Route ist immer ein Rundlauf: die letzte Station fährt zurück zur
@@ -26,6 +27,18 @@ const ShipRoutes = {
 
   async load() {
     this.cache = await GitHubSync.readJson(this.DATA_PATH, []);
+
+    // Migration: cargo war zwischenzeitlich ein Array (Mehrfachauswahl),
+    // ist jetzt wieder auf ein einzelnes Icon zurückgebaut. Bestehende
+    // Routen mit mehreren Icons werden auf das erste reduziert.
+    let migrated = false;
+    this.cache.forEach((route) => {
+      if (Array.isArray(route.cargo)) {
+        route.cargo = route.cargo.length > 0 ? route.cargo[0] : null;
+        migrated = true;
+      }
+    });
+    if (migrated) this._persist('Migration: Fracht-Icons auf ein Icon pro Route reduziert');
   },
 
   getAll() {

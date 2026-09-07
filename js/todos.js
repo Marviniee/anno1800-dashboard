@@ -146,7 +146,9 @@ function renderTodoRow(todo, islandsById) {
 
   return `
     <div class="todo-row ${todo.done ? 'done' : ''}">
-      <input type="checkbox" class="todo-checkbox" ${todo.done ? 'checked' : ''} data-toggle-id="${todo.id}">
+      <label class="todo-checkbox-wrap">
+        <input type="checkbox" class="todo-checkbox" ${todo.done ? 'checked' : ''} data-toggle-id="${todo.id}">
+      </label>
       <span class="importance-dot importance-${todo.importance}" title="Wichtigkeit: ${IMPORTANCE_LABELS[todo.importance]}"></span>
       <span class="todo-text">${escapeHtml(todo.text)}</span>
       ${island ? `<span class="tag todo-island-tag">${escapeHtml(island.name)}</span>` : ''}

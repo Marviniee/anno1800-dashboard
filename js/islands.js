@@ -168,74 +168,6 @@ let draftFunctions = [];
 let draftByKind = { vorkommen: [], fruchtbarkeiten: [], goods: [] };
 let activeGoodsTab = 'vorkommen';
 
-function renderIslandsView() {
-  const view = document.getElementById('view-inseln');
-  const islands = Islands.getAll();
-
-  view.innerHTML = `
-    <div class="view-header">
-      <h1>Inseln</h1>
-      <button class="btn btn-primary" id="btn-add-island">+ Insel hinzufügen</button>
-    </div>
-    <div id="islands-container"></div>
-  `;
-
-  const container = document.getElementById('islands-container');
-
-  if (islands.length === 0) {
-    container.innerHTML = `<div class="empty-state">Noch keine Inseln erfasst. Leg deine erste Insel an.</div>`;
-  } else {
-    container.innerHTML = `<div class="island-grid">${islands.map(renderIslandCard).join('')}</div>`;
-  }
-
-  document.getElementById('btn-add-island').addEventListener('click', () => openIslandModal());
-
-  container.querySelectorAll('[data-edit-id]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openIslandModal(btn.dataset.editId);
-    });
-  });
-  container.querySelectorAll('[data-delete-id]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const island = islands.find((i) => i.id === btn.dataset.deleteId);
-      if (confirm(`Insel "${island.name}" wirklich löschen?`)) {
-        Islands.remove(btn.dataset.deleteId);
-        renderIslandsView();
-      }
-    });
-  });
-  container.querySelectorAll('[data-detail-id]').forEach((card) => {
-    card.addEventListener('click', () => openIslandDetail(card.dataset.detailId));
-  });
-}
-
-function renderIslandCard(island) {
-  const functionsHtml = island.functions.length
-    ? `<div class="tag-row">${island.functions.map((f) => `<span class="tag function-tag">${escapeHtml(f)}</span>`).join('')}</div>`
-    : '';
-
-  return `
-    <div class="island-card" data-detail-id="${island.id}">
-      <div class="island-card-header">
-        <h3>${escapeHtml(island.name)}</h3>
-        <div class="island-card-actions">
-          <button class="icon-btn" data-edit-id="${island.id}" title="Bearbeiten">✎</button>
-          <button class="icon-btn" data-delete-id="${island.id}" title="Löschen">🗑</button>
-        </div>
-      </div>
-      ${functionsHtml}
-      <div class="island-section-label">Vorkommen</div>
-      ${renderGoodsTagRow(island.vorkommen || [], false)}
-      <div class="island-section-label">Fruchtbarkeiten</div>
-      ${renderGoodsTagRow(island.fruchtbarkeiten || [], false)}
-      <div class="island-section-label">Produzierte Güter</div>
-      ${renderGoodsTagRow(island.goods || [], true)}
-    </div>
-  `;
-}
-
 function renderGoodsTagRow(items, showRole) {
   if (!items.length) {
     return `<div class="empty-state" style="padding:8px 0;">Keine erfasst</div>`;
@@ -354,6 +286,7 @@ function openIslandModal(islandId) {
       </div>
 
       <div class="modal-actions">
+        ${island ? '<button class="btn btn-danger" id="btn-delete-island">Löschen</button>' : ''}
         <button class="btn" id="btn-cancel-modal">Abbrechen</button>
         <button class="btn btn-primary" id="btn-save-island">Speichern</button>
       </div>
@@ -387,6 +320,17 @@ function openIslandModal(islandId) {
   });
 
   document.getElementById('btn-save-island').addEventListener('click', saveIslandFromModal);
+
+  const deleteBtn = document.getElementById('btn-delete-island');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+      if (confirm(`Insel "${island.name}" wirklich löschen?`)) {
+        Islands.remove(island.id);
+        closeIslandModal();
+        renderMapView();
+      }
+    });
+  }
 }
 
 function setActiveGoodsTab(tab) {
@@ -564,7 +508,7 @@ function saveIslandFromModal() {
   }
 
   closeIslandModal();
-  renderIslandsView();
+  renderMapView();
 }
 
 function closeIslandModal() {

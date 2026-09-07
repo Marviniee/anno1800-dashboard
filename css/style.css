@@ -1,19 +1,46 @@
+/* Farbwerte an echten Anno-1800-HUD-Screenshots kalibriert (Steam-Marketing-
+   Screenshots + PCGamer-Guide, per Pixel-Sampling ausgewertet): das
+   spielinterne HUD (Symbolleisten, Insel-Panel, Rahmen) ist ein warmes,
+   fast schwarzes Neutralgrau (kein Blau-Navy) mit gold/messingfarbenen
+   Akzenten für Icons und aktive Zustände - schlicht und sachlich, ohne
+   Pergament-/Zierrahmen-Optik. Pergament-Töne tauchen im echten Spiel nur
+   bei diegetischen Popups (Diplomatie-Angebote etc.) auf, bewusst NICHT
+   für dieses HUD-Redesign übernommen (siehe Nutzer-Vorgabe).
+   Light-Theme ist eine begründete Ableitung (im Spiel selbst gibt es kein
+   Pendant): gleiche Formsprache, aber auf hellem, warmem Steingrau statt
+   Pergament, damit es nicht "historisch" wirkt. */
 :root {
-  --bg: #12181f;
-  --bg-panel: #1a2330;
-  --bg-panel-alt: #212c3b;
-  --border: #2c394b;
-  --text: #e8edf4;
-  --text-muted: #8fa1b8;
-  --accent: #d9a441;
-  --accent-hover: #e8b75c;
-  --danger: #d9534f;
-  --danger-hover: #e6716d;
+  --bg: #17151a;
+  --bg-panel: #211e22;
+  --bg-panel-alt: #2b272b;
+  --border: #3a353a;
+  --text: #ece9e4;
+  --text-muted: #a89f96;
+  --accent: #cf9f3f;
+  --accent-hover: #e0b458;
+  --danger: #c9463f;
+  --danger-hover: #d9615a;
   --producer: #4caf6d;
   --consumer: #4a90d9;
   --both: #a874d9;
   --radius: 8px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+:root[data-theme="light"] {
+  --bg: #e9e6df;
+  --bg-panel: #fbfaf7;
+  --bg-panel-alt: #eeebe3;
+  --border: #d8d2c5;
+  --text: #2a2620;
+  --text-muted: #6e675b;
+  --accent: #b07f2e;
+  --accent-hover: #9c6f27;
+  --danger: #b23b32;
+  --danger-hover: #9c322a;
+  --producer: #2f8a52;
+  --consumer: #2f6fb0;
+  --both: #8256b0;
 }
 
 * { box-sizing: border-box; }
@@ -79,6 +106,7 @@ body {
   align-items: center;
   gap: 10px;
   width: 100%;
+  min-height: 44px;
   padding: 10px 12px;
   background: transparent;
   border: none;
@@ -107,12 +135,28 @@ body {
 /* Content */
 .content {
   flex: 1;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.view { display: none; }
+.view.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   padding: 28px 36px;
   overflow-y: auto;
 }
 
-.view { display: none; }
-.view.active { display: block; }
+/* Die Karte nutzt den gesamten verfügbaren Platz bis auf die Sidebar - kein
+   Außenabstand, eigenes internes Scrollen im Canvas statt der Ansicht. */
+#view-karte.active {
+  padding: 16px 20px;
+  overflow: hidden;
+}
 
 .placeholder-view {
   color: var(--text-muted);
@@ -129,6 +173,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .view-header h1 {
@@ -138,6 +183,10 @@ body {
 
 /* Buttons */
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   padding: 9px 16px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -170,47 +219,17 @@ body {
 }
 
 .btn-small {
+  min-width: 44px;
   padding: 5px 10px;
   font-size: 13px;
 }
 
-/* Island cards */
-.island-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.island-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  cursor: pointer;
-}
-
-.island-card:hover {
-  border-color: var(--accent);
-}
-
-.island-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-.island-card-header h3 {
-  margin: 0;
-  font-size: 17px;
-}
-
-.island-card-actions {
-  display: flex;
-  gap: 6px;
-}
-
 .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   background: transparent;
   border: none;
   color: var(--text-muted);
@@ -321,7 +340,8 @@ body {
 .form-group input[type="text"],
 .form-group input[type="password"] {
   width: 100%;
-  padding: 9px 10px;
+  min-height: 44px;
+  padding: 9px 12px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg);
@@ -340,6 +360,7 @@ body {
 
 .chip-input-row select {
   flex: 1;
+  min-height: 44px;
   padding: 9px 10px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -358,20 +379,31 @@ body {
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 8px 4px 10px;
+  gap: 4px;
+  min-height: 36px;
+  padding: 4px 4px 4px 12px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   background: var(--bg-panel-alt);
   border: 1px solid var(--border);
 }
 
+/* Bewusste Ausnahme von der 44px-Tap-Ziel-Regel: ein Chip ist ein kompaktes
+   Inline-Element (Funktions-Tag, Fracht-Auswahl), volle 44px würden die
+   Chip-Liste sprengen. 36px Chip-Höhe mit großzügigem Innenabstand um das
+   ✕ ist der praktikable Kompromiss für dieses dichte UI-Element. */
 .chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   background: transparent;
   border: none;
+  border-radius: 50%;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   padding: 0;
 }
@@ -410,6 +442,7 @@ body {
 
 .good-search {
   width: 100%;
+  min-height: 44px;
   padding: 8px 10px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -427,12 +460,15 @@ body {
 }
 
 .goods-tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
   color: var(--text-muted);
   font-size: 13px;
-  padding: 8px 4px;
+  padding: 8px 6px;
   cursor: pointer;
   margin-bottom: -1px;
 }
@@ -592,6 +628,33 @@ body {
 
 .settings-row .label { color: var(--text-muted); }
 
+.theme-switch {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.theme-switch-option {
+  min-height: 44px;
+  padding: 9px 18px;
+  background: var(--bg-panel-alt);
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.theme-switch-option + .theme-switch-option {
+  border-left: 1px solid var(--border);
+}
+
+.theme-switch-option.active {
+  background: var(--accent);
+  color: #1a1204;
+  font-weight: 600;
+}
+
 /* App-Ladezustand & Sync */
 .app-loading {
   color: var(--text-muted);
@@ -637,7 +700,8 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg);
-  height: calc(100vh - 170px);
+  flex: 1;
+  min-height: 0;
 }
 
 .map-canvas-scale-container {
@@ -705,6 +769,10 @@ body {
   padding: 8px 10px;
   cursor: grab;
   user-select: none;
+  /* Verhindert, dass der Browser bei einem Touch auf die Box selbst schon
+     mit nativem Scrollen/Zoomen beginnt, bevor unser eigener Drag-Handler
+     (touchmove + preventDefault) übernimmt. */
+  touch-action: none;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   z-index: 2;
 }
@@ -798,6 +866,8 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-height: 44px;
+  padding: 4px 6px;
   font-size: 13px;
   color: var(--text-muted);
   cursor: pointer;
@@ -805,6 +875,8 @@ body {
 }
 
 .layer-toggle input {
+  width: 20px;
+  height: 20px;
   accent-color: var(--accent);
 }
 
@@ -823,21 +895,23 @@ body {
   cursor: help;
 }
 
-.route-panel {
-  margin-bottom: 16px;
+.route-dropdown {
+  position: relative;
 }
 
-.route-panel-toggle {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 13px;
-  cursor: pointer;
-  padding: 6px 0;
-}
-
-.route-panel-toggle:hover {
-  color: var(--text);
+.route-dropdown-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  width: 340px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 10px;
 }
 
 .route-row {
@@ -845,10 +919,14 @@ body {
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
-  background: var(--bg-panel);
+  background: var(--bg-panel-alt);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 6px;
+}
+
+.route-row:last-child {
+  margin-bottom: 0;
 }
 
 .route-color-dot {
@@ -882,10 +960,10 @@ body {
 }
 
 .route-color-swatch {
-  width: 22px;
-  height: 22px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   cursor: pointer;
   padding: 0;
 }
@@ -895,8 +973,8 @@ body {
 }
 
 #input-route-color-custom {
-  width: 32px;
-  height: 26px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -943,6 +1021,7 @@ body {
 
 .todo-add-row input[type="text"] {
   flex: 1;
+  min-height: 44px;
   padding: 9px 10px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -952,6 +1031,7 @@ body {
 }
 
 .todo-add-row select {
+  min-height: 44px;
   padding: 9px 10px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -984,9 +1064,20 @@ body {
   text-decoration: line-through;
 }
 
+.todo-checkbox-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -10px 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
 .todo-checkbox {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   cursor: pointer;
   accent-color: var(--accent);
@@ -1098,15 +1189,18 @@ body {
 .chain-card-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: calc(15px * var(--zoom));
-  font-weight: 600;
-  margin-bottom: 10px;
+  gap: 10px;
+  font-size: calc(20px * var(--zoom));
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
 }
 
 .chain-card-title-icon {
-  width: calc(24px * var(--zoom));
-  height: calc(24px * var(--zoom));
+  width: calc(56px * var(--zoom));
+  height: calc(56px * var(--zoom));
   object-fit: contain;
   flex-shrink: 0;
 }

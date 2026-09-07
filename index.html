@@ -4,7 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anno 1800 Inselplaner</title>
-  <link rel="stylesheet" href="css/style.css?v=18">
+  <!-- Theme-Präferenz vor dem ersten Paint setzen (FOUC vermeiden) - die
+       eigentliche Logik lebt in js/theme.js, hier nur der early-apply. -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('anno1800.theme');
+        if (t) document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body>
   <div class="app">
@@ -14,10 +24,7 @@
         <span class="sidebar-subtitle">Inselplaner</span>
       </div>
       <nav class="sidebar-nav">
-        <button class="nav-item active" data-view="inseln">
-          <span class="nav-icon">🏝️</span> Inseln
-        </button>
-        <button class="nav-item" data-view="karte">
+        <button class="nav-item active" data-view="karte">
           <span class="nav-icon">🗺️</span> Karte
         </button>
         <button class="nav-item" data-view="todos">
@@ -41,7 +48,6 @@
         Es wurden lokale Daten aus einer früheren Version gefunden, die noch nicht mit GitHub synchronisiert sind.
         Trag in den <button class="link-button" data-view="einstellungen">Einstellungen</button> deinen GitHub-Token ein, um sie zu übernehmen.
       </div>
-      <section id="view-inseln" class="view"></section>
       <section id="view-karte" class="view"></section>
       <section id="view-todos" class="view"></section>
       <section id="view-warenketten" class="view"></section>
@@ -53,16 +59,17 @@
        Safari) nach einem Deploy noch alte gecachte JS-Dateien ausliefern.
        Bei jeder Versionsänderung in js/settings.js (APP_BUILD) hier den
        gleichen Wert nachziehen. -->
-  <script src="js/storage.js?v=18"></script>
-  <script src="js/github-sync.js?v=18"></script>
-  <script src="js/translations.js?v=18"></script>
-  <script src="js/goods-icons-data.js?v=18"></script>
-  <script src="js/islands.js?v=18"></script>
-  <script src="js/ship-routes.js?v=18"></script>
-  <script src="js/map.js?v=18"></script>
-  <script src="js/todos.js?v=18"></script>
-  <script src="js/warenketten.js?v=18"></script>
-  <script src="js/settings.js?v=18"></script>
-  <script src="js/app.js?v=18"></script>
+  <script src="js/theme.js?v=19"></script>
+  <script src="js/storage.js?v=19"></script>
+  <script src="js/github-sync.js?v=19"></script>
+  <script src="js/translations.js?v=19"></script>
+  <script src="js/goods-icons-data.js?v=19"></script>
+  <script src="js/islands.js?v=19"></script>
+  <script src="js/ship-routes.js?v=19"></script>
+  <script src="js/map.js?v=19"></script>
+  <script src="js/todos.js?v=19"></script>
+  <script src="js/warenketten.js?v=19"></script>
+  <script src="js/settings.js?v=19"></script>
+  <script src="js/app.js?v=19"></script>
 </body>
 </html>

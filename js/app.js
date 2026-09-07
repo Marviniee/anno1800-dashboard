@@ -114,22 +114,21 @@ function updateMigrationBanner() {
 
 function renderCurrentView() {
   const activeBtn = document.querySelector('.nav-item.active');
-  const viewName = activeBtn ? activeBtn.dataset.view : 'inseln';
-  if (viewName === 'karte') renderMapView();
-  else if (viewName === 'todos') renderTodosView();
+  const viewName = activeBtn ? activeBtn.dataset.view : 'karte';
+  if (viewName === 'todos') renderTodosView();
   else if (viewName === 'warenketten') renderWarenkettenView();
   else if (viewName === 'einstellungen') renderSettingsView();
-  else renderIslandsView();
+  else renderMapView();
 }
 
 async function init() {
   await Promise.all([Islands.load(), MapPositions.load(), Todos.load(), Translations.load(), ShipRoutes.load()]);
 
   document.getElementById('app-loading').hidden = true;
-  document.getElementById('view-inseln').classList.add('active');
+  document.getElementById('view-karte').classList.add('active');
 
   updateMigrationBanner();
-  renderIslandsView();
+  renderMapView();
 
   console.log(`Anno 1800 Inselplaner v${APP_SEMVER} (Build ${APP_BUILD})`);
 }

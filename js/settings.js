@@ -1,5 +1,5 @@
-const APP_SEMVER = '0.11.0';
-const APP_BUILD = 18;
+const APP_SEMVER = '0.12.0';
+const APP_BUILD = 19;
 
 function renderSettingsView() {
   const view = document.getElementById('view-einstellungen');
@@ -9,6 +9,14 @@ function renderSettingsView() {
   view.innerHTML = `
     <div class="view-header">
       <h1>Einstellungen</h1>
+    </div>
+
+    <div class="settings-block">
+      <h2 class="settings-block-title">Darstellung</h2>
+      <div class="theme-switch" id="theme-switch">
+        <button type="button" class="theme-switch-option ${Theme.get() === 'dark' ? 'active' : ''}" data-theme-option="dark">🌙 Dark</button>
+        <button type="button" class="theme-switch-option ${Theme.get() === 'light' ? 'active' : ''}" data-theme-option="light">☀️ Light</button>
+      </div>
     </div>
 
     <div class="settings-block">
@@ -65,6 +73,15 @@ function renderSettingsView() {
       </div>
     </div>
   `;
+
+  document.querySelectorAll('#theme-switch [data-theme-option]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      Theme.set(btn.dataset.themeOption);
+      document.querySelectorAll('#theme-switch [data-theme-option]').forEach((b) => {
+        b.classList.toggle('active', b.dataset.themeOption === btn.dataset.themeOption);
+      });
+    });
+  });
 
   document.getElementById('btn-save-token').addEventListener('click', async () => {
     const input = document.getElementById('input-github-token');
