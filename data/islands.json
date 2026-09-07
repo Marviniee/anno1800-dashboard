@@ -197,7 +197,9 @@
   },
   {
     "name": "Marklow",
-    "functions": [],
+    "functions": [
+      "Versorgung Bauern"
+    ],
     "vorkommen": [
       {
         "good": "Clay",
