@@ -40,5 +40,12 @@
     "islandId": "8ce00510-43a2-4dda-a784-9a440684a26f",
     "done": true,
     "id": "b79f36da-b24b-43de-951e-75280e1dbdd8"
+  },
+  {
+    "text": "Nähmaschinen auslagern und auf Wessungen Transportieren",
+    "importance": "medium",
+    "islandId": null,
+    "done": false,
+    "id": "cc2441f7-660f-4b19-b925-45f758325817"
   }
 ]
