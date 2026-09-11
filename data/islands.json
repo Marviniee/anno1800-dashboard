@@ -480,7 +480,9 @@
   },
   {
     "name": "Porley",
-    "functions": [],
+    "functions": [
+      "Nähmaschinen Produktion"
+    ],
     "vorkommen": [
       {
         "good": "Iron",
