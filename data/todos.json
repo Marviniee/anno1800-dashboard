@@ -68,5 +68,12 @@
     "islandId": null,
     "done": false,
     "id": "157f3a20-9d8c-4c65-baae-926ba43c6eec"
+  },
+  {
+    "text": "Forschungsinstitut erforschen",
+    "importance": "high",
+    "islandId": null,
+    "done": false,
+    "id": "4536d06d-e47b-45fb-af62-cbcb4db27465"
   }
 ]
