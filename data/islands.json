@@ -436,8 +436,8 @@
   {
     "name": "Wessungen",
     "functions": [
-      "Schiffsproduktion",
-      "Versorgung Handwerker (AW)"
+      "Versorgung Handwerker (AW)",
+      "Segelschiffsproduktion"
     ],
     "vorkommen": [
       {
