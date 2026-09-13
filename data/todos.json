@@ -54,5 +54,12 @@
     "islandId": null,
     "done": false,
     "id": "4536d06d-e47b-45fb-af62-cbcb4db27465"
+  },
+  {
+    "text": "Nähmaschinen Produzieren",
+    "importance": "medium",
+    "islandId": null,
+    "done": false,
+    "id": "a3132c14-01ba-40b7-b95c-8e034ea9a9ce"
   }
 ]
