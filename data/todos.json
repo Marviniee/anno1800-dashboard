@@ -90,7 +90,7 @@
   {
     "text": "Forschungsinstitut mit Strom versorgen",
     "importance": "high",
-    "islandId": "e2056329-5329-4d18-8c83-2392a6559f7f",
+    "islandId": null,
     "done": false,
     "parentId": null,
     "id": "2dba081c-e30a-4fdc-854b-e8da4855607e"
