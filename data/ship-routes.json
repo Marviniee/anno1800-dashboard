@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "name": "Fettfleck",
+    "color": "#e74c3c",
+    "stops": [
+      "8ba791ab-1501-4351-8f97-929e7156bfe7",
+      "45f2a2d4-3df5-4eda-b10f-8443b013fc4c"
+    ],
+    "cargo": "Dynamite",
+    "id": "9f9d8bd9-43da-4641-87e1-d800b419185a"
+  }
+]
