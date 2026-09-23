@@ -106,6 +106,11 @@ const IMPORTANCE_ORDER = { high: 0, medium: 1, low: 2 };
 // Klick auf den Wichtigkeits-Punkt schaltet reihum weiter.
 const IMPORTANCE_NEXT = { high: 'medium', medium: 'low', low: 'high' };
 
+// Eigenes Linien-Emblem (Insel mit Wellen) im selben Messing-Icon-Slot wie
+// die Waren-Icons, siehe .todo-island-emblem.
+const ISLAND_EMBLEM_SVG =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15c2-5 5-8 8-8s6 3 8 8"/><path d="M3 19c1.5 0 1.5-1 3-1s1.5 1 3 1 1.5-1 3-1 1.5 1 3 1 1.5-1 3-1 1.5 1 3 1"/></svg>';
+
 let todoCompletedExpanded = false;
 // Eintrag, unter dem gerade das Formular für ein neues Unter-ToDo offen ist.
 let todoAddingChildTo = null;
@@ -341,6 +346,7 @@ function renderTodoRow(todo, ctx, tree) {
       </button>
       <span class="todo-text">${escapeHtml(todo.text)}</span>
       ${tree.total ? `<span class="todo-progress" title="Erledigte Unter-ToDos">${tree.done}/${tree.total}</span>` : ''}
+      ${island ? `<span class="todo-island-emblem" aria-hidden="true">${ISLAND_EMBLEM_SVG}</span>` : ''}
       <label class="todo-island-select-wrap ${island ? 'has-island' : ''}" title="Insel-Bezug">
         <select class="todo-island-select" data-island-select-id="${todo.id}">${islandOptionsHtml(ctx.islands, todo.islandId)}</select>
       </label>

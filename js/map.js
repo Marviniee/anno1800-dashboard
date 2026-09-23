@@ -766,7 +766,7 @@ function drawShipRoutes(svg, routes, boxEls, portalFor) {
 
         cargoBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         cargoBg.setAttribute('class', 'route-cargo-bg');
-        cargoBg.setAttribute('rx', '4');
+        cargoBg.setAttribute('rx', '13');
         cargoGroup.appendChild(cargoBg);
 
         cargoIcon = document.createElementNS('http://www.w3.org/2000/svg', 'image');

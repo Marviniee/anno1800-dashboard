@@ -1,46 +1,90 @@
-/* Farbwerte an echten Anno-1800-HUD-Screenshots kalibriert (Steam-Marketing-
-   Screenshots + PCGamer-Guide, per Pixel-Sampling ausgewertet): das
-   spielinterne HUD (Symbolleisten, Insel-Panel, Rahmen) ist ein warmes,
-   fast schwarzes Neutralgrau (kein Blau-Navy) mit gold/messingfarbenen
-   Akzenten für Icons und aktive Zustände - schlicht und sachlich, ohne
-   Pergament-/Zierrahmen-Optik. Pergament-Töne tauchen im echten Spiel nur
-   bei diegetischen Popups (Diplomatie-Angebote etc.) auf, bewusst NICHT
-   für dieses HUD-Redesign übernommen (siehe Nutzer-Vorgabe).
-   Light-Theme ist eine begründete Ableitung (im Spiel selbst gibt es kein
-   Pendant): gleiche Formsprache, aber auf hellem, warmem Steingrau statt
-   Pergament, damit es nicht "historisch" wirkt. */
+/* Anno-1800-HUD-Stil. Farbbasis an echten HUD-Screenshots kalibriert
+   (Steam-Marketing-Screenshots + PCGamer-Guide, per Pixel-Sampling): warmes,
+   fast schwarzes Neutralgrau mit Messing-/Goldakzenten. Darauf aufbauend
+   eigene, per CSS/SVG gebaute Elemente (keine Spieldateien/Texturen):
+    - Panel-Rahmen mit schlichten Messing-Eckbeschlägen (--frame-corners,
+      Inline-SVG als Hintergrund-Layer, deshalb auch in Scroll-Containern
+      wie Modals fest in den Ecken),
+    - Messing-Verlauf für primäre Buttons und aktive Zustände,
+    - runde, dunkle Icon-Slots mit Messingring für alle Waren-Icons,
+    - Cinzel (Display-Serif, Titel) + Source Sans 3 (Fließtext), beide
+      freie Google Fonts (OFL).
+   Bewusst ohne Pergament-/Holz-Texturen: klare Kanten, dezente Ornamente.
+   Light-Theme: gleiche Formsprache auf hellem, warmem Steingrau (im Spiel
+   gibt es kein Pendant). Die Eck-SVGs brauchen die Messingfarbe fest im
+   Data-URI, deshalb sind sie pro Theme definiert. */
 :root {
-  --bg: #17151a;
-  --bg-panel: #211e22;
-  --bg-panel-alt: #2b272b;
-  --border: #3a353a;
-  --text: #ece9e4;
-  --text-muted: #a89f96;
-  --accent: #cf9f3f;
-  --accent-hover: #e0b458;
+  --bg: #151315;
+  --bg-panel: #201c1e;
+  --bg-panel-alt: #2a2527;
+  --border: #3b3431;
+  --text: #eee8de;
+  --text-muted: #a99e90;
+  --accent: #d2a446;
+  --accent-hover: #e6bc62;
   --danger: #c9463f;
   --danger-hover: #d9615a;
   --producer: #4caf6d;
   --consumer: #4a90d9;
   --both: #a874d9;
-  --radius: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --brass: #b8913f;
+  --brass-hi: #ecd08a;
+  --brass-lo: #7a5a24;
+  --brass-dim: #5b4a31;
+  --brass-glow: rgba(210, 164, 70, 0.16);
+  --on-brass: #1c1406;
+  --slot-bg: #110e0f;
+  --slot-hi: #342d29;
+  --panel-sheen: linear-gradient(180deg, rgba(255, 236, 200, 0.045), rgba(255, 236, 200, 0) 48px);
+  --shadow-panel: 0 1px 0 rgba(0, 0, 0, 0.35), 0 6px 18px rgba(0, 0, 0, 0.35);
+  --font-display: "Cinzel", "Trajan Pro", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --radius: 4px;
+  --corner-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(1 0 0 1 0 0)' fill='none' stroke='%23b8913f' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%23b8913f' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  --corner-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(-1 0 0 1 16 0)' fill='none' stroke='%23b8913f' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%23b8913f' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  --corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(1 0 0 -1 0 16)' fill='none' stroke='%23b8913f' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%23b8913f' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  --corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(-1 0 0 -1 16 16)' fill='none' stroke='%23b8913f' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%23b8913f' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  --frame-corners:
+    var(--corner-tl) left 3px top 3px / 14px no-repeat,
+    var(--corner-tr) right 3px top 3px / 14px no-repeat,
+    var(--corner-bl) left 3px bottom 3px / 14px no-repeat,
+    var(--corner-br) right 3px bottom 3px / 14px no-repeat;
+  --frame-corners-sm:
+    var(--corner-tl) left 2px top 2px / 9px no-repeat,
+    var(--corner-tr) right 2px top 2px / 9px no-repeat,
+    var(--corner-bl) left 2px bottom 2px / 9px no-repeat,
+    var(--corner-br) right 2px bottom 2px / 9px no-repeat;
+  font-family: var(--font-body);
 }
 
 :root[data-theme="light"] {
-  --bg: #e9e6df;
-  --bg-panel: #fbfaf7;
-  --bg-panel-alt: #eeebe3;
-  --border: #d8d2c5;
+  --bg: #e7e3db;
+  --bg-panel: #faf8f3;
+  --bg-panel-alt: #eeeae1;
+  --border: #d6cebf;
   --text: #2a2620;
   --text-muted: #6e675b;
-  --accent: #b07f2e;
-  --accent-hover: #9c6f27;
+  --accent: #a67624;
+  --accent-hover: #8f651e;
   --danger: #b23b32;
   --danger-hover: #9c322a;
   --producer: #2f8a52;
   --consumer: #2f6fb0;
   --both: #8256b0;
+  --brass: #9a7328;
+  --brass-hi: #dcb866;
+  --brass-lo: #7a5818;
+  --brass-dim: #c9b58c;
+  --brass-glow: rgba(154, 115, 40, 0.14);
+  --on-brass: #1c1406;
+  --slot-bg: #e9e2d3;
+  --slot-hi: #fffdf8;
+  --panel-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 48px);
+  --shadow-panel: 0 1px 0 rgba(90, 70, 30, 0.08), 0 6px 16px rgba(90, 70, 30, 0.12);
+  --corner-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(1 0 0 1 0 0)' fill='none' stroke='%239a7328' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%239a7328' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  --corner-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(-1 0 0 1 16 0)' fill='none' stroke='%239a7328' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%239a7328' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  --corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(1 0 0 -1 0 16)' fill='none' stroke='%239a7328' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%239a7328' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  --corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg transform='matrix(-1 0 0 -1 16 16)' fill='none' stroke='%239a7328' stroke-width='1.4'%3E%3Cpath d='M1.5 15V6L6 1.5H15'/%3E%3Cpath d='M6.5 4.5L8.5 6.5L6.5 8.5L4.5 6.5Z' fill='%239a7328' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 * { box-sizing: border-box; }
@@ -1440,4 +1484,491 @@ body {
 .map-world-tabs {
   flex-wrap: wrap;
   margin-top: -8px;
+}
+
+/* ==========================================================================
+   Anno-HUD-Schicht: Rahmen, Ornamente, Messing, Icon-Slots, Typografie.
+   Liegt bewusst am Dateiende und überschreibt die Grundstile oben mit
+   gleicher Spezifität - die Layout-Regeln bleiben dort, hier nur die Optik.
+   ========================================================================== */
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+body {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* --- Typografie: Display-Serif für Titel --- */
+h1, h2, h3,
+.sidebar-title,
+.modal h2,
+.settings-block-title,
+.warenketten-category-title,
+.chain-card-title,
+.map-island-box-title,
+.map-world-portal {
+  font-family: var(--font-display);
+}
+
+.view-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+/* Kopfzeile jeder Ansicht: feine Linie mit Messing-Anfang und Raute */
+.view-header {
+  position: relative;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 140px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--brass), transparent);
+}
+
+.view-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 7px;
+  height: 7px;
+  background: var(--brass);
+  transform: rotate(45deg);
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  background: linear-gradient(180deg, var(--bg-panel), var(--bg));
+  border-right: 1px solid var(--brass-dim);
+  /* zweite, feine Innenlinie wie bei den HUD-Leisten */
+  box-shadow: inset -4px 0 0 -3px var(--brass-dim);
+}
+
+.sidebar-header {
+  position: relative;
+  text-align: center;
+  border-bottom: 1px solid var(--brass-dim);
+}
+
+.sidebar-header::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  background: var(--brass);
+  transform: rotate(45deg);
+}
+
+.sidebar-title {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--brass);
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 60%, var(--brass-lo));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sidebar-subtitle {
+  margin-top: 2px;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--brass-dim);
+}
+
+.nav-item {
+  position: relative;
+  border-radius: 2px;
+}
+
+.nav-item.active {
+  background: linear-gradient(90deg, var(--brass-glow), transparent 85%);
+  box-shadow: inset 2px 0 0 var(--brass);
+  color: var(--accent);
+}
+
+.nav-icon {
+  display: inline-flex;
+  color: var(--brass);
+}
+
+.nav-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- Buttons: dunkles Metall, primär in Messing --- */
+.btn {
+  border-radius: var(--radius);
+  border-color: var(--brass-dim);
+  background: linear-gradient(180deg, var(--bg-panel-alt), var(--bg-panel));
+  box-shadow: inset 0 1px 0 rgba(255, 240, 210, 0.05), 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+.btn:hover {
+  border-color: var(--brass);
+}
+
+.btn-primary {
+  border-color: var(--brass-lo);
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 55%, var(--brass-lo));
+  color: var(--on-brass);
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 250, 230, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass-hi) 20%, var(--brass) 70%, var(--brass-lo));
+  border-color: var(--brass-lo);
+}
+
+.btn-danger {
+  background: transparent;
+  border-color: var(--danger);
+  box-shadow: none;
+}
+
+.theme-switch {
+  border-color: var(--brass-dim);
+}
+
+.theme-switch-option.active {
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 55%, var(--brass-lo));
+  color: var(--on-brass);
+}
+
+/* --- Eingabefelder --- */
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group select,
+.chip-input-row select,
+.todo-add-row input[type="text"],
+.todo-add-row select,
+.good-search,
+.warenketten-search,
+.role-select,
+.good-count-input {
+  border-radius: var(--radius);
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--brass) !important;
+  box-shadow: 0 0 0 3px var(--brass-glow);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--brass);
+}
+
+/* --- Tabs: Messing-Unterstrich mit kleiner Raute --- */
+.goods-tabs {
+  border-bottom-color: var(--brass-dim);
+}
+
+.goods-tab {
+  position: relative;
+  letter-spacing: 0.02em;
+}
+
+.goods-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--brass);
+}
+
+.goods-tab.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  background: var(--brass);
+  transform: rotate(45deg);
+}
+
+/* --- Panels mit Messing-Eckbeschlägen --- */
+.modal,
+.settings-block,
+.chain-card,
+.route-dropdown-list {
+  border-color: var(--brass-dim);
+  border-radius: var(--radius);
+  background: var(--frame-corners), var(--panel-sheen), var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+}
+
+.modal {
+  padding: 24px 26px;
+}
+
+.modal-overlay {
+  background: rgba(8, 6, 4, 0.66);
+}
+
+.modal h2,
+.settings-block-title {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--brass-dim);
+}
+
+.map-island-box {
+  border-color: var(--brass-dim);
+  border-radius: 3px;
+  background: var(--frame-corners-sm), var(--panel-sheen), var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+}
+
+.map-island-box:hover {
+  border-color: var(--brass);
+}
+
+.map-island-box-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0 6px;
+  color: var(--text);
+}
+
+.chain-card-title,
+.warenketten-category-title {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.chain-card-title {
+  border-bottom-color: var(--brass-dim);
+}
+
+.warenketten-category-title {
+  border-bottom-color: var(--brass-dim);
+}
+
+.todo-row,
+.route-row {
+  border-radius: var(--radius);
+  background: var(--panel-sheen), var(--bg-panel);
+}
+
+.todo-row:hover {
+  border-color: var(--brass-dim);
+}
+
+.todo-children {
+  border-left: 1px solid var(--brass-dim);
+}
+
+.tag.function-tag,
+.map-function-chip {
+  background: var(--brass-glow);
+  border-color: var(--brass);
+  color: var(--accent);
+}
+
+/* --- Icon-Slots: einheitlicher runder Messing-Rahmen für alle Waren-Icons
+       (Karte, Warenketten, Insel-Formular/-Detail, Fracht-Auswahl, To-Dos) --- */
+.map-good-icon,
+.chain-node-icon,
+.chain-card-title-icon,
+.good-icon-tile-img,
+.good-entry-icon,
+.good-tag-icon,
+.chip-icon,
+.todo-island-emblem {
+  box-sizing: border-box;
+  padding: 4px;
+  border: 1px solid var(--brass-dim);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 32%, var(--slot-hi), var(--slot-bg) 72%);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+/* Winzige Icons in Tags/Chips: weniger Innenabstand, sonst bleibt vom
+   eigentlichen Icon kaum etwas übrig. */
+.good-tag-icon,
+.chip-icon {
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+}
+
+.map-good-icon-wrap,
+.map-good-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.map-good-icon {
+  padding: 2px;
+}
+
+.good-entry-icon {
+  width: 30px;
+  height: 30px;
+  padding: 3px;
+}
+
+.good-icon-tile-img {
+  width: 40px;
+  height: 40px;
+}
+
+.chain-node-icon-wrap,
+.chain-node-icon {
+  width: calc(48px * var(--zoom));
+  height: calc(48px * var(--zoom));
+}
+
+.chain-card-title-icon {
+  width: calc(60px * var(--zoom));
+  height: calc(60px * var(--zoom));
+}
+
+.good-icon-tile.selected .good-icon-tile-img,
+.map-island-box:hover .map-good-icon {
+  border-color: var(--brass);
+}
+
+.good-icon-tile {
+  background: transparent;
+}
+
+.good-icon-tile.selected {
+  background: var(--brass-glow);
+  border-color: var(--brass);
+}
+
+.map-good-count,
+.chain-node-amount {
+  background: var(--bg-panel);
+  border-color: var(--brass-dim);
+}
+
+.route-cargo-bg {
+  fill: var(--slot-bg);
+  stroke: var(--brass);
+}
+
+/* Insel-Emblem vor dem Insel-Bezug eines To-Dos */
+.todo-island-emblem {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  padding: 4px;
+  flex-shrink: 0;
+  color: var(--brass);
+}
+
+.todo-island-emblem svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Karte --- */
+.map-canvas-wrapper {
+  border-color: var(--brass-dim);
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.25);
+}
+
+.map-world-portal {
+  border: 1px solid var(--brass);
+  border-radius: var(--radius);
+  background: var(--frame-corners-sm), var(--panel-sheen), var(--bg-panel);
+  letter-spacing: 0.04em;
+  box-shadow: var(--shadow-panel);
+}
+
+.map-world-portal:hover {
+  background: var(--frame-corners-sm), var(--brass-glow), var(--bg-panel);
+}
+
+/* Feste Innenabstände je Slot-Größe (Prozent-Padding bezöge sich auf die
+   Breite des Elternelements, nicht auf das Icon selbst). */
+.chain-node-icon {
+  padding: calc(6px * var(--zoom));
+}
+
+.chain-card-title-icon {
+  padding: calc(8px * var(--zoom));
+}
+
+.good-icon-tile-img {
+  padding: 5px;
+}
+
+/* Checkboxen im Messing-Stil statt weißer Systemkästchen */
+.todo-checkbox,
+.layer-toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1px solid var(--brass);
+  border-radius: 3px;
+  background: radial-gradient(circle at 50% 30%, var(--slot-hi), var(--slot-bg) 80%);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.todo-checkbox::before,
+.layer-toggle input[type="checkbox"]::before {
+  content: '';
+  width: 10px;
+  height: 6px;
+  margin-top: -2px;
+  border-left: 2px solid var(--on-brass);
+  border-bottom: 2px solid var(--on-brass);
+  transform: rotate(-45deg) scale(0);
+  transition: transform 0.12s ease-out;
+}
+
+.todo-checkbox:checked,
+.layer-toggle input[type="checkbox"]:checked {
+  border-color: var(--brass-lo);
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 60%, var(--brass-lo));
+}
+
+.todo-checkbox:checked::before,
+.layer-toggle input[type="checkbox"]:checked::before {
+  transform: rotate(-45deg) scale(1);
+}
+
+/* Kopfzeile darf umbrechen, ohne einzelne Buttons zu verwaisen */
+.view-header {
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.map-header-actions {
+  justify-content: flex-end;
+  gap: 10px;
 }

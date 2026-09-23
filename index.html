@@ -14,7 +14,13 @@
       } catch (e) {}
     })();
   </script>
-  <link rel="stylesheet" href="css/style.css?v=24">
+  <!-- Freie Web-Fonts (OFL) für den Anno-Stil: Cinzel als Display-Serif für
+       Titel, Source Sans 3 als gut lesbare Fließtext-Schrift. Ohne Netz
+       greifen die Fallbacks aus --font-display/--font-body. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css?v=25">
 </head>
 <body>
   <div class="app">
@@ -24,20 +30,21 @@
         <span class="sidebar-subtitle">Inselplaner</span>
       </div>
       <nav class="sidebar-nav">
+        <!-- Eigene Linien-Icons (currentColor = Messing, siehe .nav-icon) -->
         <button class="nav-item active" data-view="karte">
-          <span class="nav-icon">🗺️</span> Karte
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg></span> Karte
         </button>
         <button class="nav-item" data-view="todos">
-          <span class="nav-icon">✅</span> To-Dos
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="m7.5 9 1.5 1.5L12 7.5M7.5 15.5 9 17l3-3M14 9h3M14 15.5h3"/></svg></span> To-Dos
         </button>
         <button class="nav-item" data-view="warenketten">
-          <span class="nav-icon">🔗</span> Warenketten
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg></span> Warenketten
         </button>
       </nav>
       <div class="sidebar-footer">
         <div id="sync-status" class="sync-status"></div>
         <button class="nav-item" data-view="einstellungen">
-          <span class="nav-icon">⚙️</span> Einstellungen
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/><circle cx="12" cy="12" r="6.5"/></svg></span> Einstellungen
         </button>
       </div>
     </aside>
@@ -59,17 +66,17 @@
        Safari) nach einem Deploy noch alte gecachte JS-Dateien ausliefern.
        Bei jeder Versionsänderung in js/settings.js (APP_BUILD) hier den
        gleichen Wert nachziehen. -->
-  <script src="js/theme.js?v=24"></script>
-  <script src="js/storage.js?v=24"></script>
-  <script src="js/github-sync.js?v=24"></script>
-  <script src="js/translations.js?v=24"></script>
-  <script src="js/goods-icons-data.js?v=24"></script>
-  <script src="js/islands.js?v=24"></script>
-  <script src="js/ship-routes.js?v=24"></script>
-  <script src="js/map.js?v=24"></script>
-  <script src="js/todos.js?v=24"></script>
-  <script src="js/warenketten.js?v=24"></script>
-  <script src="js/settings.js?v=24"></script>
-  <script src="js/app.js?v=24"></script>
+  <script src="js/theme.js?v=25"></script>
+  <script src="js/storage.js?v=25"></script>
+  <script src="js/github-sync.js?v=25"></script>
+  <script src="js/translations.js?v=25"></script>
+  <script src="js/goods-icons-data.js?v=25"></script>
+  <script src="js/islands.js?v=25"></script>
+  <script src="js/ship-routes.js?v=25"></script>
+  <script src="js/map.js?v=25"></script>
+  <script src="js/todos.js?v=25"></script>
+  <script src="js/warenketten.js?v=25"></script>
+  <script src="js/settings.js?v=25"></script>
+  <script src="js/app.js?v=25"></script>
 </body>
 </html>
