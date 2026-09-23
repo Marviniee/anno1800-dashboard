@@ -73,7 +73,7 @@
   },
   {
     "text": "Post Implementieren",
-    "importance": "low",
+    "importance": "high",
     "islandId": null,
     "done": false,
     "parentId": null,
@@ -89,7 +89,7 @@
   },
   {
     "text": "Forschungsinstitut mit Strom versorgen",
-    "importance": "high",
+    "importance": "medium",
     "islandId": "e2056329-5329-4d18-8c83-2392a6559f7f",
     "done": false,
     "parentId": null,
