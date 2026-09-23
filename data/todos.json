@@ -110,5 +110,13 @@
     "done": false,
     "parentId": "2dba081c-e30a-4fdc-854b-e8da4855607e",
     "id": "acceb229-e86e-4ce4-9c9f-8cfd0bc50dc8"
+  },
+  {
+    "text": "Öltanker bauen",
+    "importance": "medium",
+    "islandId": null,
+    "done": false,
+    "parentId": "acceb229-e86e-4ce4-9c9f-8cfd0bc50dc8",
+    "id": "090408ba-7687-487d-941d-64046bd14ab2"
   }
 ]
