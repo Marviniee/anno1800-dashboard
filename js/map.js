@@ -346,7 +346,8 @@ function renderMapView() {
 
   const tradeEdges = computeTradeEdges(islands);
   const tradeEdgeEls = drawTradeEdges(svg, tradeEdges, boxEls);
-  const routeLineEls = drawShipRoutes(svg, routes, boxEls);
+  const portalFor = createWorldPortalLookup(canvas, allIslands, boxEls);
+  const routeLineEls = drawShipRoutes(svg, routes, boxEls, portalFor);
   const allLineEls = [...tradeEdgeEls, ...routeLineEls];
 
   document.getElementById('toggle-trade-edges').addEventListener('change', (e) => {
@@ -356,6 +357,9 @@ function renderMapView() {
   document.getElementById('toggle-ship-routes').addEventListener('change', (e) => {
     const g = svg.querySelector('.ship-routes-layer');
     if (g) g.style.display = e.target.checked ? '' : 'none';
+    canvas.querySelectorAll('.map-world-portal').forEach((p) => {
+      p.style.display = e.target.checked ? '' : 'none';
+    });
   });
 
   islands.forEach((island) => {
@@ -633,9 +637,63 @@ function formatEdgeLabel(goods) {
   return `${goods.slice(0, 2).join(', ')} +${goods.length - 2}`;
 }
 
+// Welt-Portale: feste Ankerpunkte am Kartenrand (in % der Canvas), einer pro
+// Ziel-Welt. Keine echte Geografie zwischen den Sessions - nur eine stabile
+// Stelle, damit Routen in eine andere Welt sichtbar "hinausfahren".
+const WORLD_PORTAL_ANCHORS = {
+  'Alte Welt': { x: 0, y: 25 },
+  'Neue Welt': { x: 0, y: 75 },
+  Enbesa: { x: 100, y: 75 },
+  'Kap Trelawney': { x: 100, y: 25 },
+  Arktis: { x: 50, y: 0 },
+};
+const WORLD_PORTAL_MARGIN = 16;
+
+// Liefert eine Funktion islandId -> Schlüssel des Portals der Welt dieser
+// Insel (oder null, wenn die Insel unbekannt ist bzw. in der aktuellen Welt
+// liegt). Portale werden erst bei Bedarf angelegt und unter "portal:<Welt>"
+// in boxEls registriert, damit Linien-Update und Drag sie wie Boxen behandeln.
+function createWorldPortalLookup(canvas, allIslands, boxEls) {
+  const islandsById = Object.fromEntries(allIslands.map((i) => [i.id, i]));
+  const routeNamesByWorld = {};
+
+  return function portalFor(islandId, route) {
+    const island = islandsById[islandId];
+    if (!island || island.world === kartenWelt) return null;
+    const world = island.world;
+    const key = `portal:${world}`;
+
+    if (!boxEls[key]) {
+      const portal = document.createElement('button');
+      portal.type = 'button';
+      portal.className = 'map-world-portal';
+      portal.innerHTML = `<span class="map-world-portal-label">Richtung ${escapeHtml(world)} →</span>`;
+      portal.addEventListener('click', () => {
+        kartenWelt = world;
+        Storage.set(KARTEN_WELT_STORAGE_KEY, kartenWelt);
+        renderMapView();
+      });
+      canvas.appendChild(portal);
+
+      const anchor = WORLD_PORTAL_ANCHORS[world] || { x: 50, y: 100 };
+      const left = (anchor.x / 100) * CANVAS_WIDTH - portal.offsetWidth / 2;
+      const top = (anchor.y / 100) * CANVAS_HEIGHT - portal.offsetHeight / 2;
+      portal.style.left = `${Math.max(WORLD_PORTAL_MARGIN, Math.min(CANVAS_WIDTH - portal.offsetWidth - WORLD_PORTAL_MARGIN, left))}px`;
+      portal.style.top = `${Math.max(WORLD_PORTAL_MARGIN, Math.min(CANVAS_HEIGHT - portal.offsetHeight - WORLD_PORTAL_MARGIN, top))}px`;
+
+      boxEls[key] = portal;
+      routeNamesByWorld[world] = new Set();
+    }
+
+    routeNamesByWorld[world].add(route.name);
+    boxEls[key].title = `Routen nach ${world}: ${[...routeNamesByWorld[world]].join(', ')} - klicken, um ${world} zu öffnen`;
+    return key;
+  };
+}
+
 // Schiffsrouten: gestrichelte, farbige Linien mit Pfeilspitzen in
 // Fahrtrichtung, ein Kreis je Route (letzter Stop -> erster Stop).
-function drawShipRoutes(svg, routes, boxEls) {
+function drawShipRoutes(svg, routes, boxEls, portalFor) {
   const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   group.setAttribute('class', 'ship-routes-layer');
   svg.appendChild(group);
@@ -666,9 +724,15 @@ function drawShipRoutes(svg, routes, boxEls) {
     defs.appendChild(marker);
 
     ShipRoutes.segmentsFor(route).forEach((seg) => {
-      const boxA = boxEls[seg.from];
-      const boxB = boxEls[seg.to];
-      if (!boxA || !boxB) return;
+      // Liegt genau eine Station in einer anderen Welt, endet bzw. beginnt
+      // das Segment an deren Welt-Portal am Kartenrand statt zu verschwinden.
+      // Segmente, die komplett in anderen Welten liegen, bleiben unsichtbar.
+      const keyA = boxEls[seg.from] ? seg.from : portalFor(seg.from, route);
+      const keyB = boxEls[seg.to] ? seg.to : portalFor(seg.to, route);
+      if (!keyA || !keyB || keyA === keyB) return;
+      if (!boxEls[seg.from] && !boxEls[seg.to]) return;
+      const boxA = boxEls[keyA];
+      const boxB = boxEls[keyB];
 
       const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       line.setAttribute('class', 'route-line');
@@ -716,7 +780,7 @@ function drawShipRoutes(svg, routes, boxEls) {
         group.appendChild(cargoGroup);
       }
 
-      const entry = { type: 'route', edge: { a: seg.from, b: seg.to }, line, hitArea, cargoGroup, cargoBg, cargoIcon };
+      const entry = { type: 'route', edge: { a: keyA, b: keyB }, line, hitArea, cargoGroup, cargoBg, cargoIcon };
       routeEls.push(entry);
       updateRoutePosition(entry, boxA, boxB);
     });
@@ -890,11 +954,13 @@ function renderRoutesList(routes, islands) {
   container.innerHTML = routes
     .map((route) => {
       const stopNames = route.stops.map((id) => (islandsById[id] ? islandLabel(islandsById[id]) : '(gelöscht)'));
+      const worlds = new Set(route.stops.filter((id) => islandsById[id]).map((id) => islandsById[id].world));
+      const worldInfo = worlds.size > 1 ? ` · ${worlds.size} Welten` : '';
       return `
         <div class="route-row">
           <span class="route-color-dot" style="background:${route.color}"></span>
           <span class="route-row-name">${escapeHtml(route.name)}</span>
-          <span class="route-row-stops" title="${escapeHtml(stopNames.join(' → '))}">${stopNames.length} Stationen</span>
+          <span class="route-row-stops" title="${escapeHtml(stopNames.join(' → '))}">${stopNames.length} Stationen${worldInfo}</span>
           <button class="icon-btn" data-edit-route="${route.id}" title="Bearbeiten">✎</button>
           <button class="icon-btn" data-delete-route="${route.id}" title="Löschen">🗑</button>
         </div>
