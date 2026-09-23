@@ -355,7 +355,8 @@ body {
 }
 
 .form-group input[type="text"],
-.form-group input[type="password"] {
+.form-group input[type="password"],
+.form-group select {
   width: 100%;
   min-height: 44px;
   padding: 9px 12px;
@@ -1324,4 +1325,10 @@ body {
 
 .warenketten-footer a {
   color: var(--text-muted);
+}
+
+/* Welt-Umschalter über der Karte (eine Karte pro Spiel-Session) */
+.map-world-tabs {
+  flex-wrap: wrap;
+  margin-top: -8px;
 }

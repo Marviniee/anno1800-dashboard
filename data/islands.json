@@ -37,6 +37,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "8ba791ab-1501-4351-8f97-929e7156bfe7"
   },
   {
@@ -81,6 +82,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "8ce00510-43a2-4dda-a784-9a440684a26f"
   },
   {
@@ -119,6 +121,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "f3f42aaf-5155-465c-bd65-23e31c4fa42d"
   },
   {
@@ -163,6 +166,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "e2056329-5329-4d18-8c83-2392a6559f7f"
   },
   {
@@ -197,6 +201,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "4c21ea7a-d1a6-48db-95af-a258f437488a"
   },
   {
@@ -241,6 +246,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "02bc113a-e9dd-4881-8dbc-d987ca8917bd"
   },
   {
@@ -283,6 +289,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "8249d644-ee42-4dce-b073-dff2d3303ecb"
   },
   {
@@ -317,6 +324,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "cd9d4b02-a6aa-4d1f-9e96-d2c8c093647e"
   },
   {
@@ -363,6 +371,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "c8385ce0-463e-40ca-a623-6d93c2089959"
   },
   {
@@ -389,6 +398,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "07d7c50d-fa78-421c-b015-751b9fc8e032"
   },
   {
@@ -431,6 +441,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "0c82c08f-55bc-49a6-afca-7c5e2f9228f7"
   },
   {
@@ -476,6 +487,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "49cf3ca3-9577-4189-acff-70d65ff73ae1"
   },
   {
@@ -516,6 +528,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "45f2a2d4-3df5-4eda-b10f-8443b013fc4c"
   },
   {
@@ -554,6 +567,7 @@
       }
     ],
     "goods": [],
+    "world": "Alte Welt",
     "id": "b3af5981-7ce9-432f-a2fe-69af1e339288"
   },
   {
@@ -562,6 +576,241 @@
     "vorkommen": [],
     "fruchtbarkeiten": [],
     "goods": [],
+    "world": "Alte Welt",
     "id": "54ab23f0-e8a3-4559-a290-6f781899dbd4"
+  },
+  {
+    "name": "Insel 1",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 49.5,
+      "y": 8.5
+    },
+    "id": "4f5bccdb-9f4d-44d9-945f-65755a57b515"
+  },
+  {
+    "name": "Insel 2",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 36.2,
+      "y": 27.1
+    },
+    "id": "83844ffc-d4d1-4991-9c4f-186b794de0a5"
+  },
+  {
+    "name": "Insel 3",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 48.6,
+      "y": 38.2
+    },
+    "id": "95c0473a-99bd-481f-a634-3755034b8f70"
+  },
+  {
+    "name": "Insel 4",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 72.1,
+      "y": 38.2
+    },
+    "id": "f2d0b1a4-1db5-42ac-8562-a71d863b9d2e"
+  },
+  {
+    "name": "Insel 5",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 21.3,
+      "y": 47.4
+    },
+    "id": "975372ac-68b1-4587-a826-f3e12f1fad9a"
+  },
+  {
+    "name": "Insel 6",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 39.0,
+      "y": 58.2
+    },
+    "id": "d82ffce1-4b69-4a9a-abf9-f6b5f73bb779"
+  },
+  {
+    "name": "Insel 7",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 51.1,
+      "y": 54.2
+    },
+    "id": "d3ac25fa-830a-4f5d-b81a-a6473640bd9c"
+  },
+  {
+    "name": "Insel 8",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 67.0,
+      "y": 56.2
+    },
+    "id": "ac8a995d-a3e0-49dc-9589-ae213e418cbc"
+  },
+  {
+    "name": "Insel 9",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 80.6,
+      "y": 52.6
+    },
+    "id": "f3895143-c4e0-4896-abf8-2d5acfeb8e17"
+  },
+  {
+    "name": "Insel 10",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 45.4,
+      "y": 76.1
+    },
+    "id": "c5f74783-cbcf-40f3-9dcf-dd004cd15889"
+  },
+  {
+    "name": "Insel 11",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Neue Welt",
+    "mapStart": {
+      "x": 64.1,
+      "y": 74.8
+    },
+    "id": "1b6aac9c-ceda-4068-bcd6-34bd34f2322f"
+  },
+  {
+    "name": "Insel 1",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Enbesa",
+    "mapStart": {
+      "x": 52.4,
+      "y": 17.3
+    },
+    "id": "32201266-342a-4710-85be-c0ff14d8b2c4"
+  },
+  {
+    "name": "Insel 2",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Enbesa",
+    "mapStart": {
+      "x": 35.2,
+      "y": 25.8
+    },
+    "id": "220749e3-a9a9-4644-ab1f-a98da90925fd"
+  },
+  {
+    "name": "Insel 3",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Enbesa",
+    "mapStart": {
+      "x": 27.7,
+      "y": 43.3
+    },
+    "id": "7e0bafab-1ab4-444a-88b4-0d3bbad02336"
+  },
+  {
+    "name": "Insel 4",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Enbesa",
+    "mapStart": {
+      "x": 74.9,
+      "y": 42.3
+    },
+    "id": "3675ffb3-3bbb-4e67-84a2-2acd3c981a9d"
+  },
+  {
+    "name": "Insel 5",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Enbesa",
+    "mapStart": {
+      "x": 48.9,
+      "y": 52.9
+    },
+    "id": "47138bf0-bd1d-4581-8633-1cbdbe48ab7b"
+  },
+  {
+    "name": "Insel 6",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Enbesa",
+    "mapStart": {
+      "x": 22.7,
+      "y": 64.4
+    },
+    "id": "6049ca8e-ec4e-4497-b3dc-175d2bb05db1"
+  },
+  {
+    "name": "Insel 7",
+    "functions": [],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "world": "Enbesa",
+    "mapStart": {
+      "x": 56.2,
+      "y": 76.8
+    },
+    "id": "d66e57ce-fc03-4dc3-b292-1a0217d0bfe4"
   }
 ]

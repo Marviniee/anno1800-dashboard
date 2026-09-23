@@ -84,7 +84,7 @@ function renderTodosView() {
       </select>
       <select id="input-todo-island">
         <option value="">Keine Insel</option>
-        ${islands.map((i) => `<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('')}
+        ${islands.map((i) => `<option value="${i.id}">${escapeHtml(islandLabel(i))}</option>`).join('')}
       </select>
       <button class="btn btn-primary" id="btn-add-todo">+ Hinzufügen</button>
     </div>
@@ -151,7 +151,7 @@ function renderTodoRow(todo, islandsById) {
       </label>
       <span class="importance-dot importance-${todo.importance}" title="Wichtigkeit: ${IMPORTANCE_LABELS[todo.importance]}"></span>
       <span class="todo-text">${escapeHtml(todo.text)}</span>
-      ${island ? `<span class="tag todo-island-tag">${escapeHtml(island.name)}</span>` : ''}
+      ${island ? `<span class="tag todo-island-tag">${escapeHtml(islandLabel(island))}</span>` : ''}
       <button class="icon-btn" data-delete-todo-id="${todo.id}" title="Löschen">🗑</button>
     </div>
   `;

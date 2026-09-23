@@ -13,7 +13,11 @@
  *   ],
  *   goods: [
  *     { good: string, role: 'producer' | 'consumer' | 'both', count: number | null }
- *   ]
+ *   ],
+ *   world: string,                  // Session, einer von WORLDS
+ *   mapStart?: { x: number, y: number } // optionale Startposition auf der
+ *                                     // Karte in % der Weltkarte (0-100),
+ *                                     // abgeleitet aus Spiel-Screenshots
  * }
  *
  * good ist die kanonische Icon-ID aus GOODS_ICON_LIST (js/goods-icons-data.js,
@@ -37,6 +41,11 @@
  * ohne eigene Rolle.
  */
 
+// Spiel-Sessions. Jede Insel gehört zu genau einer Welt, die Karte zeigt
+// immer nur eine Welt gleichzeitig.
+const WORLDS = ['Alte Welt', 'Neue Welt', 'Enbesa', 'Kap Trelawney', 'Arktis'];
+const DEFAULT_WORLD = 'Alte Welt';
+
 const Islands = {
   DATA_PATH: 'data/islands.json',
   cache: [],
@@ -56,6 +65,10 @@ const Islands = {
       if (!island.vorkommen) island.vorkommen = [];
       if (!island.fruchtbarkeiten) island.fruchtbarkeiten = [];
       if (!island.goods) island.goods = [];
+      // Inseln aus der Zeit vor der Welt-Zuordnung lagen alle in der Alten
+      // Welt - reicht als Laufzeit-Default, gespeichert wird es beim
+      // nächsten Bearbeiten der Insel.
+      if (!WORLDS.includes(island.world)) island.world = DEFAULT_WORLD;
 
       const stillGoods = [];
       island.goods.forEach((g) => {
@@ -102,7 +115,8 @@ const Islands = {
   update(id, updatedIsland) {
     const idx = this.cache.findIndex((i) => i.id === id);
     if (idx === -1) return;
-    this.cache[idx] = { ...updatedIsland, id };
+    // Felder, die das Formular nicht kennt (z.B. mapStart), bleiben erhalten.
+    this.cache[idx] = { ...this.cache[idx], ...updatedIsland, id };
     this._persist(`Insel bearbeitet: ${updatedIsland.name}`);
   },
 
@@ -246,6 +260,8 @@ function openIslandModal(islandId) {
     goods: island ? (island.goods || []).map((g) => ({ ...g })) : [],
   };
   activeGoodsTab = 'vorkommen';
+  // Neue Inseln landen in der Welt, die gerade auf der Karte offen ist.
+  const selectedWorld = island ? island.world : kartenWelt;
 
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
@@ -257,6 +273,13 @@ function openIslandModal(islandId) {
       <div class="form-group">
         <label for="input-island-name">Name</label>
         <input type="text" id="input-island-name" placeholder="z.B. Kap Trelawney" value="${island ? escapeHtml(island.name) : ''}">
+      </div>
+
+      <div class="form-group">
+        <label for="input-island-world">Welt</label>
+        <select id="input-island-world">
+          ${WORLDS.map((w) => `<option value="${w}" ${w === selectedWorld ? 'selected' : ''}>${w}</option>`).join('')}
+        </select>
       </div>
 
       <div class="form-group">
@@ -495,6 +518,7 @@ function saveIslandFromModal() {
 
   const islandData = {
     name,
+    world: document.getElementById('input-island-world').value,
     functions: draftFunctions,
     vorkommen: draftByKind.vorkommen,
     fruchtbarkeiten: draftByKind.fruchtbarkeiten,
@@ -517,6 +541,13 @@ function closeIslandModal() {
   editingIslandId = null;
   draftFunctions = [];
   draftByKind = { vorkommen: [], fruchtbarkeiten: [], goods: [] };
+}
+
+// Anzeigename für Auswahllisten über alle Welten hinweg: Platzhalter wie
+// "Insel 1" gibt es in mehreren Welten, deshalb außerhalb der Alten Welt mit
+// Welt-Zusatz.
+function islandLabel(island) {
+  return island.world && island.world !== DEFAULT_WORLD ? `${island.name} (${island.world})` : island.name;
 }
 
 function escapeHtml(str) {

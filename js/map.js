@@ -23,6 +23,16 @@ const BOX_DEFAULT_HEIGHT = 260;
 const GRID_GAP = 40;
 const GRID_COLUMNS = 6;
 const MAX_BOX_FUNCTIONS = 3;
+// Umrechnung von island.mapStart (% der Weltkarte, aus Spiel-Screenshots
+// abgeleitet) in Canvas-Pixel: die Karten-Raute wird auf die ganze Canvas
+// gestreckt (Rand MAP_START_PADDING), damit die breiten Boxen nebeneinander
+// Platz haben. Die Höhenreserve ist kleiner als BOX_DEFAULT_HEIGHT, weil
+// frisch angelegte Platzhalter-Inseln nur aus dem Titel bestehen.
+const MAP_START_PADDING = 40;
+const MAP_START_BOX_HEIGHT = 120;
+
+const KARTEN_WELT_STORAGE_KEY = 'kartenWelt';
+let kartenWelt = WORLDS.includes(Storage.get(KARTEN_WELT_STORAGE_KEY)) ? Storage.get(KARTEN_WELT_STORAGE_KEY) : DEFAULT_WORLD;
 
 const MapPositions = {
   DATA_PATH: 'data/map-positions.json',
@@ -46,9 +56,9 @@ const MapPositions = {
     this._persist(`Kartenposition aktualisiert: ${islandId}`);
   },
 
-  clearAll() {
-    this.cache = {};
-    this._persist('Kartenlayout zurückgesetzt');
+  clearIslands(islandIds, worldName) {
+    islandIds.forEach((id) => delete this.cache[id]);
+    this._persist(`Kartenlayout zurückgesetzt: ${worldName}`);
   },
 
   _persist(message) {
@@ -207,7 +217,8 @@ function setupPinchZoom(wrapper) {
 
 function renderMapView() {
   const view = document.getElementById('view-karte');
-  const islands = Islands.getAll();
+  const allIslands = Islands.getAll();
+  const islands = allIslands.filter((i) => i.world === kartenWelt);
   const routes = ShipRoutes.getAll();
 
   view.innerHTML = `
@@ -230,7 +241,21 @@ function renderMapView() {
         <button class="btn" id="btn-reset-layout">Layout zurücksetzen</button>
       </div>
     </div>
+    <div class="goods-tabs map-world-tabs">
+      ${WORLDS.map((w) => {
+        const count = allIslands.filter((i) => i.world === w).length;
+        return `<button type="button" class="goods-tab ${w === kartenWelt ? 'active' : ''}" data-world="${w}">${w} (${count})</button>`;
+      }).join('')}
+    </div>
   `;
+
+  view.querySelectorAll('[data-world]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      kartenWelt = btn.dataset.world;
+      Storage.set(KARTEN_WELT_STORAGE_KEY, kartenWelt);
+      renderMapView();
+    });
+  });
 
   document.getElementById('btn-karten-zoom-out').addEventListener('click', () => setKartenZoom(kartenZoom - KARTEN_ZOOM_STEP));
   document.getElementById('btn-karten-zoom-in').addEventListener('click', () => setKartenZoom(kartenZoom + KARTEN_ZOOM_STEP));
@@ -238,7 +263,7 @@ function renderMapView() {
 
   document.getElementById('btn-add-island').addEventListener('click', () => openIslandModal());
 
-  renderRoutesList(routes, islands);
+  renderRoutesList(routes, allIslands);
 
   document.getElementById('btn-toggle-routes-panel').addEventListener('click', (e) => {
     e.stopPropagation();
@@ -265,7 +290,7 @@ function renderMapView() {
   if (islands.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'empty-state';
-    empty.textContent = 'Noch keine Inseln angelegt. Leg mit "+ Insel hinzufügen" oben deine erste Insel an.';
+    empty.textContent = `Noch keine Inseln in ${kartenWelt} angelegt. Leg mit "+ Insel hinzufügen" oben deine erste Insel an.`;
     view.appendChild(empty);
     return;
   }
@@ -301,8 +326,8 @@ function renderMapView() {
   setupPinchZoom(wrapper);
 
   document.getElementById('btn-reset-layout').addEventListener('click', () => {
-    if (confirm('Layout zurücksetzen? Alle Inseln werden neu im Raster angeordnet.')) {
-      MapPositions.clearAll();
+    if (confirm(`Layout von ${kartenWelt} zurücksetzen? Inseln springen auf ihre Startposition (aus der Spielkarte) bzw. ins Raster.`)) {
+      MapPositions.clearIslands(islands.map((i) => i.id), kartenWelt);
       renderMapView();
     }
   });
@@ -344,8 +369,27 @@ function gridCellKey(x, y) {
   return `${col},${row}`;
 }
 
+function mapStartToCanvas(mapStart) {
+  const clamp = (v) => Math.min(100, Math.max(0, v)) / 100;
+  return {
+    x: Math.round(MAP_START_PADDING + clamp(mapStart.x) * (CANVAS_WIDTH - 2 * MAP_START_PADDING - BOX_DEFAULT_WIDTH)),
+    y: Math.round(MAP_START_PADDING + clamp(mapStart.y) * (CANVAS_HEIGHT - 2 * MAP_START_PADDING - MAP_START_BOX_HEIGHT)),
+  };
+}
+
+// `islands` sind nur die Inseln der aktuell angezeigten Welt - jede Welt hat
+// ihre eigene Karte, Rasterzellen anderer Welten sind hier frei.
 function assignMissingPositions(islands) {
   const positions = MapPositions.getAll();
+  let changed = false;
+
+  // Startposition aus der Spielkarte (island.mapStart) hat Vorrang vor dem
+  // Raster; danach ist die Insel wie jede andere frei verschiebbar.
+  islands.forEach((island) => {
+    if (positions[island.id] || !island.mapStart) return;
+    positions[island.id] = mapStartToCanvas(island.mapStart);
+    changed = true;
+  });
 
   // Belegte Rasterzellen ermitteln, damit neue Inseln nicht auf bereits
   // positionierte (auch manuell verschobene) Inseln gelegt werden.
@@ -355,7 +399,6 @@ function assignMissingPositions(islands) {
     if (pos) takenCells.add(gridCellKey(pos.x, pos.y));
   });
 
-  let changed = false;
   let searchIndex = 0;
 
   islands.forEach((island) => {
@@ -846,7 +889,7 @@ function renderRoutesList(routes, islands) {
 
   container.innerHTML = routes
     .map((route) => {
-      const stopNames = route.stops.map((id) => (islandsById[id] ? islandsById[id].name : '(gelöscht)'));
+      const stopNames = route.stops.map((id) => (islandsById[id] ? islandLabel(islandsById[id]) : '(gelöscht)'));
       return `
         <div class="route-row">
           <span class="route-color-dot" style="background:${route.color}"></span>
@@ -911,7 +954,7 @@ function openRouteModal(routeId) {
         <label for="input-route-stop">Stationen (Reihenfolge)</label>
         <div class="chip-input-row">
           <select id="input-route-stop">
-            ${islands.map((i) => `<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('')}
+            ${islands.map((i) => `<option value="${i.id}">${escapeHtml(islandLabel(i))}</option>`).join('')}
           </select>
           <button class="btn btn-small" id="btn-add-stop">Hinzufügen</button>
         </div>
@@ -981,7 +1024,7 @@ function renderRouteStopList() {
   list.innerHTML = draftRouteStops
     .map((islandId, idx) => {
       const island = islandsById[islandId];
-      const name = island ? island.name : '(gelöschte Insel)';
+      const name = island ? islandLabel(island) : '(gelöschte Insel)';
       return `
         <div class="route-stop-row">
           <span class="route-stop-index">${idx + 1}</span>
