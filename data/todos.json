@@ -102,5 +102,13 @@
     "done": false,
     "parentId": "2dba081c-e30a-4fdc-854b-e8da4855607e",
     "id": "36b5dfed-f8be-4d6b-a121-f3eddf427819"
+  },
+  {
+    "text": "Dampfschiffswerft bauen / unlocken",
+    "importance": "high",
+    "islandId": null,
+    "done": false,
+    "parentId": "2dba081c-e30a-4fdc-854b-e8da4855607e",
+    "id": "acceb229-e86e-4ce4-9c9f-8cfd0bc50dc8"
   }
 ]
