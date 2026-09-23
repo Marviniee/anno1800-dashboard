@@ -59,7 +59,7 @@
     "text": "Forschungsinstitut erforschen",
     "importance": "high",
     "islandId": null,
-    "done": false,
+    "done": true,
     "parentId": null,
     "id": "4536d06d-e47b-45fb-af62-cbcb4db27465"
   },
