@@ -2298,10 +2298,10 @@
       },
       "nodes": [
         {
-          "id": "Oilwell",
-          "good": "Oilwell",
-          "name": "Oilwell",
-          "icon": "Oilwell",
+          "id": "Oil",
+          "good": "Oil",
+          "name": "Oil",
+          "icon": "Oil",
           "amount": "3",
           "building": "Oil Well",
           "consumedBy": [],
@@ -2327,7 +2327,7 @@
       ],
       "edges": [
         {
-          "from": "Oilwell",
+          "from": "Oil",
           "to": "Oil_Power_Plant"
         }
       ]

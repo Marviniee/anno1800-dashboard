@@ -21,7 +21,7 @@
  * }
  *
  * good ist die kanonische Icon-ID aus GOODS_ICON_LIST (js/goods-icons-data.js,
- * z.B. "Oilwell"), nicht Freitext - die deutsche Anzeige kommt über
+ * z.B. "Oil"), nicht Freitext - die deutsche Anzeige kommt über
  * Translations.good(). count ist die Anzahl Vorkommen bzw. Fabriken,
  * optional (null wenn nicht angegeben).
  *
@@ -69,6 +69,17 @@ const Islands = {
       // Welt - reicht als Laufzeit-Default, gespeichert wird es beim
       // nächsten Bearbeiten der Insel.
       if (!WORLDS.includes(island.world)) island.world = DEFAULT_WORLD;
+
+      // Umbenannte Icon-IDs (z.B. Oilwell -> Oil) auf die aktuelle ID ziehen.
+      [island.vorkommen, island.fruchtbarkeiten, island.goods].forEach((list) => {
+        list.forEach((entry) => {
+          const canonical = canonicalIconId(entry.good);
+          if (canonical !== entry.good) {
+            entry.good = canonical;
+            migrated = true;
+          }
+        });
+      });
 
       const stillGoods = [];
       island.goods.forEach((g) => {

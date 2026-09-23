@@ -37,8 +37,12 @@ const ShipRoutes = {
         route.cargo = route.cargo.length > 0 ? route.cargo[0] : null;
         migrated = true;
       }
+      if (route.cargo && canonicalIconId(route.cargo) !== route.cargo) {
+        route.cargo = canonicalIconId(route.cargo);
+        migrated = true;
+      }
     });
-    if (migrated) this._persist('Migration: Fracht-Icons auf ein Icon pro Route reduziert');
+    if (migrated) this._persist('Migration: Fracht-Icons aktualisiert');
   },
 
   getAll() {

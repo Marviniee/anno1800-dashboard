@@ -18,7 +18,7 @@ const GOODS_ICON_LIST = [
   'Furs', 'Glass', 'Glasses', 'Gold', 'Gold_Ore', 'Goulash', 'Grain',
   'Gramophone', 'Grapes', 'Helium', 'High_wheeler', 'Hops',
   'Industrial_Lubricant', 'Iron', 'Jewelry', 'Light_bulb', 'Malt',
-  'Mud_bricks', 'Oil_Power_Plant', 'Oilwell', 'Pearls', 'Pigs', 'Plantains',
+  'Mud_bricks', 'Oil', 'Oil_Power_Plant', 'Pearls', 'Pigs', 'Plantains',
   'Pocket_watch', 'Poncho', 'Potato', 'Quartz_sand', 'Red_peppers',
   'Reinforced_concrete', 'Rum', 'Sails', 'Saltpeter', 'Sausages',
   'Schnapps', 'Sewing_machines', 'Soap', 'Steam_carriages', 'Steam_motors',
@@ -27,12 +27,25 @@ const GOODS_ICON_LIST = [
   'Wood', 'Wood_veneers', 'Wool', 'Work_clothes', 'Zinc',
 ];
 
+// Umbenannte Icon-IDs (alt -> neu), damit gespeicherte Inseln/Routen mit der
+// alten ID beim Laden automatisch migriert werden:
+//  - "Oilwell" zeigte das Bohrturm-Gebäude (Quell-Repo nutzt es auch für das
+//    Gut, gleiche Fehlerklasse wie früher Kohle/Köhlerei). Das eigentliche
+//    Waren-Icon ist das Öl-Fass (oil.png im Quell-Repo) -> ID "Oil".
+const LEGACY_ICON_RENAMES = {
+  Oilwell: 'Oil',
+};
+
+function canonicalIconId(id) {
+  return LEGACY_ICON_RENAMES[id] || id;
+}
+
 // VORKOMMEN: echte Boden-/Minen-/Steinbruch-Funde, die abgebaut werden - kein
 // Fruchtbarkeitswert nötig, keine Feldfrucht. Anzahl der Vorkommen ist
 // sinnvoll (mehrere Fundstellen pro Insel möglich).
 const RAW_MATERIAL_ICON_LIST = [
   'Bauxite', 'Cement', 'Clay', 'Coal', 'Copper', 'Gold_Ore', 'Iron',
-  'Oilwell', 'Quartz_sand', 'Zinc',
+  'Oil', 'Quartz_sand', 'Zinc',
 ];
 
 // FRUCHTBARKEITEN: angebaute Feldfrüchte bzw. Farmen, die im Spiel eine
