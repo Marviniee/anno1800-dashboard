@@ -94,5 +94,13 @@
     "done": false,
     "parentId": null,
     "id": "2dba081c-e30a-4fdc-854b-e8da4855607e"
+  },
+  {
+    "text": "Öl beschaffen",
+    "importance": "medium",
+    "islandId": "8ba791ab-1501-4351-8f97-929e7156bfe7",
+    "done": false,
+    "parentId": "2dba081c-e30a-4fdc-854b-e8da4855607e",
+    "id": "36b5dfed-f8be-4d6b-a121-f3eddf427819"
   }
 ]
