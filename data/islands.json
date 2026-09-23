@@ -652,7 +652,7 @@
     "goods": [],
     "world": "Neue Welt",
     "mapStart": {
-      "x": 39.0,
+      "x": 39,
       "y": 58.2
     },
     "id": "d82ffce1-4b69-4a9a-abf9-f6b5f73bb779"
@@ -678,7 +678,7 @@
     "goods": [],
     "world": "Neue Welt",
     "mapStart": {
-      "x": 67.0,
+      "x": 67,
       "y": 56.2
     },
     "id": "ac8a995d-a3e0-49dc-9589-ae213e418cbc"
