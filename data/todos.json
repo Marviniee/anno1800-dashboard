@@ -78,5 +78,13 @@
     "done": false,
     "parentId": null,
     "id": "bee9b4b7-25fa-4d9f-adf8-e0ed90fa9f35"
+  },
+  {
+    "text": "Aluminium Produzieren",
+    "importance": "medium",
+    "islandId": "4f5bccdb-9f4d-44d9-945f-65755a57b515",
+    "done": false,
+    "parentId": "bee9b4b7-25fa-4d9f-adf8-e0ed90fa9f35",
+    "id": "afa5dc9c-5bb0-4637-999e-9d4ef60efa78"
   }
 ]
