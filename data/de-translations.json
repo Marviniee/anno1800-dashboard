@@ -1,5 +1,5 @@
 {
-  "_comment": "Übersetzungstabelle Englisch -> Deutsch für die Warenketten-Ansicht. Begriffe stammen aus dem deutschen Anno-1800-Spiel, recherchiert über anno.skotschir.de sowie (wo dort nicht vorhanden, z.B. Enbesa/Bright-Harvest-Inhalte) über weitere deutschsprachige Anno-1800-Quellen. Icons/IDs in production-chains.json bleiben unverändert, hier wird nur die Anzeige übersetzt.",
+  "_comment": "Übersetzungstabelle Englisch -> Deutsch für die Warenketten-Ansicht. Begriffe stammen aus dem deutschen Anno-1800-Spiel, recherchiert über anno.skotschir.de sowie (wo dort nicht vorhanden, z.B. Enbesa/Bright-Harvest-Inhalte) über weitere deutschsprachige Anno-1800-Quellen (annoinfo.de). DLC-Rohstoffe: Arktis-Begriffe aus anno.skotschir.de (Seite Waren), Enbesa-Begriffe aus annoinfo.de (Warenübersicht). Icons/IDs in production-chains.json bleiben unverändert, hier wird nur die Anzeige übersetzt.",
 
   "categories": {
     "Building Materials": "Baumaterialien",
@@ -125,7 +125,23 @@
     "Industrial_Lubricant": "Industrieschmiermittel",
     "Teff_Grass": "Tef",
     "Wansa_Wood": "Wanza Holz",
-    "Mud_bricks": "Lehmziegel"
+    "Mud_bricks": "Lehmziegel",
+    "Gas": "Gas",
+    "Whale_Oil": "Walöl",
+    "Caribou_Meat": "Rentierfleisch",
+    "Seal_Skin": "Robbenfelle",
+    "Bear_Skin": "Bärenfelle",
+    "Goose_Feathers": "Gänsefedern",
+    "Huskies": "Huskys",
+    "Linseed": "Flachs",
+    "Hibiscus_Petals": "Hibiskusblüten",
+    "Indigo": "Indigo",
+    "Spices": "Gewürze",
+    "Lobsters": "Hummer",
+    "Beeswax": "Bienenwachs",
+    "Goat_Milk": "Ziegenmilch",
+    "Sanga_Cow": "Sanga-Kühe",
+    "Salt": "Salz"
   },
 
   "goodsNotVerified": [
