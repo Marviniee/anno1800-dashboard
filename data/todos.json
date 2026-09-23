@@ -86,5 +86,13 @@
     "done": false,
     "parentId": "bee9b4b7-25fa-4d9f-adf8-e0ed90fa9f35",
     "id": "afa5dc9c-5bb0-4637-999e-9d4ef60efa78"
+  },
+  {
+    "text": "Forschungsinstitut mit Strom versorgen",
+    "importance": "high",
+    "islandId": "e2056329-5329-4d18-8c83-2392a6559f7f",
+    "done": false,
+    "parentId": null,
+    "id": "2dba081c-e30a-4fdc-854b-e8da4855607e"
   }
 ]
