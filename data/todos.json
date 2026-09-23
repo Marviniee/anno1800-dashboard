@@ -118,5 +118,13 @@
     "done": false,
     "parentId": "acceb229-e86e-4ce4-9c9f-8cfd0bc50dc8",
     "id": "090408ba-7687-487d-941d-64046bd14ab2"
+  },
+  {
+    "text": "Genug Nähmaschienen produzieren",
+    "importance": "high",
+    "islandId": null,
+    "done": false,
+    "parentId": null,
+    "id": "a7e7421e-168a-48d2-8127-0b80a10292ba"
   }
 ]
