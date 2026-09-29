@@ -123,7 +123,7 @@
     "text": "Genug Nähmaschienen produzieren",
     "importance": "high",
     "islandId": null,
-    "done": false,
+    "done": true,
     "parentId": null,
     "id": "a7e7421e-168a-48d2-8127-0b80a10292ba"
   }
