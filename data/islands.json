@@ -807,7 +807,9 @@
   {
     "name": "Little Clarence",
     "world": "Enbesa",
-    "functions": [],
+    "functions": [
+      "Baumaterialien"
+    ],
     "vorkommen": [],
     "fruchtbarkeiten": [],
     "goods": [],
