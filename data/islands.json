@@ -815,5 +815,21 @@
     "fruchtbarkeiten": [],
     "goods": [],
     "id": "85550a9f-5f5d-4765-9265-beeb31aa8f41"
+  },
+  {
+    "name": "How to Export",
+    "world": "Enbesa",
+    "functions": [
+      "Leinen",
+      "Ochsen",
+      "Hibiskustee",
+      "Wandteppiche",
+      "Meeresfrücht-Eintopf",
+      "Tinpfeifen"
+    ],
+    "vorkommen": [],
+    "fruchtbarkeiten": [],
+    "goods": [],
+    "id": "1b3d7ff8-d286-4a8a-a09d-36642961cc8d"
   }
 ]
