@@ -3014,12 +3014,12 @@
       ]
     },
     {
-      "id": "obrero-consumables-sugar-3-0",
+      "id": "obrero-consumables-chocolate-3-0",
       "category": "Obrero Consumables",
       "targetGood": {
-        "id": "Sugar",
-        "name": "Sugar",
-        "icon": "Sugar"
+        "id": "Chocolate",
+        "name": "Chocolate",
+        "icon": "Chocolate"
       },
       "nodes": [
         {
@@ -3045,25 +3045,8 @@
             "Farmers"
           ],
           "level": 1,
-          "isFinal": true
-        }
-      ],
-      "edges": [
-        {
-          "from": "Sugar_cane",
-          "to": "Sugar"
-        }
-      ]
-    },
-    {
-      "id": "obrero-consumables-chocolate-3-1",
-      "category": "Obrero Consumables",
-      "targetGood": {
-        "id": "Chocolate",
-        "name": "Chocolate",
-        "icon": "Chocolate"
-      },
-      "nodes": [
+          "isFinal": false
+        },
         {
           "id": "Cocoa",
           "good": "Cocoa",
@@ -3087,11 +3070,19 @@
             "Investors",
             "Engineers"
           ],
-          "level": 1,
+          "level": 2,
           "isFinal": true
         }
       ],
       "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Sugar"
+        },
+        {
+          "from": "Sugar",
+          "to": "Chocolate"
+        },
         {
           "from": "Cocoa",
           "to": "Chocolate"
@@ -3190,6 +3181,4179 @@
         {
           "from": "Felt",
           "to": "Bowler_hats"
+        }
+      ]
+    },
+    {
+      "id": "explorer-consumables-heater-0-0",
+      "category": "Explorer Consumables",
+      "targetGood": {
+        "id": "Heater",
+        "name": "Heater",
+        "icon": "Heater"
+      },
+      "nodes": [
+        {
+          "id": "Coal_a",
+          "good": "Charcoal_kiln",
+          "name": "Coal a",
+          "icon": "Charcoal_kiln",
+          "amount": "1",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Coal_o",
+          "good": "Charcoal_kiln",
+          "name": "Coal o",
+          "icon": "Charcoal_kiln",
+          "amount": "1",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Heater",
+          "good": "Heater",
+          "name": "Heater",
+          "icon": "Heater",
+          "amount": "1",
+          "building": "Heater",
+          "consumedBy": [
+            "Explorers",
+            "Technicians"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Coal_a",
+          "to": "Heater"
+        },
+        {
+          "from": "Coal_o",
+          "to": "Heater"
+        }
+      ]
+    },
+    {
+      "id": "explorer-consumables-pemmican-1-0",
+      "category": "Explorer Consumables",
+      "targetGood": {
+        "id": "Pemmican",
+        "name": "Pemmican",
+        "icon": "Pemmican"
+      },
+      "nodes": [
+        {
+          "id": "Whale_Oil",
+          "good": "Whale_Oil",
+          "name": "Whale Oil",
+          "icon": "Whale_Oil",
+          "amount": "1",
+          "building": "Whaling Station",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Caribou_Meat",
+          "good": "Caribou_Meat",
+          "name": "Caribou Meat",
+          "icon": "Caribou_Meat",
+          "amount": "1",
+          "building": "Caribou Hunting Cabin",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Pemmican",
+          "good": "Pemmican",
+          "name": "Pemmican",
+          "icon": "Pemmican",
+          "amount": "1",
+          "building": "Pemmican Cookhouse",
+          "consumedBy": [
+            "Explorers",
+            "Technicians"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Whale_Oil",
+          "to": "Pemmican"
+        },
+        {
+          "from": "Caribou_Meat",
+          "to": "Pemmican"
+        }
+      ]
+    },
+    {
+      "id": "explorer-consumables-sleeping_bags-2-0",
+      "category": "Explorer Consumables",
+      "targetGood": {
+        "id": "Sleeping_Bags",
+        "name": "Sleeping Bags",
+        "icon": "Sleeping_Bags"
+      },
+      "nodes": [
+        {
+          "id": "Seal_Skin",
+          "good": "Seal_Skin",
+          "name": "Seal Skin",
+          "icon": "Seal_Skin",
+          "amount": "1",
+          "building": "Seal Hunting Docks",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Goose_Feathers",
+          "good": "Goose_Feathers",
+          "name": "Goose Feathers",
+          "icon": "Goose_Feathers",
+          "amount": "4",
+          "building": "Goose Farm",
+          "consumedBy": [
+            "Elders"
+          ],
+          "fieldInfo": "5x (2x3)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sleeping_Bags",
+          "good": "Sleeping_Bags",
+          "name": "Sleeping Bags",
+          "icon": "Sleeping_Bags",
+          "amount": "2",
+          "building": "Sleeping Bag Factory",
+          "consumedBy": [
+            "Explorers",
+            "Technicians"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Seal_Skin",
+          "to": "Sleeping_Bags"
+        },
+        {
+          "from": "Goose_Feathers",
+          "to": "Sleeping_Bags"
+        }
+      ]
+    },
+    {
+      "id": "explorer-consumables-oil_lamps-3-0",
+      "category": "Explorer Consumables",
+      "targetGood": {
+        "id": "Oil_Lamps",
+        "name": "Oil Lamps",
+        "icon": "Oil_Lamps"
+      },
+      "nodes": [
+        {
+          "id": "Copper",
+          "good": "Copper",
+          "name": "Copper",
+          "icon": "Copper",
+          "amount": "1",
+          "building": "Copper Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Zinc",
+          "good": "Zinc",
+          "name": "Zinc",
+          "icon": "Zinc",
+          "amount": "1",
+          "building": "Zinc Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Brass",
+          "good": "Brass",
+          "name": "Brass",
+          "icon": "Brass",
+          "amount": "2",
+          "building": "Brass Smeltery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Whale_Oil",
+          "good": "Whale_Oil",
+          "name": "Whale Oil",
+          "icon": "Whale_Oil",
+          "amount": "2",
+          "building": "Whaling Station",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Oil_Lamps",
+          "good": "Oil_Lamps",
+          "name": "Oil Lamps",
+          "icon": "Oil_Lamps",
+          "amount": "2",
+          "building": "Oil Lamp Factory",
+          "consumedBy": [
+            "Explorers",
+            "Technicians"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Copper",
+          "to": "Brass"
+        },
+        {
+          "from": "Zinc",
+          "to": "Brass"
+        },
+        {
+          "from": "Brass",
+          "to": "Oil_Lamps"
+        },
+        {
+          "from": "Whale_Oil",
+          "to": "Oil_Lamps"
+        }
+      ]
+    },
+    {
+      "id": "technician-consumables-parkas-0-0",
+      "category": "Technician Consumables",
+      "targetGood": {
+        "id": "Parkas",
+        "name": "Parkas",
+        "icon": "Parkas"
+      },
+      "nodes": [
+        {
+          "id": "Bear_Skin",
+          "good": "Bear_Skin",
+          "name": "Bear Skin",
+          "icon": "Bear_Skin",
+          "amount": "3",
+          "building": "Bear Hunting Cabin",
+          "consumedBy": [
+            "Investors"
+          ],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Seal_Skin",
+          "good": "Seal_Skin",
+          "name": "Seal Skin",
+          "icon": "Seal_Skin",
+          "amount": "1",
+          "building": "Seal Hunting Docks",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Parkas",
+          "good": "Parkas",
+          "name": "Parkas",
+          "icon": "Parkas",
+          "amount": "3",
+          "building": "Parka Factory",
+          "consumedBy": [
+            "Technicians"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Bear_Skin",
+          "to": "Parkas"
+        },
+        {
+          "from": "Seal_Skin",
+          "to": "Parkas"
+        }
+      ]
+    },
+    {
+      "id": "technician-consumables-husky_sleds-1-0",
+      "category": "Technician Consumables",
+      "targetGood": {
+        "id": "Husky_Sleds",
+        "name": "Husky Sleds",
+        "icon": "Husky_Sleds"
+      },
+      "nodes": [
+        {
+          "id": "Seal_Skin",
+          "good": "Seal_Skin",
+          "name": "Seal Skin",
+          "icon": "Seal_Skin",
+          "amount": "2",
+          "building": "Seal Hunting Docks",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sleds",
+          "good": "Sleds",
+          "name": "Sleds",
+          "icon": "Sleds",
+          "amount": "4",
+          "building": "Sled Frame Factory",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Huskies",
+          "good": "Huskies",
+          "name": "Huskies",
+          "icon": "Huskies",
+          "amount": "8",
+          "building": "Husky Farm",
+          "consumedBy": [],
+          "fieldInfo": "4x (3x4)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Husky_Sleds",
+          "good": "Husky_Sleds",
+          "name": "Husky Sleds",
+          "icon": "Husky_Sleds",
+          "amount": "4",
+          "building": "Husky Sled Factory",
+          "consumedBy": [
+            "Technicians"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Seal_Skin",
+          "to": "Sleds"
+        },
+        {
+          "from": "Wood",
+          "to": "Sleds"
+        },
+        {
+          "from": "Sleds",
+          "to": "Husky_Sleds"
+        },
+        {
+          "from": "Huskies",
+          "to": "Husky_Sleds"
+        }
+      ]
+    },
+    {
+      "id": "technician-consumables-gas_power_plant-2-0",
+      "category": "Technician Consumables",
+      "targetGood": {
+        "id": "Gas_power_plant",
+        "name": "Gas power plant",
+        "icon": "Gas_power_plant"
+      },
+      "nodes": [
+        {
+          "id": "Gas",
+          "good": "Gas",
+          "name": "Gas",
+          "icon": "Gas",
+          "amount": "6",
+          "building": "Gas Pumps",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Gas_power_plant",
+          "good": "Gas_power_plant",
+          "name": "Gas power plant",
+          "icon": "Gas_power_plant",
+          "amount": "1",
+          "building": "Gas-Fired Power Plant",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Gas",
+          "to": "Gas_power_plant"
+        }
+      ]
+    },
+    {
+      "id": "shepherd-consumables-goat_milk-0-0",
+      "category": "Shepherd Consumables",
+      "targetGood": {
+        "id": "Goat_Milk",
+        "name": "Goat Milk",
+        "icon": "Goat_Milk"
+      },
+      "nodes": [
+        {
+          "id": "Goat_Milk",
+          "good": "Goat_Milk",
+          "name": "Goat Milk",
+          "icon": "Goat_Milk",
+          "amount": "1",
+          "building": "Goat Farm",
+          "consumedBy": [
+            "Shepherds",
+            "Elders"
+          ],
+          "level": 0,
+          "isFinal": true
+        }
+      ],
+      "edges": []
+    },
+    {
+      "id": "shepherd-consumables-finery-1-0",
+      "category": "Shepherd Consumables",
+      "targetGood": {
+        "id": "Finery",
+        "name": "Finery",
+        "icon": "Finery"
+      },
+      "nodes": [
+        {
+          "id": "Linseed",
+          "good": "Linseed",
+          "name": "Linseed",
+          "icon": "Linseed",
+          "amount": "2",
+          "building": "Linseed Farm",
+          "consumedBy": [],
+          "fieldInfo": "96x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Linen",
+          "good": "Linen",
+          "name": "Linen",
+          "icon": "Linen",
+          "amount": "1",
+          "building": "Linen Mill",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Finery",
+          "good": "Finery",
+          "name": "Finery",
+          "icon": "Finery",
+          "amount": "2",
+          "building": "Embroiderer",
+          "consumedBy": [
+            "Shepherds",
+            "Elders"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Linseed",
+          "to": "Linen"
+        },
+        {
+          "from": "Linen",
+          "to": "Finery"
+        }
+      ]
+    },
+    {
+      "id": "shepherd-consumables-dried_meat-2-0",
+      "category": "Shepherd Consumables",
+      "targetGood": {
+        "id": "Dried_Meat",
+        "name": "Dried Meat",
+        "icon": "Dried_Meat"
+      },
+      "nodes": [
+        {
+          "id": "Sanga_Cow",
+          "good": "Sanga_Cow",
+          "name": "Sanga Cow",
+          "icon": "Sanga_Cow",
+          "amount": "2",
+          "building": "Sanga Farm",
+          "consumedBy": [],
+          "fieldInfo": "5x (4×4)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Salt",
+          "good": "Salt",
+          "name": "Salt",
+          "icon": "Salt",
+          "amount": "1",
+          "building": "Salt Works",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Dried_Meat",
+          "good": "Dried_Meat",
+          "name": "Dried Meat",
+          "icon": "Dried_Meat",
+          "amount": "1",
+          "building": "Dry-House",
+          "consumedBy": [
+            "Shepherds",
+            "Elders"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sanga_Cow",
+          "to": "Dried_Meat"
+        },
+        {
+          "from": "Salt",
+          "to": "Dried_Meat"
+        }
+      ]
+    },
+    {
+      "id": "elder-consumables-ceramics-0-0",
+      "category": "Elder Consumables",
+      "targetGood": {
+        "id": "Ceramics",
+        "name": "Ceramics",
+        "icon": "Ceramics"
+      },
+      "nodes": [
+        {
+          "id": "Indigo",
+          "good": "Indigo",
+          "name": "Indigo",
+          "icon": "Indigo",
+          "amount": "4",
+          "building": "Indigo Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Clay",
+          "good": "Clay",
+          "name": "Clay",
+          "icon": "Clay",
+          "amount": "1",
+          "building": "Clay Collector",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Ceramics",
+          "good": "Ceramics",
+          "name": "Ceramics",
+          "icon": "Ceramics",
+          "amount": "2",
+          "building": "Ceramics Workshop",
+          "consumedBy": [
+            "Elders"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Indigo",
+          "to": "Ceramics"
+        },
+        {
+          "from": "Clay",
+          "to": "Ceramics"
+        }
+      ]
+    },
+    {
+      "id": "elder-consumables-clay_pipes-1-0",
+      "category": "Elder Consumables",
+      "targetGood": {
+        "id": "Clay_Pipes",
+        "name": "Clay Pipes",
+        "icon": "Clay_Pipes"
+      },
+      "nodes": [
+        {
+          "id": "Tobacco",
+          "good": "Tobacco",
+          "name": "Tobacco",
+          "icon": "Tobacco",
+          "amount": "8",
+          "building": "Tobacco Plantation",
+          "consumedBy": [],
+          "fieldInfo": "192x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Clay",
+          "good": "Clay",
+          "name": "Clay",
+          "icon": "Clay",
+          "amount": "1",
+          "building": "Clay Collector",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Clay_Pipes",
+          "good": "Clay_Pipes",
+          "name": "Clay Pipes",
+          "icon": "Clay_Pipes",
+          "amount": "6",
+          "building": "PipeMaker",
+          "consumedBy": [
+            "Elders",
+            "Scholars",
+            "Workers"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Tobacco",
+          "to": "Clay_Pipes"
+        },
+        {
+          "from": "Clay",
+          "to": "Clay_Pipes"
+        }
+      ]
+    },
+    {
+      "id": "elder-consumables-hibiscus_tea-2-0",
+      "category": "Elder Consumables",
+      "targetGood": {
+        "id": "Hibiscus_Tea",
+        "name": "Hibiscus Tea",
+        "icon": "Hibiscus_Tea"
+      },
+      "nodes": [
+        {
+          "id": "Hibiscus_Petals",
+          "good": "Hibiscus_Petals",
+          "name": "Hibiscus Petals",
+          "icon": "Hibiscus_Petals",
+          "amount": "2",
+          "building": "Hibiscus Farm",
+          "consumedBy": [
+            "Farmers"
+          ],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Hibiscus_Tea",
+          "good": "Hibiscus_Tea",
+          "name": "Hibiscus Tea",
+          "icon": "Hibiscus_Tea",
+          "amount": "3",
+          "building": "Tea Spicer",
+          "consumedBy": [
+            "Shepherds",
+            "Elders",
+            "Scholars"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Hibiscus_Petals",
+          "to": "Hibiscus_Tea"
+        }
+      ]
+    },
+    {
+      "id": "elder-consumables-tapestries-3-0",
+      "category": "Elder Consumables",
+      "targetGood": {
+        "id": "Tapestries",
+        "name": "Tapestries",
+        "icon": "Tapestries"
+      },
+      "nodes": [
+        {
+          "id": "Linseed",
+          "good": "Linseed",
+          "name": "Linseed",
+          "icon": "Linseed",
+          "amount": "2",
+          "building": "Linseed Farm",
+          "consumedBy": [],
+          "fieldInfo": "96x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Linen",
+          "good": "Linen",
+          "name": "Linen",
+          "icon": "Linen",
+          "amount": "1",
+          "building": "Linen Mill",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Indigo",
+          "good": "Indigo",
+          "name": "Indigo",
+          "icon": "Indigo",
+          "amount": "2",
+          "building": "Indigo Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Tapestries",
+          "good": "Tapestries",
+          "name": "Tapestries",
+          "icon": "Tapestries",
+          "amount": "1",
+          "building": "Tapestry Looms",
+          "consumedBy": [
+            "Elders",
+            "Scholars",
+            "Investors"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Linseed",
+          "to": "Linen"
+        },
+        {
+          "from": "Indigo",
+          "to": "Tapestries"
+        },
+        {
+          "from": "Linen",
+          "to": "Tapestries"
+        }
+      ]
+    },
+    {
+      "id": "elder-consumables-scriptures-4-0",
+      "category": "Elder Consumables",
+      "targetGood": {
+        "id": "Scriptures",
+        "name": "Scriptures",
+        "icon": "Scriptures"
+      },
+      "nodes": [
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Paper",
+          "good": "Paper",
+          "name": "Paper",
+          "icon": "Paper",
+          "amount": "1",
+          "building": "Paper Mill",
+          "consumedBy": [
+            "Artisans"
+          ],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Indigo",
+          "good": "Indigo",
+          "name": "Indigo",
+          "icon": "Indigo",
+          "amount": "4",
+          "building": "Indigo Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Scriptures",
+          "good": "Scriptures",
+          "name": "Scriptures",
+          "icon": "Scriptures",
+          "amount": "4",
+          "building": "Luminer",
+          "consumedBy": [
+            "Elders",
+            "Obreros"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Wood",
+          "to": "Paper"
+        },
+        {
+          "from": "Indigo",
+          "to": "Scriptures"
+        },
+        {
+          "from": "Paper",
+          "to": "Scriptures"
+        }
+      ]
+    },
+    {
+      "id": "elder-consumables-seafood_stew-5-0",
+      "category": "Elder Consumables",
+      "targetGood": {
+        "id": "Seafood_Stew",
+        "name": "Seafood Stew",
+        "icon": "Seafood_Stew"
+      },
+      "nodes": [
+        {
+          "id": "Teff_Grass",
+          "good": "Teff_Grass",
+          "name": "Teff Grass",
+          "icon": "Teff_Grass",
+          "amount": "2",
+          "building": "Teff Farm",
+          "consumedBy": [
+            "Jornaleros"
+          ],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Spices",
+          "good": "Spices",
+          "name": "Spices",
+          "icon": "Spices",
+          "amount": "2",
+          "building": "Spice Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Teff_Flour",
+          "good": "Teff_Flour",
+          "name": "Teff Flour",
+          "icon": "Teff_Flour",
+          "amount": "1",
+          "building": "Teff Mill",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Lobsters",
+          "good": "Lobsters",
+          "name": "Lobsters",
+          "icon": "Lobsters",
+          "amount": "2",
+          "building": "Lobster Fishery",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Seafood_Stew",
+          "good": "Seafood_Stew",
+          "name": "Seafood Stew",
+          "icon": "Seafood_Stew",
+          "amount": "2",
+          "building": "Wat Kitchen",
+          "consumedBy": [
+            "Elders",
+            "Scholars"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Teff_Grass",
+          "to": "Teff_Flour"
+        },
+        {
+          "from": "Spices",
+          "to": "Teff_Flour"
+        },
+        {
+          "from": "Teff_Flour",
+          "to": "Seafood_Stew"
+        },
+        {
+          "from": "Lobsters",
+          "to": "Seafood_Stew"
+        }
+      ]
+    },
+    {
+      "id": "elder-consumables-lanterns-6-0",
+      "category": "Elder Consumables",
+      "targetGood": {
+        "id": "Lanterns",
+        "name": "Lanterns",
+        "icon": "Lanterns"
+      },
+      "nodes": [
+        {
+          "id": "Beeswax",
+          "good": "Beeswax",
+          "name": "Beeswax",
+          "icon": "Beeswax",
+          "amount": "1",
+          "building": "Apiary",
+          "consumedBy": [],
+          "fieldInfo": "192x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Cotton",
+          "good": "Cotton",
+          "name": "Cotton",
+          "icon": "Cotton",
+          "amount": "2",
+          "building": "Cotton Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Candles",
+          "good": "Candles",
+          "name": "Candles",
+          "icon": "Candles",
+          "amount": "1",
+          "building": "Chandler",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Quartz_sand",
+          "good": "Quartz_sand",
+          "name": "Quartz sand",
+          "icon": "Quartz_sand",
+          "amount": "1",
+          "building": "Sand Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Glass",
+          "good": "Glass",
+          "name": "Glass",
+          "icon": "Glass",
+          "amount": "1",
+          "building": "Glassmakers",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Lanterns",
+          "good": "Lanterns",
+          "name": "Lanterns",
+          "icon": "Lanterns",
+          "amount": "2",
+          "building": "Lanternsmith",
+          "consumedBy": [
+            "Elders",
+            "Artistas"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Cotton",
+          "to": "Candles"
+        },
+        {
+          "from": "Beeswax",
+          "to": "Candles"
+        },
+        {
+          "from": "Quartz_sand",
+          "to": "Glass"
+        },
+        {
+          "from": "Glass",
+          "to": "Lanterns"
+        },
+        {
+          "from": "Candles",
+          "to": "Lanterns"
+        }
+      ]
+    },
+    {
+      "id": "scholar-consumables-tailored_suits-0-0",
+      "category": "Scholar Consumables",
+      "targetGood": {
+        "id": "Tailored_Suits",
+        "name": "Tailored Suits",
+        "icon": "Tailored_Suits"
+      },
+      "nodes": [
+        {
+          "id": "Linseed",
+          "good": "Linseed",
+          "name": "Linseed",
+          "icon": "Linseed",
+          "amount": "2",
+          "building": "Linseed Farm",
+          "consumedBy": [],
+          "fieldInfo": "96x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Linen",
+          "good": "Linen",
+          "name": "Linen",
+          "icon": "Linen",
+          "amount": "1",
+          "building": "Linen Mill",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Cotton",
+          "good": "Cotton",
+          "name": "Cotton",
+          "icon": "Cotton",
+          "amount": "2",
+          "building": "Cotton Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Cotton_fabric",
+          "good": "Cotton_fabric",
+          "name": "Cotton fabric",
+          "icon": "Cotton_fabric",
+          "amount": "1",
+          "building": "Cotton Mill",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Tailored_Suits",
+          "good": "Tailored_Suits",
+          "name": "Tailored Suits",
+          "icon": "Tailored_Suits",
+          "amount": "2",
+          "building": "Tailor's Shop",
+          "consumedBy": [
+            "Scholars"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Linseed",
+          "to": "Linen"
+        },
+        {
+          "from": "Cotton",
+          "to": "Cotton_fabric"
+        },
+        {
+          "from": "Linen",
+          "to": "Tailored_Suits"
+        },
+        {
+          "from": "Cotton_fabric",
+          "to": "Tailored_Suits"
+        }
+      ]
+    },
+    {
+      "id": "scholar-consumables-telephones-1-0",
+      "category": "Scholar Consumables",
+      "targetGood": {
+        "id": "Telephones",
+        "name": "Telephones",
+        "icon": "Telephones"
+      },
+      "nodes": [
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Wood_veneers",
+          "good": "Wood_veneers",
+          "name": "Wood veneers",
+          "icon": "Wood_veneers",
+          "amount": "4",
+          "building": "Marquetry Workshop (Old World)",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Charcoal_kiln",
+          "good": "Charcoal_kiln",
+          "name": "Charcoal kiln",
+          "icon": "Charcoal_kiln",
+          "amount": "2",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Coal",
+          "good": "Coal",
+          "name": "Coal",
+          "icon": "Coal",
+          "amount": "1",
+          "building": "Coal Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Carbon_filament",
+          "good": "Carbon_filament",
+          "name": "Carbon filament",
+          "icon": "Carbon_filament",
+          "amount": "4",
+          "building": "Filament Factory",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Telephones",
+          "good": "Telephones",
+          "name": "Telephones",
+          "icon": "Telephones",
+          "amount": "3",
+          "building": "Telephone Manufacturer",
+          "consumedBy": [
+            "Scholars"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Wood",
+          "to": "Wood_veneers"
+        },
+        {
+          "from": "Coal",
+          "to": "Carbon_filament"
+        },
+        {
+          "from": "Wood_veneers",
+          "to": "Telephones"
+        },
+        {
+          "from": "Carbon_filament",
+          "to": "Telephones"
+        },
+        {
+          "from": "Charcoal_kiln",
+          "to": "Carbon_filament"
+        }
+      ]
+    },
+    {
+      "id": "scholar-consumables-leather_boots-2-0",
+      "category": "Scholar Consumables",
+      "targetGood": {
+        "id": "Leather_Boots",
+        "name": "Leather Boots",
+        "icon": "Leather_Boots"
+      },
+      "nodes": [
+        {
+          "id": "Sanga_Cow",
+          "good": "Sanga_Cow",
+          "name": "Sanga Cow",
+          "icon": "Sanga_Cow",
+          "amount": "1",
+          "building": "Sanga Farm",
+          "consumedBy": [],
+          "fieldInfo": "5x (4×4)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Leather_Boots",
+          "good": "Leather_Boots",
+          "name": "Leather Boots",
+          "icon": "Leather_Boots",
+          "amount": "1",
+          "building": "BootMakers",
+          "consumedBy": [
+            "Scholars",
+            "Tourists"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sanga_Cow",
+          "to": "Leather_Boots"
+        }
+      ]
+    },
+    {
+      "id": "scholar-consumables-coffee-3-0",
+      "category": "Scholar Consumables",
+      "targetGood": {
+        "id": "Coffee",
+        "name": "Coffee",
+        "icon": "Coffee"
+      },
+      "nodes": [
+        {
+          "id": "Grain",
+          "good": "Grain",
+          "name": "Grain",
+          "icon": "Grain",
+          "amount": "2",
+          "building": "Grain Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Malt",
+          "good": "Malt",
+          "name": "Malt",
+          "icon": "Malt",
+          "amount": "1",
+          "building": "Malthouse",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Coffee",
+          "good": "Coffee",
+          "name": "Coffee",
+          "icon": "Coffee",
+          "amount": "1",
+          "building": "Advanced Coffee Roaster",
+          "consumedBy": [],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Grain",
+          "to": "Malt"
+        },
+        {
+          "from": "Malt",
+          "to": "Coffee"
+        }
+      ]
+    },
+    {
+      "id": "scholar-consumables-cotton_fabric-4-0",
+      "category": "Scholar Consumables",
+      "targetGood": {
+        "id": "Cotton_fabric",
+        "name": "Cotton fabric",
+        "icon": "Cotton_fabric"
+      },
+      "nodes": [
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Wool",
+          "good": "Wool",
+          "name": "Wool",
+          "icon": "Wool",
+          "amount": "2",
+          "building": "Sheep Farm",
+          "consumedBy": [],
+          "fieldInfo": "3x (3×3)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Cotton",
+          "good": "Cotton_fabric",
+          "name": "Cotton",
+          "icon": "Cotton_fabric",
+          "amount": "2",
+          "building": "Advanced Cotton Mill",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Wood",
+          "to": "Cotton"
+        },
+        {
+          "from": "Wool",
+          "to": "Cotton"
+        }
+      ]
+    },
+    {
+      "id": "scholar-consumables-rum-5-0",
+      "category": "Scholar Consumables",
+      "targetGood": {
+        "id": "Rum",
+        "name": "Rum",
+        "icon": "Rum"
+      },
+      "nodes": [
+        {
+          "id": "Potato",
+          "good": "Potato",
+          "name": "Potato",
+          "icon": "Potato",
+          "amount": "2",
+          "building": "Potato Farm",
+          "consumedBy": [],
+          "fieldInfo": "72x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Coal",
+          "good": "Coal",
+          "name": "Coal",
+          "icon": "Coal",
+          "amount": "1",
+          "building": "Coal Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Rum",
+          "good": "Rum",
+          "name": "Rum",
+          "icon": "Rum",
+          "amount": "2",
+          "building": "Advanced Rum Distillery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Potato",
+          "to": "Rum"
+        },
+        {
+          "from": "Coal",
+          "to": "Rum"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-soccer_balls-0-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "soccer_balls",
+        "name": "soccer balls",
+        "icon": "soccer_balls"
+      },
+      "nodes": [
+        {
+          "id": "nandu_leather",
+          "good": "nandu_leather",
+          "name": "nandu leather",
+          "icon": "nandu_leather",
+          "amount": "1",
+          "building": "Nandu Farm",
+          "consumedBy": [],
+          "fieldInfo": "4x (4×4)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Caoutchouc",
+          "good": "Caoutchouc",
+          "name": "Caoutchouc",
+          "icon": "Caoutchouc",
+          "amount": "2",
+          "building": "Caoutchouc Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "soccer_balls",
+          "good": "soccer_balls",
+          "name": "soccer balls",
+          "icon": "soccer_balls",
+          "amount": "1",
+          "building": "Ball Manufactory",
+          "consumedBy": [
+            "Artistas",
+            "Workers",
+            "Artisans",
+            "Jornaleros"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "nandu_leather",
+          "to": "soccer_balls"
+        },
+        {
+          "from": "Caoutchouc",
+          "to": "soccer_balls"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-ice_cream-1-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "ice_cream",
+        "name": "ice cream",
+        "icon": "ice_cream"
+      },
+      "nodes": [
+        {
+          "id": "Citrus",
+          "good": "Citrus",
+          "name": "Citrus",
+          "icon": "Citrus",
+          "amount": "3",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Milk",
+          "good": "Milk",
+          "name": "Milk",
+          "icon": "Milk",
+          "amount": "1",
+          "building": "Cattle Farm",
+          "consumedBy": [],
+          "fieldInfo": "6x (3×4)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sugar_cane",
+          "good": "Sugar_cane",
+          "name": "Sugar cane",
+          "icon": "Sugar_cane",
+          "amount": "1",
+          "building": "Sugar Cane Plantation",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sugar",
+          "good": "Sugar",
+          "name": "Sugar",
+          "icon": "Sugar",
+          "amount": "1",
+          "building": "Sugar Refinery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Cocoa",
+          "good": "Cocoa",
+          "name": "Cocoa",
+          "icon": "Cocoa",
+          "amount": "2",
+          "building": "Cocoa Plantation",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Chocolate",
+          "good": "Chocolate",
+          "name": "Chocolate",
+          "icon": "Chocolate",
+          "amount": "3",
+          "building": "Chocolate Factory",
+          "consumedBy": [],
+          "level": 2,
+          "isFinal": false
+        },
+        {
+          "id": "ice_cream",
+          "good": "ice_cream",
+          "name": "ice cream",
+          "icon": "ice_cream",
+          "amount": "6",
+          "building": "Ice Cream Factory",
+          "consumedBy": [
+            "Artistas",
+            "Engineers",
+            "Tourists"
+          ],
+          "level": 3,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Sugar"
+        },
+        {
+          "from": "Sugar",
+          "to": "Chocolate"
+        },
+        {
+          "from": "Cocoa",
+          "to": "Chocolate"
+        },
+        {
+          "from": "Milk",
+          "to": "ice_cream"
+        },
+        {
+          "from": "Citrus",
+          "to": "ice_cream"
+        },
+        {
+          "from": "Chocolate",
+          "to": "ice_cream"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-mezcal-2-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "Mezcal",
+        "name": "Mezcal",
+        "icon": "Mezcal"
+      },
+      "nodes": [
+        {
+          "id": "Sugar_cane",
+          "good": "Sugar_cane",
+          "name": "Sugar cane",
+          "icon": "Sugar_cane",
+          "amount": "1",
+          "building": "Sugar Cane Plantation",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sugar",
+          "good": "Sugar",
+          "name": "Sugar",
+          "icon": "Sugar",
+          "amount": "1",
+          "building": "Sugar Refinery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Citrus",
+          "good": "Citrus",
+          "name": "Citrus",
+          "icon": "Citrus",
+          "amount": "1",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Herbs",
+          "good": "Herbs",
+          "name": "Herbs",
+          "icon": "Herbs",
+          "amount": "1",
+          "building": "Herb Garden",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Mezcal",
+          "good": "Mezcal",
+          "name": "Mezcal",
+          "icon": "Mezcal",
+          "amount": "1",
+          "building": "Mezcal Bar",
+          "consumedBy": [
+            "Artistas",
+            "Engineers",
+            "Technicians",
+            "Tourists"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Sugar"
+        },
+        {
+          "from": "Sugar",
+          "to": "Mezcal"
+        },
+        {
+          "from": "Citrus",
+          "to": "Mezcal"
+        },
+        {
+          "from": "Herbs",
+          "to": "Mezcal"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-perfumes-3-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "Perfumes",
+        "name": "Perfumes",
+        "icon": "Perfumes"
+      },
+      "nodes": [
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Corn",
+          "good": "Corn",
+          "name": "Corn",
+          "icon": "Corn",
+          "amount": "4",
+          "building": "Corn Farm",
+          "consumedBy": [],
+          "fieldInfo": "168x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Ethanol",
+          "good": "Ethanol",
+          "name": "Ethanol",
+          "icon": "Ethanol",
+          "amount": "2",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Coconut_Oil",
+          "good": "Coconut_Oil",
+          "name": "Coconut Oil",
+          "icon": "Coconut_Oil",
+          "amount": "2",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Orchid",
+          "good": "Orchid",
+          "name": "Orchid",
+          "icon": "Orchid",
+          "amount": "2",
+          "building": "Orchid Farm",
+          "consumedBy": [
+            "Elders"
+          ],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Perfumes",
+          "good": "Perfumes",
+          "name": "Perfumes",
+          "icon": "Perfumes",
+          "amount": "4",
+          "building": "Perfume Mixer",
+          "consumedBy": [
+            "Artistas",
+            "Artisans",
+            "Investors",
+            "Tourists"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Wood",
+          "to": "Ethanol"
+        },
+        {
+          "from": "Corn",
+          "to": "Ethanol"
+        },
+        {
+          "from": "Orchid",
+          "to": "Perfumes"
+        },
+        {
+          "from": "Ethanol",
+          "to": "Perfumes"
+        },
+        {
+          "from": "Coconut_Oil",
+          "to": "Perfumes"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-sewing_machines-4-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "Sewing_machines",
+        "name": "Sewing machines",
+        "icon": "Sewing_machines"
+      },
+      "nodes": [
+        {
+          "id": "Coal",
+          "good": "Charcoal_kiln",
+          "name": "Coal",
+          "icon": "Charcoal_kiln",
+          "amount": "6",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Bauxite",
+          "good": "Bauxite",
+          "name": "Bauxite",
+          "icon": "Bauxite",
+          "amount": "2",
+          "building": "Bauxite Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Aluminium_Profiles",
+          "good": "Aluminium_Profiles",
+          "name": "Aluminium Profiles",
+          "icon": "Aluminium_Profiles",
+          "amount": "18",
+          "building": "Aluminium Smelter",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "3",
+          "building": "Lumberjack's Hut (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sewing_machines",
+          "good": "Sewing_machines",
+          "name": "Sewing machines",
+          "icon": "Sewing_machines",
+          "amount": "6",
+          "building": "Sewing Machine Factory",
+          "consumedBy": [
+            "Artisans",
+            "Engineers",
+            "Obreros",
+            "Artistas",
+            "Elders"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Coal",
+          "to": "Aluminium_Profiles"
+        },
+        {
+          "from": "Bauxite",
+          "to": "Aluminium_Profiles"
+        },
+        {
+          "from": "Wood",
+          "to": "Sewing_machines"
+        },
+        {
+          "from": "Aluminium_Profiles",
+          "to": "Sewing_machines"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-jalea-5-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "Jalea",
+        "name": "Jalea",
+        "icon": "Jalea"
+      },
+      "nodes": [
+        {
+          "id": "Calamari",
+          "good": "Calamari",
+          "name": "Calamari",
+          "icon": "Calamari",
+          "amount": "2",
+          "building": "Calamari Fishery",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Corn",
+          "good": "Corn",
+          "name": "Corn",
+          "icon": "Corn",
+          "amount": "2",
+          "building": "Corn Farm",
+          "consumedBy": [],
+          "fieldInfo": "168x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Herbs",
+          "good": "Herbs",
+          "name": "Herbs",
+          "icon": "Herbs",
+          "amount": "1",
+          "building": "Herb Garden",
+          "consumedBy": [
+            "Farmers",
+            "Elders"
+          ],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Jalea",
+          "good": "Jalea",
+          "name": "Jalea",
+          "icon": "Jalea",
+          "amount": "1",
+          "building": "Jalea Kitchen",
+          "consumedBy": [
+            "Artistas"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Calamari",
+          "to": "Jalea"
+        },
+        {
+          "from": "Corn",
+          "to": "Jalea"
+        },
+        {
+          "from": "Herbs",
+          "to": "Jalea"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-motor-6-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "Motor",
+        "name": "Motor",
+        "icon": "Motor"
+      },
+      "nodes": [
+        {
+          "id": "Copper",
+          "good": "Copper",
+          "name": "Copper",
+          "icon": "Copper",
+          "amount": "2",
+          "building": "Copper Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Caoutchouc",
+          "good": "Caoutchouc",
+          "name": "Caoutchouc",
+          "icon": "Caoutchouc",
+          "amount": "4",
+          "building": "Caoutchouc Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Electric_Cables",
+          "good": "Electric_Cables",
+          "name": "Electric Cables",
+          "icon": "Electric_Cables",
+          "amount": "2",
+          "building": "Cable Factory",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Iron",
+          "good": "Iron",
+          "name": "Iron",
+          "icon": "Iron",
+          "amount": "1",
+          "building": "Iron Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Charcoal_kiln",
+          "good": "Charcoal_kiln",
+          "name": "Charcoal kiln",
+          "icon": "Charcoal_kiln",
+          "amount": "2",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Steel",
+          "good": "Steel",
+          "name": "Steel",
+          "icon": "Steel",
+          "amount": "2",
+          "building": "Furnace",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Celluloid",
+          "good": "Celluloid",
+          "name": "Celluloid",
+          "icon": "Celluloid",
+          "amount": "2",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Motor",
+          "good": "Motor",
+          "name": "Motor",
+          "icon": "Motor",
+          "amount": "2",
+          "building": "Motor Assembly Plant",
+          "consumedBy": [
+            "Technicians"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Copper",
+          "to": "Electric_Cables"
+        },
+        {
+          "from": "Caoutchouc",
+          "to": "Electric_Cables"
+        },
+        {
+          "from": "Charcoal_kiln",
+          "to": "Steel"
+        },
+        {
+          "from": "Iron",
+          "to": "Steel"
+        },
+        {
+          "from": "Celluloid",
+          "to": "Motor"
+        },
+        {
+          "from": "Electric_Cables",
+          "to": "Motor"
+        },
+        {
+          "from": "Steel",
+          "to": "Motor"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-fans-7-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "Fans",
+        "name": "Fans",
+        "icon": "Fans"
+      },
+      "nodes": [
+        {
+          "id": "Coal",
+          "good": "Charcoal_kiln",
+          "name": "Coal",
+          "icon": "Charcoal_kiln",
+          "amount": "3",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Bauxite",
+          "good": "Bauxite",
+          "name": "Bauxite",
+          "icon": "Bauxite",
+          "amount": "1",
+          "building": "Bauxite Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Aluminium_Profiles",
+          "good": "Aluminium_Profiles",
+          "name": "Aluminium Profiles",
+          "icon": "Aluminium_Profiles",
+          "amount": "9",
+          "building": "Aluminium Smelter",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Motor",
+          "good": "Motor",
+          "name": "Motor",
+          "icon": "Motor",
+          "amount": "3",
+          "building": "Motor Assembly Plant",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Fans",
+          "good": "Fans",
+          "name": "Fans",
+          "icon": "Fans",
+          "amount": "3",
+          "building": "Fan Factory",
+          "consumedBy": [
+            "Artistas",
+            "Investors",
+            "Obreros",
+            "Scholars"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Coal",
+          "to": "Aluminium_Profiles"
+        },
+        {
+          "from": "Bauxite",
+          "to": "Aluminium_Profiles"
+        },
+        {
+          "from": "Motor",
+          "to": "Fans"
+        },
+        {
+          "from": "Aluminium_Profiles",
+          "to": "Fans"
+        }
+      ]
+    },
+    {
+      "id": "artistas-consumables-scooter-8-0",
+      "category": "Artistas Consumables",
+      "targetGood": {
+        "id": "Scooter",
+        "name": "Scooter",
+        "icon": "Scooter"
+      },
+      "nodes": [
+        {
+          "id": "Saltpeter",
+          "good": "Saltpeter",
+          "name": "Saltpeter",
+          "icon": "Saltpeter",
+          "amount": "4",
+          "building": "Alpaca Farm",
+          "consumedBy": [],
+          "fieldInfo": "4x (3×3)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Minerals",
+          "good": "Minerals",
+          "name": "Minerals",
+          "icon": "Minerals",
+          "amount": "1",
+          "building": "Mineral Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Pigments",
+          "good": "Pigments",
+          "name": "Pigments",
+          "icon": "Pigments",
+          "amount": "3",
+          "building": "Arsenal",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Motor",
+          "good": "Motor",
+          "name": "Motor",
+          "icon": "Motor",
+          "amount": "2",
+          "building": "Motor Assembly Plant",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Caoutchouc",
+          "good": "Caoutchouc",
+          "name": "Caoutchouc",
+          "icon": "Caoutchouc",
+          "amount": "4",
+          "building": "Caoutchouc Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Scooter",
+          "good": "Scooter",
+          "name": "Scooter",
+          "icon": "Scooter",
+          "amount": "4",
+          "building": "Scooter Factory",
+          "consumedBy": [
+            "Artistas",
+            "Artisans",
+            "Scholars"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Saltpeter",
+          "to": "Pigments"
+        },
+        {
+          "from": "Minerals",
+          "to": "Pigments"
+        },
+        {
+          "from": "Motor",
+          "to": "Scooter"
+        },
+        {
+          "from": "Caoutchouc",
+          "to": "Scooter"
+        },
+        {
+          "from": "Pigments",
+          "to": "Scooter"
+        }
+      ]
+    },
+    {
+      "id": "hacienda-consumables-schnapps-0-0",
+      "category": "Hacienda Consumables",
+      "targetGood": {
+        "id": "Schnapps",
+        "name": "Schnapps",
+        "icon": "Schnapps"
+      },
+      "nodes": [
+        {
+          "id": "Potato",
+          "good": "Potato",
+          "name": "Potato",
+          "icon": "Potato",
+          "amount": "1",
+          "building": "Hacienda Farm",
+          "consumedBy": [],
+          "fieldInfo": "64x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Schnapps",
+          "good": "Schnapps",
+          "name": "Schnapps",
+          "icon": "Schnapps",
+          "amount": "2",
+          "building": "Hacienda Brewery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Potato",
+          "to": "Schnapps"
+        }
+      ]
+    },
+    {
+      "id": "hacienda-consumables-hot_sauce-1-0",
+      "category": "Hacienda Consumables",
+      "targetGood": {
+        "id": "Hot_sauce",
+        "name": "Hot sauce",
+        "icon": "Hot_sauce"
+      },
+      "nodes": [
+        {
+          "id": "Spices",
+          "good": "Spices",
+          "name": "Spices",
+          "icon": "Spices",
+          "amount": "1",
+          "building": "Hacienda Farm",
+          "consumedBy": [],
+          "fieldInfo": "64x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Hot_sauce",
+          "good": "Hot_sauce",
+          "name": "Hot sauce",
+          "icon": "Hot_sauce",
+          "amount": "2",
+          "building": "Hacienda Brewery",
+          "consumedBy": [
+            "Jornaleros",
+            "Obreros",
+            "Workers",
+            "Explorers",
+            "Shepherds"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Spices",
+          "to": "Hot_sauce"
+        }
+      ]
+    },
+    {
+      "id": "hacienda-consumables-atole-2-0",
+      "category": "Hacienda Consumables",
+      "targetGood": {
+        "id": "Atole",
+        "name": "Atole",
+        "icon": "Atole"
+      },
+      "nodes": [
+        {
+          "id": "Sugar_cane",
+          "good": "Sugar_cane",
+          "name": "Sugar cane",
+          "icon": "Sugar_cane",
+          "amount": "1",
+          "building": "Hacienda Farm",
+          "consumedBy": [],
+          "fieldInfo": "64x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Corn",
+          "good": "Corn",
+          "name": "Corn",
+          "icon": "Corn",
+          "amount": "2",
+          "building": "Hacienda Farm",
+          "consumedBy": [],
+          "fieldInfo": "64x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Atole",
+          "good": "Atole",
+          "name": "Atole",
+          "icon": "Atole",
+          "amount": "2",
+          "building": "Hacienda Brewery",
+          "consumedBy": [
+            "Obreros"
+          ],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Atole"
+        },
+        {
+          "from": "Corn",
+          "to": "Atole"
+        }
+      ]
+    },
+    {
+      "id": "hacienda-consumables-rum-3-0",
+      "category": "Hacienda Consumables",
+      "targetGood": {
+        "id": "Rum",
+        "name": "Rum",
+        "icon": "Rum"
+      },
+      "nodes": [
+        {
+          "id": "Sugar_cane",
+          "good": "Sugar_cane",
+          "name": "Sugar cane",
+          "icon": "Sugar_cane",
+          "amount": "2",
+          "building": "Hacienda Farm",
+          "consumedBy": [],
+          "fieldInfo": "64x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Rum",
+          "good": "Rum",
+          "name": "Rum",
+          "icon": "Rum",
+          "amount": "2",
+          "building": "Hacienda Brewery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Rum"
+        },
+        {
+          "from": "Wood",
+          "to": "Rum"
+        }
+      ]
+    },
+    {
+      "id": "hacienda-consumables-beer-4-0",
+      "category": "Hacienda Consumables",
+      "targetGood": {
+        "id": "Beer",
+        "name": "Beer",
+        "icon": "Beer"
+      },
+      "nodes": [
+        {
+          "id": "Grain",
+          "good": "Grain",
+          "name": "Grain",
+          "icon": "Grain",
+          "amount": "1",
+          "building": "Hacienda Farm",
+          "consumedBy": [],
+          "fieldInfo": "64x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Corn",
+          "good": "Corn",
+          "name": "Corn",
+          "icon": "Corn",
+          "amount": "1",
+          "building": "Hacienda Farm",
+          "consumedBy": [],
+          "fieldInfo": "64x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Beer",
+          "good": "Beer",
+          "name": "Beer",
+          "icon": "Beer",
+          "amount": "1",
+          "building": "Hacienda Brewery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Grain",
+          "to": "Beer"
+        },
+        {
+          "from": "Corn",
+          "to": "Beer"
+        }
+      ]
+    },
+    {
+      "id": "hacienda-consumables-silo-5-0",
+      "category": "Hacienda Consumables",
+      "targetGood": {
+        "id": "Silo",
+        "name": "Silo",
+        "icon": "Silo"
+      },
+      "nodes": [
+        {
+          "id": "Fertiliser",
+          "good": "Fertiliser",
+          "name": "Fertiliser",
+          "icon": "Fertiliser",
+          "amount": "1",
+          "building": "Hacienda Fertiliser Works",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Silo",
+          "good": "Silo",
+          "name": "Silo",
+          "icon": "Silo",
+          "amount": "10",
+          "building": "Fertiliser Silo",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Fertiliser",
+          "to": "Silo"
+        }
+      ]
+    },
+    {
+      "id": "hacienda-consumables-fertiliser-6-0",
+      "category": "Hacienda Consumables",
+      "targetGood": {
+        "id": "Fertiliser",
+        "name": "Fertiliser",
+        "icon": "Fertiliser"
+      },
+      "nodes": [
+        {
+          "id": "Dung",
+          "good": "Dung",
+          "name": "Dung",
+          "icon": "Dung",
+          "amount": "1",
+          "building": "Production buildings",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Fertiliser",
+          "good": "Fertiliser",
+          "name": "Fertiliser",
+          "icon": "Fertiliser",
+          "amount": "1",
+          "building": "Hacienda Fertiliser Works",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Dung",
+          "to": "Fertiliser"
+        }
+      ]
+    },
+    {
+      "id": "tourist-consumables-jam-0-0",
+      "category": "Tourist Consumables",
+      "targetGood": {
+        "id": "jam",
+        "name": "jam",
+        "icon": "jam"
+      },
+      "nodes": [
+        {
+          "id": "jam",
+          "good": "jam",
+          "name": "jam",
+          "icon": "jam",
+          "amount": "1",
+          "building": "Orchard (Old World)",
+          "consumedBy": [
+            "Tourists",
+            "Farmers",
+            "Shepherds"
+          ],
+          "level": 0,
+          "isFinal": true
+        }
+      ],
+      "edges": []
+    },
+    {
+      "id": "tourist-consumables-shampoo-1-0",
+      "category": "Tourist Consumables",
+      "targetGood": {
+        "id": "Shampoo",
+        "name": "Shampoo",
+        "icon": "Shampoo"
+      },
+      "nodes": [
+        {
+          "id": "Coconut_Oil",
+          "good": "Coconut_Oil",
+          "name": "Coconut Oil",
+          "icon": "Coconut_Oil",
+          "amount": "1",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Cinnamon",
+          "good": "Cinnamon",
+          "name": "Cinnamon",
+          "icon": "Cinnamon",
+          "amount": "1",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Pigs",
+          "good": "Pigs",
+          "name": "Pigs",
+          "icon": "Pigs",
+          "amount": "2",
+          "building": "Pig Farm",
+          "consumedBy": [],
+          "fieldInfo": "5x (2×3)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Tallow",
+          "good": "Tallow",
+          "name": "Tallow",
+          "icon": "Tallow",
+          "amount": "2",
+          "building": "Rendering Works",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Soap",
+          "good": "Soap",
+          "name": "Soap",
+          "icon": "Soap",
+          "amount": "1",
+          "building": "Soap Factory",
+          "consumedBy": [],
+          "level": 2,
+          "isFinal": false
+        },
+        {
+          "id": "Shampoo",
+          "good": "Shampoo",
+          "name": "Shampoo",
+          "icon": "Shampoo",
+          "amount": "1",
+          "building": "Chemical Plant (Old World)",
+          "consumedBy": [
+            "Tourists",
+            "Engineers"
+          ],
+          "level": 3,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Pigs",
+          "to": "Tallow"
+        },
+        {
+          "from": "Tallow",
+          "to": "Soap"
+        },
+        {
+          "from": "Coconut_Oil",
+          "to": "Shampoo"
+        },
+        {
+          "from": "Cinnamon",
+          "to": "Shampoo"
+        },
+        {
+          "from": "Soap",
+          "to": "Shampoo"
+        }
+      ]
+    },
+    {
+      "id": "tourist-consumables-lemonade-2-0",
+      "category": "Tourist Consumables",
+      "targetGood": {
+        "id": "Lemonade",
+        "name": "Lemonade",
+        "icon": "Lemonade"
+      },
+      "nodes": [
+        {
+          "id": "Sugar_cane",
+          "good": "Sugar_cane",
+          "name": "Sugar cane",
+          "icon": "Sugar_cane",
+          "amount": "1",
+          "building": "Sugar Cane Plantation",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sugar",
+          "good": "Sugar",
+          "name": "Sugar",
+          "icon": "Sugar",
+          "amount": "1",
+          "building": "Sugar Refinery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Citrus",
+          "good": "Citrus",
+          "name": "Citrus",
+          "icon": "Citrus",
+          "amount": "1",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Saltpeter",
+          "good": "Saltpeter",
+          "name": "Saltpeter",
+          "icon": "Saltpeter",
+          "amount": "4",
+          "building": "Saltpeter Works",
+          "consumedBy": [
+            "Scholars"
+          ],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Lemonade",
+          "good": "Lemonade",
+          "name": "Lemonade",
+          "icon": "Lemonade",
+          "amount": "1",
+          "building": "Chemical Plant (Old World)",
+          "consumedBy": [
+            "Tourists"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Sugar"
+        },
+        {
+          "from": "Sugar",
+          "to": "Lemonade"
+        },
+        {
+          "from": "Citrus",
+          "to": "Lemonade"
+        },
+        {
+          "from": "Saltpeter",
+          "to": "Lemonade"
+        }
+      ]
+    },
+    {
+      "id": "tourist-consumables-souvenirs-3-0",
+      "category": "Tourist Consumables",
+      "targetGood": {
+        "id": "Souvenirs",
+        "name": "Souvenirs",
+        "icon": "Souvenirs"
+      },
+      "nodes": [
+        {
+          "id": "Camphor_wax",
+          "good": "Camphor_wax",
+          "name": "Camphor wax",
+          "icon": "Camphor_wax",
+          "amount": "1",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Quartz_sand",
+          "good": "Quartz_sand",
+          "name": "Quartz sand",
+          "icon": "Quartz_sand",
+          "amount": "1",
+          "building": "Sand Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Glass",
+          "good": "Glass",
+          "name": "Glass",
+          "icon": "Glass",
+          "amount": "1",
+          "building": "Glassmakers",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Cotton",
+          "good": "Cotton",
+          "name": "Cotton",
+          "icon": "Cotton",
+          "amount": "2",
+          "building": "Cotton Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Souvenirs",
+          "good": "Souvenirs",
+          "name": "Souvenirs",
+          "icon": "Souvenirs",
+          "amount": "1",
+          "building": "Chemical Plant (Old World)",
+          "consumedBy": [
+            "Tourists",
+            "Artistas"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Quartz_sand",
+          "to": "Glass"
+        },
+        {
+          "from": "Camphor_wax",
+          "to": "Souvenirs"
+        },
+        {
+          "from": "Glass",
+          "to": "Souvenirs"
+        },
+        {
+          "from": "Cotton",
+          "to": "Souvenirs"
+        }
+      ]
+    },
+    {
+      "id": "skyscrapers-materials-ethanol-0-0",
+      "category": "Skyscrapers Materials",
+      "targetGood": {
+        "id": "Ethanol",
+        "name": "Ethanol",
+        "icon": "Ethanol"
+      },
+      "nodes": [
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Ethanol",
+          "good": "Ethanol",
+          "name": "Ethanol",
+          "icon": "Ethanol",
+          "amount": "2",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        },
+        {
+          "id": "Corn",
+          "good": "Corn",
+          "name": "Corn",
+          "icon": "Corn",
+          "amount": "4",
+          "building": "Corn Farm",
+          "consumedBy": [],
+          "fieldInfo": "168x (1×1)",
+          "level": 0,
+          "isFinal": false
+        }
+      ],
+      "edges": [
+        {
+          "from": "Wood",
+          "to": "Ethanol"
+        },
+        {
+          "from": "Corn",
+          "to": "Ethanol"
+        }
+      ]
+    },
+    {
+      "id": "skyscrapers-materials-celluloid-1-0",
+      "category": "Skyscrapers Materials",
+      "targetGood": {
+        "id": "Celluloid",
+        "name": "Celluloid",
+        "icon": "Celluloid"
+      },
+      "nodes": [
+        {
+          "id": "Cotton",
+          "good": "Cotton",
+          "name": "Cotton",
+          "icon": "Cotton",
+          "amount": "2",
+          "building": "Cotton Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Camphor_wax",
+          "good": "Camphor_wax",
+          "name": "Camphor wax",
+          "icon": "Camphor_wax",
+          "amount": "1",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Ethanol",
+          "good": "Ethanol",
+          "name": "Ethanol",
+          "icon": "Ethanol",
+          "amount": "1",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Celluloid",
+          "good": "Celluloid",
+          "name": "Celluloid",
+          "icon": "Celluloid",
+          "amount": "1",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Cotton",
+          "to": "Celluloid"
+        },
+        {
+          "from": "Camphor_wax",
+          "to": "Celluloid"
+        },
+        {
+          "from": "Ethanol",
+          "to": "Celluloid"
+        }
+      ]
+    },
+    {
+      "id": "skyscrapers-materials-elevators-2-0",
+      "category": "Skyscrapers Materials",
+      "targetGood": {
+        "id": "Elevators",
+        "name": "Elevators",
+        "icon": "Elevators"
+      },
+      "nodes": [
+        {
+          "id": "Iron",
+          "good": "Iron",
+          "name": "Iron",
+          "icon": "Iron",
+          "amount": "1",
+          "building": "Iron Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Charcoal_kiln",
+          "good": "Charcoal_kiln",
+          "name": "Charcoal kiln",
+          "icon": "Charcoal_kiln",
+          "amount": "2",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Coal",
+          "good": "Coal",
+          "name": "Coal",
+          "icon": "Coal",
+          "amount": "1",
+          "building": "Coal Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Steel",
+          "good": "Steel",
+          "name": "Steel",
+          "icon": "Steel",
+          "amount": "2",
+          "building": "Furnace",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Wood",
+          "good": "Wood",
+          "name": "Wood",
+          "icon": "Wood",
+          "amount": "1",
+          "building": "Lumberjack's Hut (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Wood_veneers",
+          "good": "Wood_veneers",
+          "name": "Wood veneers",
+          "icon": "Wood_veneers",
+          "amount": "4",
+          "building": "Marquetry Workshop (Old World)",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Steam_motors",
+          "good": "Steam_motors",
+          "name": "Steam motors",
+          "icon": "Steam_motors",
+          "amount": "3",
+          "building": "Motor Assembly Line",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Elevators",
+          "good": "Elevators",
+          "name": "Elevators",
+          "icon": "Elevators",
+          "amount": "1",
+          "building": "Assembly Line",
+          "consumedBy": [],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Iron",
+          "to": "Steel"
+        },
+        {
+          "from": "Coal",
+          "to": "Steel"
+        },
+        {
+          "from": "Wood",
+          "to": "Wood_veneers"
+        },
+        {
+          "from": "Steel",
+          "to": "Elevators"
+        },
+        {
+          "from": "Wood_veneers",
+          "to": "Elevators"
+        },
+        {
+          "from": "Steam_motors",
+          "to": "Elevators"
+        },
+        {
+          "from": "Charcoal_kiln",
+          "to": "Steel"
+        }
+      ]
+    },
+    {
+      "id": "skyscrapers-materials-lacquer-3-0",
+      "category": "Skyscrapers Materials",
+      "targetGood": {
+        "id": "Lacquer",
+        "name": "Lacquer",
+        "icon": "Lacquer"
+      },
+      "nodes": [
+        {
+          "id": "Ethanol",
+          "good": "Ethanol",
+          "name": "Ethanol",
+          "icon": "Ethanol",
+          "amount": "1",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Resin",
+          "good": "Resin",
+          "name": "Resin",
+          "icon": "Resin",
+          "amount": "1",
+          "building": "Orchard (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Quartz_sand",
+          "good": "Quartz_sand",
+          "name": "Quartz sand",
+          "icon": "Quartz_sand",
+          "amount": "1",
+          "building": "Sand Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Lacquer",
+          "good": "Lacquer",
+          "name": "Lacquer",
+          "icon": "Lacquer",
+          "amount": "1",
+          "building": "Chemical Plant (Old World)",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Ethanol",
+          "to": "Lacquer"
+        },
+        {
+          "from": "Resin",
+          "to": "Lacquer"
+        },
+        {
+          "from": "Quartz_sand",
+          "to": "Lacquer"
+        }
+      ]
+    },
+    {
+      "id": "engineer-skyscrapers-consumables-typewriters-0-0",
+      "category": "Engineer Skyscrapers Consumables",
+      "targetGood": {
+        "id": "Typewriters",
+        "name": "Typewriters",
+        "icon": "Typewriters"
+      },
+      "nodes": [
+        {
+          "id": "Iron",
+          "good": "Iron",
+          "name": "Iron",
+          "icon": "Iron",
+          "amount": "1",
+          "building": "Iron Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Charcoal_kiln",
+          "good": "Charcoal_kiln",
+          "name": "Charcoal kiln",
+          "icon": "Charcoal_kiln",
+          "amount": "2",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Coal",
+          "good": "Coal",
+          "name": "Coal",
+          "icon": "Coal",
+          "amount": "1",
+          "building": "Coal Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Steel",
+          "good": "Steel",
+          "name": "Steel",
+          "icon": "Steel",
+          "amount": "2",
+          "building": "Furnace",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Zinc",
+          "good": "Zinc",
+          "name": "Zinc",
+          "icon": "Zinc",
+          "amount": "2",
+          "building": "Zinc Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Copper",
+          "good": "Copper",
+          "name": "Copper",
+          "icon": "Copper",
+          "amount": "2",
+          "building": "Copper Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Brass",
+          "good": "Brass",
+          "name": "Brass",
+          "icon": "Brass",
+          "amount": "4",
+          "building": "Brass Smeltery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Lacquer",
+          "good": "Lacquer",
+          "name": "Lacquer",
+          "icon": "Lacquer",
+          "amount": "2",
+          "building": "Chemical Plant (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Typewriters",
+          "good": "Typewriters",
+          "name": "Typewriters",
+          "icon": "Typewriters",
+          "amount": "1",
+          "building": "Assembly Line",
+          "consumedBy": [
+            "Engineers",
+            "Investors",
+            "Obreros"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Iron",
+          "to": "Steel"
+        },
+        {
+          "from": "Coal",
+          "to": "Steel"
+        },
+        {
+          "from": "Zinc",
+          "to": "Brass"
+        },
+        {
+          "from": "Copper",
+          "to": "Brass"
+        },
+        {
+          "from": "Brass",
+          "to": "Typewriters"
+        },
+        {
+          "from": "Steel",
+          "to": "Typewriters"
+        },
+        {
+          "from": "Lacquer",
+          "to": "Typewriters"
+        },
+        {
+          "from": "Charcoal_kiln",
+          "to": "Steel"
+        }
+      ]
+    },
+    {
+      "id": "engineer-skyscrapers-consumables-violins-1-0",
+      "category": "Engineer Skyscrapers Consumables",
+      "targetGood": {
+        "id": "Violins",
+        "name": "Violins",
+        "icon": "Violins"
+      },
+      "nodes": [
+        {
+          "id": "Iron",
+          "good": "Iron",
+          "name": "Iron",
+          "icon": "Iron",
+          "amount": "1",
+          "building": "Iron Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Charcoal_kiln",
+          "good": "Charcoal_kiln",
+          "name": "Charcoal kiln",
+          "icon": "Charcoal_kiln",
+          "amount": "2",
+          "building": "Charcoal Kiln",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Coal",
+          "good": "Coal",
+          "name": "Coal",
+          "icon": "Coal",
+          "amount": "1",
+          "building": "Coal Mine",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Steel",
+          "good": "Steel",
+          "name": "Steel",
+          "icon": "Steel",
+          "amount": "2",
+          "building": "Furnace",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Cherry_Wood",
+          "good": "Cherry_Wood",
+          "name": "Cherry Wood",
+          "icon": "Cherry_Wood",
+          "amount": "2",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Lacquer",
+          "good": "Lacquer",
+          "name": "Lacquer",
+          "icon": "Lacquer",
+          "amount": "2",
+          "building": "Chemical Plant (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Violins",
+          "good": "Violins",
+          "name": "Violins",
+          "icon": "Violins",
+          "amount": "4",
+          "building": "Artisans' Workshop",
+          "consumedBy": [
+            "Engineers",
+            "Investors"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Iron",
+          "to": "Steel"
+        },
+        {
+          "from": "Coal",
+          "to": "Steel"
+        },
+        {
+          "from": "Cherry_Wood",
+          "to": "Violins"
+        },
+        {
+          "from": "Steel",
+          "to": "Violins"
+        },
+        {
+          "from": "Lacquer",
+          "to": "Violins"
+        },
+        {
+          "from": "Charcoal_kiln",
+          "to": "Steel"
+        }
+      ]
+    },
+    {
+      "id": "engineer-skyscrapers-consumables-chewing_gum-2-0",
+      "category": "Engineer Skyscrapers Consumables",
+      "targetGood": {
+        "id": "Chewing_Gum",
+        "name": "Chewing Gum",
+        "icon": "Chewing_Gum"
+      },
+      "nodes": [
+        {
+          "id": "Sugar_cane",
+          "good": "Sugar_cane",
+          "name": "Sugar cane",
+          "icon": "Sugar_cane",
+          "amount": "1",
+          "building": "Sugar Cane Plantation",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sugar",
+          "good": "Sugar",
+          "name": "Sugar",
+          "icon": "Sugar",
+          "amount": "1",
+          "building": "Sugar Refinery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Cinnamon",
+          "good": "Cinnamon",
+          "name": "Cinnamon",
+          "icon": "Cinnamon",
+          "amount": "1",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Caoutchouc",
+          "good": "Caoutchouc",
+          "name": "Caoutchouc",
+          "icon": "Caoutchouc",
+          "amount": "2",
+          "building": "Caoutchouc Plantation",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Chewing_Gum",
+          "good": "Chewing_Gum",
+          "name": "Chewing Gum",
+          "icon": "Chewing_Gum",
+          "amount": "1",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [
+            "Engineers",
+            "Investors"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Sugar"
+        },
+        {
+          "from": "Sugar",
+          "to": "Chewing_Gum"
+        },
+        {
+          "from": "Cinnamon",
+          "to": "Chewing_Gum"
+        },
+        {
+          "from": "Caoutchouc",
+          "to": "Chewing_Gum"
+        }
+      ]
+    },
+    {
+      "id": "investor-skyscrapers-consumables-biscuits-0-0",
+      "category": "Investor Skyscrapers Consumables",
+      "targetGood": {
+        "id": "Biscuits",
+        "name": "Biscuits",
+        "icon": "Biscuits"
+      },
+      "nodes": [
+        {
+          "id": "Pigs",
+          "good": "Pigs",
+          "name": "Pigs",
+          "icon": "Pigs",
+          "amount": "4",
+          "building": "Pig Farm",
+          "consumedBy": [],
+          "fieldInfo": "5x (2×3)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Tallow",
+          "good": "Tallow",
+          "name": "Tallow",
+          "icon": "Tallow",
+          "amount": "4",
+          "building": "Rendering Works",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Grain",
+          "good": "Grain",
+          "name": "Grain",
+          "icon": "Grain",
+          "amount": "4",
+          "building": "Grain Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Flour",
+          "good": "Flour",
+          "name": "Flour",
+          "icon": "Flour",
+          "amount": "2",
+          "building": "Flour Mill",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Citrus",
+          "good": "Citrus",
+          "name": "Citrus",
+          "icon": "Citrus",
+          "amount": "2",
+          "building": "Orchard (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Biscuits",
+          "good": "Biscuits",
+          "name": "Biscuits",
+          "icon": "Biscuits",
+          "amount": "1",
+          "building": "Assembly Line",
+          "consumedBy": [
+            "Investors"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Pigs",
+          "to": "Tallow"
+        },
+        {
+          "from": "Grain",
+          "to": "Flour"
+        },
+        {
+          "from": "Flour",
+          "to": "Biscuits"
+        },
+        {
+          "from": "Tallow",
+          "to": "Biscuits"
+        },
+        {
+          "from": "Citrus",
+          "to": "Biscuits"
+        }
+      ]
+    },
+    {
+      "id": "investor-skyscrapers-consumables-cognac-1-0",
+      "category": "Investor Skyscrapers Consumables",
+      "targetGood": {
+        "id": "Cognac",
+        "name": "Cognac",
+        "icon": "Cognac"
+      },
+      "nodes": [
+        {
+          "id": "Sugar_cane",
+          "good": "Sugar_cane",
+          "name": "Sugar cane",
+          "icon": "Sugar_cane",
+          "amount": "1",
+          "building": "Sugar Cane Plantation",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Sugar",
+          "good": "Sugar",
+          "name": "Sugar",
+          "icon": "Sugar",
+          "amount": "1",
+          "building": "Sugar Refinery",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Grapes",
+          "good": "Grapes",
+          "name": "Grapes",
+          "icon": "Grapes",
+          "amount": "4",
+          "building": "Vineyard",
+          "consumedBy": [],
+          "fieldInfo": "128x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Cherry_Wood",
+          "good": "Cherry_Wood",
+          "name": "Cherry Wood",
+          "icon": "Cherry_Wood",
+          "amount": "1",
+          "building": "Orchard (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Cognac",
+          "good": "Cognac",
+          "name": "Cognac",
+          "icon": "Cognac",
+          "amount": "2",
+          "building": "Artisans' Workshop",
+          "consumedBy": [
+            "Investors"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Sugar_cane",
+          "to": "Sugar"
+        },
+        {
+          "from": "Grapes",
+          "to": "Cognac"
+        },
+        {
+          "from": "Sugar",
+          "to": "Cognac"
+        },
+        {
+          "from": "Cherry_Wood",
+          "to": "Cognac"
+        }
+      ]
+    },
+    {
+      "id": "investor-skyscrapers-consumables-billiard_tables-2-0",
+      "category": "Investor Skyscrapers Consumables",
+      "targetGood": {
+        "id": "Billiard_Tables",
+        "name": "Billiard Tables",
+        "icon": "Billiard_Tables"
+      },
+      "nodes": [
+        {
+          "id": "Alpaca_wool",
+          "good": "Alpaca_wool",
+          "name": "Alpaca wool",
+          "icon": "Alpaca_wool",
+          "amount": "1",
+          "building": "Alpaca Farm",
+          "consumedBy": [],
+          "fieldInfo": "4x (3×3)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Felt",
+          "good": "Felt",
+          "name": "Felt",
+          "icon": "Felt",
+          "amount": "1",
+          "building": "Felt Producer",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Celluloid",
+          "good": "Celluloid",
+          "name": "Celluloid",
+          "icon": "Celluloid",
+          "amount": "1",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Cherry_Wood",
+          "good": "Cherry_Wood",
+          "name": "Cherry Wood",
+          "icon": "Cherry_Wood",
+          "amount": "1",
+          "building": "Orchard (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Billiard_Tables",
+          "good": "Billiard_Tables",
+          "name": "Billiard Tables",
+          "icon": "Billiard_Tables",
+          "amount": "2",
+          "building": "Artisans' Workshop",
+          "consumedBy": [
+            "Investors",
+            "Artistas"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Alpaca_wool",
+          "to": "Felt"
+        },
+        {
+          "from": "Felt",
+          "to": "Billiard_Tables"
+        },
+        {
+          "from": "Celluloid",
+          "to": "Billiard_Tables"
+        },
+        {
+          "from": "Cherry_Wood",
+          "to": "Billiard_Tables"
+        }
+      ]
+    },
+    {
+      "id": "investor-skyscrapers-consumables-toys-3-0",
+      "category": "Investor Skyscrapers Consumables",
+      "targetGood": {
+        "id": "Toys",
+        "name": "Toys",
+        "icon": "Toys"
+      },
+      "nodes": [
+        {
+          "id": "Alpaca_wool",
+          "good": "Alpaca_wool",
+          "name": "Alpaca wool",
+          "icon": "Alpaca_wool",
+          "amount": "1",
+          "building": "Alpaca Farm",
+          "consumedBy": [],
+          "fieldInfo": "4x (3×3)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Felt",
+          "good": "Felt",
+          "name": "Felt",
+          "icon": "Felt",
+          "amount": "1",
+          "building": "Felt Producer",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Celluloid",
+          "good": "Celluloid",
+          "name": "Celluloid",
+          "icon": "Celluloid",
+          "amount": "1",
+          "building": "Chemical Plant (New World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Lacquer",
+          "good": "Lacquer",
+          "name": "Lacquer",
+          "icon": "Lacquer",
+          "amount": "1",
+          "building": "Chemical Plant (Old World)",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Toys",
+          "good": "Toys",
+          "name": "Toys",
+          "icon": "Toys",
+          "amount": "2",
+          "building": "Artisans' Workshop",
+          "consumedBy": [
+            "Investors"
+          ],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Alpaca_wool",
+          "to": "Felt"
+        },
+        {
+          "from": "Felt",
+          "to": "Toys"
+        },
+        {
+          "from": "Celluloid",
+          "to": "Toys"
+        },
+        {
+          "from": "Lacquer",
+          "to": "Toys"
+        }
+      ]
+    },
+    {
+      "id": "bright-harvest-tractorbarn-0-0",
+      "category": "Bright Harvest",
+      "targetGood": {
+        "id": "Tractorbarn",
+        "name": "Tractorbarn",
+        "icon": "Tractorbarn"
+      },
+      "nodes": [
+        {
+          "id": "Oil",
+          "good": "Oil",
+          "name": "Oil",
+          "icon": "Oil",
+          "amount": "1",
+          "building": "Oil Well",
+          "consumedBy": [],
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Fuel",
+          "good": "Fuel",
+          "name": "Fuel",
+          "icon": "Fuel",
+          "amount": "1",
+          "building": "Fuel Station",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": false
+        },
+        {
+          "id": "Tractorbarn",
+          "good": "Tractorbarn",
+          "name": "Tractorbarn",
+          "icon": "Tractorbarn",
+          "amount": "20",
+          "building": "Tractor Barn",
+          "consumedBy": [],
+          "level": 2,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Oil",
+          "to": "Fuel"
+        },
+        {
+          "from": "Fuel",
+          "to": "Tractorbarn"
+        }
+      ]
+    },
+    {
+      "id": "bright-harvest-silo-1-0",
+      "category": "Bright Harvest",
+      "targetGood": {
+        "id": "Silo",
+        "name": "Silo",
+        "icon": "Silo"
+      },
+      "nodes": [
+        {
+          "id": "Grain",
+          "good": "Grain",
+          "name": "Grain",
+          "icon": "Grain",
+          "amount": "1",
+          "building": "Grain Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Corn",
+          "good": "Corn",
+          "name": "Corn",
+          "icon": "Corn",
+          "amount": "1",
+          "building": "Corn Farm",
+          "consumedBy": [],
+          "fieldInfo": "168x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Teff_Grass",
+          "good": "Teff_Grass",
+          "name": "Teff Grass",
+          "icon": "Teff_Grass",
+          "amount": "1",
+          "building": "Teff Farm",
+          "consumedBy": [],
+          "fieldInfo": "144x (1×1)",
+          "level": 0,
+          "isFinal": false
+        },
+        {
+          "id": "Silo",
+          "good": "Silo",
+          "name": "Silo",
+          "icon": "Silo",
+          "amount": "5",
+          "building": "Silo",
+          "consumedBy": [],
+          "level": 1,
+          "isFinal": true
+        }
+      ],
+      "edges": [
+        {
+          "from": "Teff_Grass",
+          "to": "Silo"
+        },
+        {
+          "from": "Corn",
+          "to": "Silo"
+        },
+        {
+          "from": "Grain",
+          "to": "Silo"
         }
       ]
     }

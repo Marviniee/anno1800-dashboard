@@ -8,15 +8,29 @@
  * Lizenz: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
  */
 
+// Nach Welt gruppiert: Alte Welt (inkl. Wolkenkratzer, Touristen, Reiche
+// Ernte), Neue Welt (inkl. Artistas, Hacienda), Arktis, Enbesa.
 const CATEGORY_ORDER = [
   'Building Materials',
   'Farmer Consumables',
   'Worker Consumables',
-  'Jornalero Consumables',
   'Artisan Consumables',
   'Engineer Consumables',
   'Investor Consumables',
+  'Skyscrapers Materials',
+  'Engineer Skyscrapers Consumables',
+  'Investor Skyscrapers Consumables',
+  'Tourist Consumables',
+  'Bright Harvest',
+  'Jornalero Consumables',
   'Obrero Consumables',
+  'Artistas Consumables',
+  'Hacienda Consumables',
+  'Explorer Consumables',
+  'Technician Consumables',
+  'Shepherd Consumables',
+  'Elder Consumables',
+  'Scholar Consumables',
 ];
 
 let productionChains = null;

@@ -25,15 +25,14 @@
  * Translations.good(). count ist die Anzahl Vorkommen bzw. Fabriken,
  * optional (null wenn nicht angegeben).
  *
- * Drei Bereiche (js/goods-icons-data.js):
- *  - vorkommen: RAW_MATERIAL_ICON_LIST - echte Boden-/Minenfunde (Erze, Öl,
- *    Lehm, Quarzsand, Salpeter, Zement), keine Rolle, Menge = Anzahl Fundstellen.
- *  - fruchtbarkeiten: FERTILITY_ICON_LIST - Feldfrüchte, die im Spiel eine
- *    Fruchtbarkeit auf der Insel brauchen (verifiziert über anno1800-Wiki:
- *    Fandom "Fertilities and resources"). Binär, kein Mengenfeld.
- *  - goods: PRODUCED_GOOD_ICON_LIST - alles Übrige (per Gebäude verarbeitet,
- *    oder mangels eigener Kategorie Farm-/Jagd-/Fischerei-Rohstoffe ohne
- *    Fruchtbarkeitsbedarf wie Holz/Wolle/Fisch/Alpakawolle), mit Rolle.
+ * Drei Bereiche, welt-abhängig (classificationFor(island.world) in
+ * js/goods-icons-data.js):
+ *  - vorkommen: nicht anbaubare Rohstoffe (Minen, in Arktis/Enbesa auch
+ *    Jagd/Fang/Tierhaltung), keine Rolle, Menge = Anzahl Fundstellen/Gebäude.
+ *  - fruchtbarkeiten: Feldfrüchte mit Fruchtbarkeitsbedarf. Binär, kein
+ *    Mengenfeld.
+ *  - goods: alles Übrige (per Gebäude verarbeitet oder überall verfügbar),
+ *    mit Rolle.
  *
  * Für die automatische Handelsrouten-Berechnung auf der Karte zählen sowohl
  * ein Vorkommen als auch eine Fruchtbarkeit wie ein "Produzent" dieser Ware
@@ -46,6 +45,54 @@
 const WORLDS = ['Alte Welt', 'Neue Welt', 'Enbesa', 'Kap Trelawney', 'Arktis'];
 const DEFAULT_WORLD = 'Alte Welt';
 
+// Verschiebt Einträge in den Bereich, der für die Welt der Insel gilt (siehe
+// Migration in Islands.load und Welt-Wechsel im Formular). Produzierte Güter
+// werden nie automatisch aus Vorkommen/Fruchtbarkeiten herausgezogen, damit
+// keine bewusst erfassten Rohstoffe ungefragt verschwinden. Gibt true zurück,
+// wenn sich etwas geändert hat.
+function reclassifyIslandGoods(island) {
+  const cls = classificationFor(island.world);
+  let changed = false;
+
+  const stillGoods = [];
+  island.goods.forEach((g) => {
+    if (cls.vorkommen.includes(g.good)) {
+      island.vorkommen.push({ good: g.good, count: g.count ?? null });
+      changed = true;
+    } else if (cls.fruchtbarkeiten.includes(g.good)) {
+      island.fruchtbarkeiten.push({ good: g.good });
+      changed = true;
+    } else {
+      stillGoods.push(g);
+    }
+  });
+  island.goods = stillGoods;
+
+  const stillVorkommen = [];
+  island.vorkommen.forEach((v) => {
+    if (cls.fruchtbarkeiten.includes(v.good)) {
+      island.fruchtbarkeiten.push({ good: v.good });
+      changed = true;
+    } else {
+      stillVorkommen.push(v);
+    }
+  });
+  island.vorkommen = stillVorkommen;
+
+  const stillFruchtbarkeiten = [];
+  island.fruchtbarkeiten.forEach((f) => {
+    if (cls.vorkommen.includes(f.good)) {
+      island.vorkommen.push({ good: f.good, count: null });
+      changed = true;
+    } else {
+      stillFruchtbarkeiten.push(f);
+    }
+  });
+  island.fruchtbarkeiten = stillFruchtbarkeiten;
+
+  return changed;
+}
+
 const Islands = {
   DATA_PATH: 'data/islands.json',
   cache: [],
@@ -53,13 +100,13 @@ const Islands = {
   async load() {
     this.cache = await GitHubSync.readJson(this.DATA_PATH, []);
 
-    // Automatische Migration von Alt-Daten. Zwei Stufen, je nach Ausgangslage:
-    //  1) Ganz alte Inseln: alles lag in "goods" - Rohstoffe (RAW_MATERIAL_
-    //     ICON_LIST) wandern nach "vorkommen".
-    //  2) Inseln aus der ersten Vorkommen/Güter-Trennung: Feldfrüchte, die
-    //     damals noch als Vorkommen galten (grobe Level-0-Heuristik), wandern
-    //     jetzt anhand FERTILITY_ICON_LIST von "vorkommen" nach
-    //     "fruchtbarkeiten". Die Rolle entfällt in beiden Fällen.
+    // Automatische Migration von Alt-Daten, immer anhand der Klassifikation
+    // der Welt der Insel (classificationFor, js/goods-icons-data.js):
+    //  1) Ganz alte Inseln: alles lag in "goods" - Vorkommen/Fruchtbarkeiten
+    //     wandern in ihren Bereich, die Rolle entfällt.
+    //  2) Einträge im falschen Rohstoff-Bereich wandern zwischen "vorkommen"
+    //     und "fruchtbarkeiten" (z.B. Feldfrüchte aus der früheren Level-0-
+    //     Heuristik, oder Felle einer Arktis-Insel, die dort Vorkommen sind).
     let migrated = false;
     this.cache.forEach((island) => {
       if (!island.vorkommen) island.vorkommen = [];
@@ -81,30 +128,7 @@ const Islands = {
         });
       });
 
-      const stillGoods = [];
-      island.goods.forEach((g) => {
-        if (RAW_MATERIAL_ICON_LIST.includes(g.good)) {
-          island.vorkommen.push({ good: g.good, count: g.count ?? null });
-          migrated = true;
-        } else if (FERTILITY_ICON_LIST.includes(g.good)) {
-          island.fruchtbarkeiten.push({ good: g.good });
-          migrated = true;
-        } else {
-          stillGoods.push(g);
-        }
-      });
-      island.goods = stillGoods;
-
-      const stillVorkommen = [];
-      island.vorkommen.forEach((v) => {
-        if (FERTILITY_ICON_LIST.includes(v.good)) {
-          island.fruchtbarkeiten.push({ good: v.good });
-          migrated = true;
-        } else {
-          stillVorkommen.push(v);
-        }
-      });
-      island.vorkommen = stillVorkommen;
+      if (reclassifyIslandGoods(island)) migrated = true;
     });
 
     if (migrated) {
@@ -156,10 +180,10 @@ const ROLE_LABELS = {
 };
 
 // Konfiguration der drei Güter-Bereiche im Insel-Formular. hasCount/hasRole
-// steuern, welche Felder in der Auswahl-Liste gerendert werden.
+// steuern, welche Felder in der Auswahl-Liste gerendert werden. Welche Icons
+// ein Bereich anbietet, hängt von der Welt ab (modalIconList).
 const GOODS_KIND_CONFIG = {
   vorkommen: {
-    iconList: RAW_MATERIAL_ICON_LIST,
     hasRole: false,
     hasCount: true,
     tabLabel: 'Vorkommen',
@@ -168,7 +192,6 @@ const GOODS_KIND_CONFIG = {
     emptyListMsg: 'Noch keine Vorkommen ausgewählt.',
   },
   fruchtbarkeiten: {
-    iconList: FERTILITY_ICON_LIST,
     hasRole: false,
     hasCount: false,
     tabLabel: 'Fruchtbarkeiten',
@@ -177,7 +200,6 @@ const GOODS_KIND_CONFIG = {
     emptyListMsg: 'Noch keine Fruchtbarkeiten ausgewählt.',
   },
   goods: {
-    iconList: PRODUCED_GOOD_ICON_LIST,
     hasRole: true,
     hasCount: true,
     tabLabel: 'Produzierte Güter',
@@ -336,6 +358,7 @@ function openIslandModal(islandId) {
   });
   setActiveGoodsTab(activeGoodsTab);
 
+  document.getElementById('input-island-world').addEventListener('change', onModalWorldChange);
   document.getElementById('btn-add-function').addEventListener('click', addFunctionFromInput);
   document.getElementById('input-function').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -365,6 +388,36 @@ function openIslandModal(islandId) {
       }
     });
   }
+}
+
+// Icon-Liste eines Bereichs für die aktuell im Formular gewählte Welt.
+function modalIconList(kind) {
+  const worldSelect = document.getElementById('input-island-world');
+  return classificationFor(worldSelect ? worldSelect.value : DEFAULT_WORLD)[kind];
+}
+
+// Welt im Formular gewechselt: bereits ausgewählte Einträge in den für die
+// neue Welt passenden Bereich verschieben, dann alle Raster neu aufbauen.
+function onModalWorldChange() {
+  const draftIsland = {
+    world: document.getElementById('input-island-world').value,
+    vorkommen: draftByKind.vorkommen,
+    fruchtbarkeiten: draftByKind.fruchtbarkeiten,
+    goods: draftByKind.goods.map((g) => ({ ...g })),
+  };
+  reclassifyIslandGoods(draftIsland);
+  draftIsland.goods.forEach((g) => {
+    if (!g.role) g.role = 'producer';
+  });
+  draftByKind = {
+    vorkommen: draftIsland.vorkommen,
+    fruchtbarkeiten: draftIsland.fruchtbarkeiten,
+    goods: draftIsland.goods,
+  };
+  GOODS_KINDS.forEach((kind) => {
+    renderIconPickerGrid(kind);
+    renderEntryList(kind);
+  });
 }
 
 function setActiveGoodsTab(tab) {
@@ -407,13 +460,14 @@ function renderFunctionChips() {
 
 function renderIconPickerGrid(kind) {
   const config = GOODS_KIND_CONFIG[kind];
+  const iconList = modalIconList(kind);
   const grid = document.getElementById(`${kind}-icon-grid`);
   const searchInput = document.getElementById(`${kind}-search`);
   const term = (searchInput.value || '').trim().toLowerCase();
   const draftArray = draftByKind[kind];
   const selectedIds = new Set(draftArray.map((g) => g.good));
 
-  const filtered = config.iconList.filter((icon) => {
+  const filtered = iconList.filter((icon) => {
     if (!term) return true;
     const name = Translations.good(icon, icon).toLowerCase();
     return name.includes(term) || icon.toLowerCase().includes(term);
