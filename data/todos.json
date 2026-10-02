@@ -182,5 +182,13 @@
     "done": false,
     "parentId": "39f70b67-e27c-46ad-a0be-b8bf894af051",
     "id": "0db2c565-c5ba-422e-8d4b-a053744947b4"
+  },
+  {
+    "text": "2 Lehmgruben + 6 Ziegeleien und Radius der Handelskammer bauen",
+    "importance": "medium",
+    "islandId": "07d7c50d-fa78-421c-b015-751b9fc8e032",
+    "done": false,
+    "parentId": "08d06500-00c2-4164-bbb7-6f8d27a5f831",
+    "id": "0890d37a-2154-43f0-8da3-abc3353ffe0f"
   }
 ]
