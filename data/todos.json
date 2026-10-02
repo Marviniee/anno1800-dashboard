@@ -166,5 +166,13 @@
     "done": false,
     "parentId": "39f70b67-e27c-46ad-a0be-b8bf894af051",
     "id": "9784c03a-8bdf-43c8-aad0-18eca01f950e"
+  },
+  {
+    "text": "Eiserne Werksglocke",
+    "importance": "medium",
+    "islandId": "07d7c50d-fa78-421c-b015-751b9fc8e032",
+    "done": false,
+    "parentId": "39f70b67-e27c-46ad-a0be-b8bf894af051",
+    "id": "3dc37fe9-ab7e-4c1f-9c2e-635d5ad7f754"
   }
 ]
