@@ -131,7 +131,7 @@
     "text": "Konserven",
     "importance": "medium",
     "islandId": null,
-    "done": false,
+    "done": true,
     "parentId": null,
     "id": "10ad59bc-6220-4821-ba56-2b03a8f05b49"
   },
@@ -139,7 +139,7 @@
     "text": "Nähmaschienen",
     "importance": "medium",
     "islandId": null,
-    "done": false,
+    "done": true,
     "parentId": null,
     "id": "0b64b23f-f108-458a-967a-3716ca52038e"
   }
