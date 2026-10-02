@@ -150,5 +150,13 @@
     "done": false,
     "parentId": null,
     "id": "08d06500-00c2-4164-bbb7-6f8d27a5f831"
+  },
+  {
+    "text": "Handelskammer bauen und Items bersorgen",
+    "importance": "medium",
+    "islandId": "07d7c50d-fa78-421c-b015-751b9fc8e032",
+    "done": false,
+    "parentId": "08d06500-00c2-4164-bbb7-6f8d27a5f831",
+    "id": "39f70b67-e27c-46ad-a0be-b8bf894af051"
   }
 ]
