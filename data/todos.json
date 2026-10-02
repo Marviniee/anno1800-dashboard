@@ -198,5 +198,13 @@
     "done": false,
     "parentId": "08d06500-00c2-4164-bbb7-6f8d27a5f831",
     "id": "74d9406b-400c-4ba3-8168-f69007fc0991"
+  },
+  {
+    "text": "Aluminium Import über Krasne legen (Weg von Bugsly)",
+    "importance": "medium",
+    "islandId": "07d7c50d-fa78-421c-b015-751b9fc8e032",
+    "done": false,
+    "parentId": "08d06500-00c2-4164-bbb7-6f8d27a5f831",
+    "id": "36f443db-f592-4f8b-9f96-f52e1a645c47"
   }
 ]
