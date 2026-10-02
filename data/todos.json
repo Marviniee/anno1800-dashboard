@@ -142,5 +142,13 @@
     "done": true,
     "parentId": null,
     "id": "0b64b23f-f108-458a-967a-3716ca52038e"
+  },
+  {
+    "text": "Ziegelproduktion (Versorgungsroute) auslagern",
+    "importance": "medium",
+    "islandId": null,
+    "done": false,
+    "parentId": null,
+    "id": "08d06500-00c2-4164-bbb7-6f8d27a5f831"
   }
 ]
