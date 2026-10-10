@@ -405,7 +405,9 @@
   },
   {
     "name": "Hansberrenge",
-    "functions": [],
+    "functions": [
+      "Ingenieure"
+    ],
     "vorkommen": [
       {
         "good": "Iron",
